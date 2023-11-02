@@ -1,0 +1,19 @@
+@import "./global.css";
+
+body {
+    display: grid;
+    grid-template-rows: 1fr min-content;
+    justify-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background: var(--bg-color-2);
+    overflow-x: hidden;
+}
+a, button {
+    display: block;
+    outline: #00000000 solid;
+}
+a:focus-visible,
+button:focus-visible {
+    outline: var(--bg-color-16) solid;
+}

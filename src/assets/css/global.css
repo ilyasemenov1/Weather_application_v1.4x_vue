@@ -1,0 +1,116 @@
+
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-color-1: #ffffff;
+    --bg-color-2: #fcfcfc;
+    --bg-color-3: #ffffff;
+    --bg-color-4: #52525211;
+    --bg-color-5: #02020211;
+    --bg-color-6: #ffffff31;
+    --bg-color-7: #ffffff48;
+    --bg-color-8: #ffffff42;
+    --bg-color-9: #2828281f;
+    --bg-color-10: #b8b8b847;
+    --bg-color-11: #ffffff77;
+    --bg-color-12: #00000011;
+    --bg-color-13: #474747;
+    --bg-color-14: #f3f3f3;
+    --bg-color-15: #ffffff;
+    --bg-color-16: #1a8fd3;
+    --text-color-1: #000000af;  
+    --text-color-2: #f5f5f5; /* const */
+    --text-color-3: #f5f5f5b9; /* const */
+    --tetx-color-4: #616161;
+    --text-color-5: #000000;
+    --text-color-6: #00000094;
+    --text-color-7: #616161;
+    --stroke-color-1: #ebebeb4d;
+    --stroke-color-2: #5e98f0;
+    --border-color-1: #0000000a;
+    --scroll-bar-color: #e7e7e7;
+    --scroll-bar-color-2: #a3a3a39a;
+    --gradient-1: linear-gradient(190deg, #7799cb 0%, #92a4b9 92%);
+    --gradient-2: linear-gradient(190deg, #79bfd4 0%, #93a5b6 92%);
+    --gradient-3: linear-gradient(190deg, #a5a2de 16%, #a09fad 100%);
+}
+
+body.night-mode {
+    --bg-color-1: #4a4c4e;
+    --bg-color-2: #3d3d3f;
+    --bg-color-3: #585858;
+    --bg-color-4: #ffffff11;
+    --bg-color-5: #e4e4e411;
+    --bg-color-6: #ffffff31;
+    --bg-color-7: #ffffff48;
+    --bg-color-8: #ffffff42;
+    --bg-color-9: #cccccc1f;
+    --bg-color-10: #a7a7a748;
+    --bg-color-11: #4d4d4d77;
+    --bg-color-12: #ffffff11;
+    --bg-color-13: #c9c9c9;
+    --bg-color-14: #555555;
+    --bg-color-15: #5c5c5c;
+    --bg-color-16: #3a94c7;
+    --text-color-1: #d1d1d1d7;
+    --text-color-2: #f5f5f5; /* const */
+    --text-color-3: #f5f5f5b9; /* const */
+    --tetx-color-4: #616161;
+    --text-color-5: #ffffff;
+    --text-color-6: #ffffff94;
+    --text-color-7: #a1a1a1;
+    --stroke-color-1: #6666664d;
+    --stroke-color-2: #5e98f0;
+    --border-color-1: #ffffff0a;
+    --scroll-bar-color: #8f8f8f;
+    --scroll-bar-color-2: #ececec9a;
+    --gradient-1: linear-gradient(190deg, #5c6e8b 0%, #4c545f 92%);
+    --gradient-2: linear-gradient(190deg, #58757e 0%, #545b62 92%);
+    --gradient-3: linear-gradient(190deg, #6f6c8b 16%, #535358 100%);
+}
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance:none;
+}
+
+@font-face {
+    font-family: "Sourse Sans Pro";
+    src: url("../../fonts/sourse_sans_pro/SourceSansPro-ExtraLight.ttf"),;
+    font-weight: 300;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Sourse Sans Pro";
+    src: url("../../fonts/sourse_sans_pro/SourceSansPro-Light.ttf");
+    font-weight: 400;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Sourse Sans Pro";
+    src: url("../../fonts/sourse_sans_pro/SourceSansPro-Regular.ttf");
+    font-weight: 500;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Sourse Sans Pro";
+    src: url("../../fonts/sourse_sans_pro/SourceSansPro-SemiBold.ttf");
+    font-weight: 600;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Sourse Sans Pro";
+    src: url("../../fonts/sourse_sans_pro/SourceSansPro-Bold.ttf");
+    font-weight: 700;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Sourse Sans Pro";
+    src: url("../../fonts/sourse_sans_pro/SourceSansPro-Bold.ttf");
+    font-weight: 800;
+    font-display: swap;
+}
