@@ -1,11 +1,30 @@
 <script setup>
     import Logo from "./Logo.vue";
     import CitySearch from "./CitySearch.vue";
+    import { onMounted, ref } from "vue";
+
+    const headerContent = ref(null);
+    const headerRef = ref(0);
+
+    onMounted(() => {
+        headerRef.value = headerContent.value.clientWidth;
+        setHeaderRef(headerRef.value);
+
+        window.addEventListener("resize", () => {
+            headerRef.value = headerContent.value.clientWidth;
+            setHeaderRef(headerRef.value);
+        })
+    });
+
+    function setHeaderRef(refValue) {
+        sessionStorage.setItem("header-width", JSON.stringify(refValue));
+    }
+
 </script>
 
 <template>
     <header class="header">
-        <div class="header-content">
+        <div class="header-content" ref="headerContent">
             <div class="header-blocks">
                 <Logo>
                     Погода

@@ -78,6 +78,10 @@ input[type="search"]::-webkit-search-results-decoration {
   -webkit-appearance:none;
 }
 
+h1,h2,h3,h5,h6,button,input,span,b,code,p,div {
+    font-family: "Sourse Sans Pro", sans-serif;
+}
+
 @font-face {
     font-family: "Sourse Sans Pro";
     src: url("../../fonts/sourse_sans_pro/SourceSansPro-ExtraLight.ttf"),;
