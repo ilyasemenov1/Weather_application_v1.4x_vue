@@ -24,17 +24,19 @@
     let headerTop = 0;
 
     function changeMenuState() {
-        if (!isMenuOpen.value && isMenuArrowMode.value) {
-            // On arrow mode active
+        if (isMenuArrowMode.value) {
+            // From arrow to open mode
             isMenuArrowMode.value = false;
             isMenuOpen.value = true;
         } else if (isMenuOpen.value) {
+            // From open to default mode
             isMenuArrowMode.value = false;
             isMenuOpen.value = false;
             burgerMenuButtonTransformX.value = 0;
             burgerMenuButtonTransformY.value = 0;
             header.style = "";
         } else if (!isMenuOpen.value && !isMenuArrowMode.value) {
+            // From default to open mode
             isMenuOpen.value = true;
             burgerMenuButtonTransformX.value = burgerMenuButtonTransformX.value - menu.clientWidth + 65 + (headerWidth - headerContentwidth)/2;
             burgerMenuButtonTransformY.value = 0;
@@ -52,6 +54,11 @@
         
         burgerMenuButtonPositionX.value = headerWidth - padding - burgerElement.clientWidth - headerLeft - (headerWidth - headerContentwidth)/2;
         burgerMenuButtonPositionY.value = headerHeight - burgerElement.clientHeight + headerTop;
+    }
+
+    function openSelectedMenu(event) {
+        console.log(event.target);
+        isMenuArrowMode.value = true;
     }
 
     onMounted(() => {
@@ -73,19 +80,19 @@
         <span class="burger"></span>
     </button>
     <div class="main-menu" 
-    :class="{active: isMenuOpen}"
+    :class="{ active: isMenuOpen }"
     ref="mainMenu">
         <h2 class="main-menu__label">Главное меню</h2>
-        <div class="main-menu__content">
-            <router-link class="main-menu__button" to="/settings" aria-label="Settings" tabindex="-1">
+        <div class="main-menu__content" @click="(event) => openSelectedMenu(event)">
+            <button class="main-menu__button" data-select-id="settings" aria-label="Settings" tabindex="-1">
                 <span>Настройки</span>
-            </router-link>
-            <router-link class="main-menu__button" to="/favourite-towns" aria-label="About App" tabindex="-1">
+            </button>
+            <button class="main-menu__button" data-select-id="favourite-towns" aria-label="About App" tabindex="-1">
                 <span>Избранные города</span>
-            </router-link>
-            <router-link class="main-menu__button" to="/about" aria-label="About App" tabindex="-1">
+            </button>
+            <button class="main-menu__button" data-select-id="about" aria-label="About App" tabindex="-1">
                 <span>О приложении</span>
-            </router-link>
+            </button>
         </div>
     </div>
 </template>
@@ -105,7 +112,7 @@
         transition: background .3s, border .3s, transform .3s, opacity .3s;
         z-index: 300;
     }
-    span {
+    .burger-menu-button span {
         position: absolute;
         width: calc(100% - 24px);
         left: 16px;
@@ -114,8 +121,8 @@
         background: var(--bg-color-13);
         transition: .2s ease;
     }
-    span::before,
-    span::after {
+    .burger-menu-button span::before,
+    .burger-menu-button span::after {
         position: absolute;
         content: "";
         height: 3px;
@@ -123,12 +130,12 @@
         background: var(--bg-color-13);
         transition: .2s ease;
     }
-    span::before {
+    .burger-menu-button span::before {
         width: calc(100% + 5px);
         top: -8px;
         left: -5px;
     }
-    span::after {
+    .burger-menu-button span::after {
         width: calc(100% + 7px);
         left: -7px;
         top: 8px;
@@ -156,6 +163,7 @@
         width: 20px;
         top: 19px;
         left: 12px;
+        background: var(--bg-color-13);
     }
     .burger-menu-button.arrow span::before,
     .burger-menu-button.arrow span::after {
@@ -174,7 +182,7 @@
         top: 5px;
         left: -5px;
     }
-    button.arrow span::after {
+    .burger-menu-button.arrow span::after {
         top: -5px;
         left: -5px;
     }
@@ -210,6 +218,10 @@
         font-weight: 700;
         color: var(--text-color-1);
     }
+    .main-menu__content {
+        display: flex;
+        flex-direction: column;
+    }
     .main-menu__button {
         position: relative;
         display: flex;
@@ -227,6 +239,10 @@
         transition: .2s ease;
         box-sizing: border-box;
     }
+    .main-menu__button span,
+    .main-menu__button svg {
+        pointer-events: none;
+    }
     .main-menu__button:hover,
     .main-menu__button:focus {
         cursor: pointer;
@@ -240,4 +256,5 @@
         box-shadow: 0px 0px 18px #00000021;
         transform: translateX(0px);
     }
+    
 </style>

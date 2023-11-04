@@ -6,13 +6,13 @@
     let isFocused = ref(false);
     let isFindTowns = ref(false);
 
-    const stotagedTowns = ["Всеволожск", "126345678"]
+    const storagedTowns = ["Всеволожск", "126345678"]
     let resultTowns = [];
 
     function ScarchStoregedTowns(value) {
         resultTowns = [];
         if (value) {
-            for (let element of stotagedTowns) {
+            for (let element of storagedTowns) {
                 value = value.toLowerCase();
                 element = element.toLowerCase();
                 if (element.includes(value)) { 
@@ -25,9 +25,14 @@
                     resultTowns.push(town)
                  }
             }
+            towns.value = resultTowns;
+            resultTowns.length > 0 && value !== "" ? isFindTowns.value = true : isFindTowns.value = false;
+        } else {
+            isFindTowns.value = false
+            setTimeout(() => {
+                towns.value = [];
+            }, 200);
         }
-        towns.value = resultTowns;
-        resultTowns.length > 0 && value !== "" ? isFindTowns.value = true : isFindTowns.value = false;
     }
 
 
