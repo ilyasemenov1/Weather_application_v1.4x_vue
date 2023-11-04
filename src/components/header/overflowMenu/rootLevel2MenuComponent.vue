@@ -7,6 +7,9 @@
             <h2 class="h1 level2-menu__label">
                 <slot name="label-text"></slot>
             </h2>
+            <div class="level2-menu__content">
+                <slot name="content"></slot>
+            </div>
         </section>
     </div>
 </template>

@@ -1,25 +1,7 @@
 <script setup>
     import Logo from "./Logo.vue";
     import CitySearch from "./CitySearch.vue";
-    import { onMounted, ref } from "vue";
-
-    const headerContent = ref(null);
-    const headerRef = ref(0);
-
-    onMounted(() => {
-        headerRef.value = headerContent.value.clientWidth;
-        setHeaderRef(headerRef.value);
-
-        window.addEventListener("resize", () => {
-            headerRef.value = headerContent.value.clientWidth;
-            setHeaderRef(headerRef.value);
-        })
-    });
-
-    function setHeaderRef(refValue) {
-        sessionStorage.setItem("header-width", JSON.stringify(refValue));
-    }
-
+    import BurgerMenu from "./overflowMenu/BurgerMenu.vue";
 </script>
 
 <template>
@@ -33,6 +15,7 @@
             </div>
         </div>
     </header>
+    <BurgerMenu></BurgerMenu>
 </template>
 
 <style scoped>

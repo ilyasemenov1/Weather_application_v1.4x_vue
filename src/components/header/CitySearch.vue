@@ -6,13 +6,15 @@
     let isFocused = ref(false);
     let isFindTowns = ref(false);
 
-    const stotagedTowns = ["123", "345", "343"]
+    const stotagedTowns = ["Всеволожск", "126345678"]
     let resultTowns = [];
 
     function ScarchStoregedTowns(value) {
         resultTowns = [];
         if (value) {
             for (let element of stotagedTowns) {
+                value = value.toLowerCase();
+                element = element.toLowerCase();
                 if (element.includes(value)) { 
                     let townTextArr = element.split(value);
                     let town = ""
@@ -60,6 +62,7 @@
         max-width: 650px;
         width: 100%;
         height: 50px;
+        margin: 0 50px 0 0;
     }
     .search-content {
         position: relative;
