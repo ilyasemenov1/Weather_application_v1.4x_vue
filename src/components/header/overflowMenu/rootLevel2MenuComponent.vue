@@ -1,15 +1,22 @@
 <script setup>
-    
+    import { ref } from "vue";
+    let isLabelShadow = ref(false);
+
+    function contentScrollEvent(event) {
+        let target = event.target;
+        scroll = target.scrollTop;
+        scroll > 0 ? isLabelShadow.value = true : isLabelShadow.value = false;
+    }
 </script>
 
 <template>
     <section class="level2-menu">
-        <div class="level2-menu__label--conteiner">
+        <div class="level2-menu__label--conteiner" :class="{ shadow: isLabelShadow }">
             <h2 class="level2-menu__label">
                 <slot name="labelText"></slot>
             </h2>
         </div>
-        <div class="level2-menu__content">
+        <div class="level2-menu__content" @scroll="(event) => contentScrollEvent(event)">
             <slot name="content"></slot>
         </div>
     </section>
@@ -27,7 +34,7 @@
         padding: 0 !important;
         box-shadow: 0px 0px 18px #00000021;
         background: var(--bg-color-1);
-        transition: transform .3s ease, opacity .3s ease;
+        transition: .3s ease;
         box-sizing: border-box;
         z-index: 200;
 
@@ -56,10 +63,26 @@
         transition: .2s ease;
         z-index: 10;
     }
+    .level2-menu__label--conteiner.shadow {
+        box-shadow: 4px 6px 8px -3px #00000011;
+    }
     .level2-menu__label {
         font-size: 27px;
         margin: 0 0 0 58px;
         white-space: nowrap;
         max-width: calc(100% - 24px);
     }
-</style>
+    .level2-menu__content {
+        padding: 0 12px 12px 12px;
+        margin: 0 10px 25px 0;
+        overflow-y: visible;
+        overflow-x: hidden;  
+    }
+    .level2-menu__content::-webkit-scrollbar-thumb {
+        background: var(--scroll-bar-color);
+        border-radius: 10px;
+    }
+    .level2-menu__content::-webkit-scrollbar-thumb:hover {
+        background: var(--scroll-bar-color-2);
+    }
+    </style>
