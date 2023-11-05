@@ -41,7 +41,7 @@
 <template>
     <search class="search">
         <div class="search-content" :class="{active: isFocused}">
-            <button class="search-button" tabindex="-1" @click="console.log('clicked')">
+            <button class="search-button" tabindex="-1" @click="console.log('clicked')" aria-label="Поиск">
                 <SearchIcon></SearchIcon>
             </button>
             <input type="search" autocomplete="off" placeholder="Введите название города" 

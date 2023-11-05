@@ -3,52 +3,19 @@
 </script>
 
 <template>
-    <div class="page-modal">
-        <div class="page-blur"></div>
-        <section class="level2-menu">
-            <div class="level2-menu__label--conteiner">
-                <h2 class="level2-menu__label">
-                    <slot name="labelText"></slot>
-                </h2>
-            </div>
-            <div class="level2-menu__content">
-                <slot name="content"></slot>
-            </div>
-        </section>
-    </div>
+    <section class="level2-menu">
+        <div class="level2-menu__label--conteiner">
+            <h2 class="level2-menu__label">
+                <slot name="labelText"></slot>
+            </h2>
+        </div>
+        <div class="level2-menu__content">
+            <slot name="content"></slot>
+        </div>
+    </section>
 </template>
 
 <style scoped>
-    .page-modal {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: fixed;
-        width: 100vw;
-        height: 100vh;
-        padding: 30px 20px;
-        z-index: 200;
-        box-sizing: border-box;
-
-        pointer-events: none;
-    }
-    .page-modal.active {
-        pointer-events: all;
-    }
-    .page-blur {
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100vh;
-        width: 100vw;
-        z-index: 101;
-        background: var(--bg-color-11);
-
-        opacity: 0;
-    }
-    .active .page-blur {
-        opacity: 1;
-    }
     .level2-menu {
         position: fixed;
         left: calc(100% - 500px);
@@ -66,10 +33,15 @@
 
         transform: translateX(200px);
         opacity: 0;
+        pointer-events: all;
+        visibility: hidden;
+
     }
-    .active .level2-menu {
+    .level2-menu.active {
         transform: translateX(0);
         opacity: 1;
+        pointer-events: all;
+        visibility: visible;
     }
     .level2-menu__label--conteiner {
         display: flex;

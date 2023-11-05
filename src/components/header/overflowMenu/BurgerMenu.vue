@@ -7,6 +7,7 @@
 
     const header = document.querySelector(".header");
     const headerContent = document.querySelector(".header-content");
+    const pageContent = document.querySelectorAll(".header, .main, .footer");
 
     // !Mutable (once) in OnMounted()!
     let modalMenuWidth = 0;
@@ -19,13 +20,13 @@
 
     let isMenuOpen = ref(false);
     let isMenuArrowMode = ref(false);
+    let isPageBlurActive = ref(false);
     let burgerMenuButtonPositionX = ref(0);
     let burgerMenuButtonPositionY = ref(0);
     let burgerMenuButtonTransformX = ref(0);
     let burgerMenuButtonTransformY = ref(0);
 
-
-    // !Mutable (once) in menuPosition()!
+    // !Mutable (once) in setMenuPosition()!
     let headerWidth = 0;
     let headerHeight = 0;
     let headerContentwidth = 0
@@ -38,27 +39,26 @@
             // From arrow to open mode
             isMenuArrowMode.value = false;
             isMenuOpen.value = true;
+            isPageBlurActive.value = true;
             closeMenuSelect();
 
             burgerMenuButtonTransformX.value = -menu.clientWidth + 65 + (headerWidth - headerContentwidth)/2;
             burgerMenuButtonTransformY.value = 0;
+            setPageContentTransformX(-menu.clientWidth);
         } else if (isMenuOpen.value) {
             // From open to default mode
-            isMenuArrowMode.value = false;
-            isMenuOpen.value = false;
-            burgerMenuButtonTransformX.value = 0;
-            burgerMenuButtonTransformY.value = 0;
-            header.style = "";
+            closeMenu();
         } else if (!isMenuOpen.value && !isMenuArrowMode.value) {
             // From default to open mode
             isMenuOpen.value = true;
+            isPageBlurActive.value = true;
             burgerMenuButtonTransformX.value =  -menu.clientWidth + 65 + (headerWidth - headerContentwidth)/2;
             burgerMenuButtonTransformY.value = 0;
-            header.style = `transform: translateX(${-menu.clientWidth}px);`;
+            setPageContentTransformX(-menu.clientWidth);
         }
     }
 
-    function menuPosition(burgerElement) {
+    function setMenuPosition(burgerElement) {
         headerWidth = header.clientWidth;
         headerHeight = header.clientHeight;
         headerContentwidth = headerContent.clientWidth;
@@ -79,25 +79,51 @@
         modalMenu.classList.add("active");
 
         burgerMenuButtonTransformX.value = -modalMenuWidth + padding + burgerWidth + headerLeft + (headerWidth - headerContentwidth)/2 + 10;
+        setPageContentTransformX(-modalMenuWidth);
     }
 
     function closeMenuSelect() {
-        let element = document.querySelectorAll(".page-modal");
+        let element = document.querySelectorAll(".level2-menu");
         element.forEach(element => {
             element.classList.remove("active");
         });
     }
 
+    function closeMenu() {
+        burgerMenuButtonTransformX.value = 0;
+        burgerMenuButtonTransformY.value = 0;
+        isMenuArrowMode.value = false;
+        isMenuOpen.value = false;
+        isPageBlurActive.value = false;
+
+        closeMenuSelect();
+    }
+
+    function setPageContentTransformX(transformValue) {
+        pageContent.forEach(element => {
+            element.style = `transform: translateX(${transformValue}px)`;
+        })
+    }
+
     onMounted(() => {
+        const pageBlur = document.querySelectorAll(".page-blur");
+
         modalMenuWidth = document.querySelector(".level2-menu").clientWidth;
         burgerWidth = burger.value.clientWidth;
         menu = mainMenu.value;
 
-        menuPosition(burger.value);
+        setMenuPosition(burger.value);
         window.addEventListener("resize", () => {
-            menuPosition(burger.value);
+            setMenuPosition(burger.value);
         });
-    })
+
+        pageBlur.forEach(element => {
+            element.addEventListener("click", () => {
+                closeMenu();
+                setPageContentTransformX(0);
+            });
+        });
+    });
 </script>
 
 <template>
@@ -113,17 +139,18 @@
     ref="mainMenu">
         <h2 class="main-menu__label">Главное меню</h2>
         <div class="main-menu__content" @click="(event) => openSelectedMenu(event)">
-            <button class="main-menu__button" data-select-id="settings" aria-label="Settings" tabindex="-1">
+            <button class="main-menu__button" data-select-id="settings" aria-label="Настройки">
                 <span>Настройки</span>
             </button>
-            <button class="main-menu__button" data-select-id="favourite-towns" aria-label="About App" tabindex="-1">
+            <button class="main-menu__button" data-select-id="favourite-towns" aria-label="Избранные города">
                 <span>Избранные города</span>
             </button>
-            <button class="main-menu__button" data-select-id="about" aria-label="About App" tabindex="-1">
+            <button class="main-menu__button" data-select-id="about" aria-label="О приложении">
                 <span>О приложении</span>
             </button>
         </div>
     </div>
+    <div class="page-blur" :class="{ active: isPageBlurActive }"></div>
     <Settings />
     <FavouriteTows />
     <About />
@@ -235,10 +262,11 @@
         width: 300px;
         height: 100vh;
         padding: 10px;
-        z-index: 20;
+        z-index: 51;
         pointer-events: none;
         transform: translateX(300px);
-        transition: transform .3s, opacity .3s;
+        visibility: hidden;
+        transition: .3s ease;
         box-sizing: border-box;
     }
     .main-menu__label {
@@ -284,9 +312,10 @@
         transform: scale(.97);
     }
     .main-menu.active {
-        pointer-events: all;
         box-shadow: 0px 0px 18px #00000021;
         transform: translateX(0px);
+        pointer-events: all;
+        visibility: visible;
     }
     
 </style>
