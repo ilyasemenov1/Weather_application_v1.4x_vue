@@ -2,6 +2,9 @@
     import Settings from "./settings/Settings.vue";
     import FavouriteTows from "./favoutite-towns/FavouriteTows.vue";
     import About from "./about/About.vue";
+    import SettingsIcon from "../../icons/SettingsIcon.vue";
+    import HeartIcon from "../../icons/HeartIcon.vue";
+    import InfoIcon from "../../icons/InfoIcon.vue";
 
     import { onMounted, ref } from "vue";
 
@@ -131,7 +134,7 @@
     ref="burger" 
     @click="changeMenuState()" 
     :class="{ active: isMenuOpen, arrow: isMenuArrowMode }"
-    :style="{ top: `{${burgerMenuButtonPositionY}px`, left: `${burgerMenuButtonPositionX}px`, transform: `translateX(${burgerMenuButtonTransformX}px)` }">
+    :style="{ top: `{${burgerMenuButtonPositionY}px`, left: `${burgerMenuButtonPositionX}px`, transform: `translate(${burgerMenuButtonTransformX}px, ${burgerMenuButtonTransformY}px)` }">
         <span class="burger"></span>
     </button>
     <div class="main-menu" 
@@ -140,12 +143,21 @@
         <h2 class="main-menu__label">Главное меню</h2>
         <div class="main-menu__content" @click="(event) => openSelectedMenu(event)">
             <button class="main-menu__button" data-select-id="settings" aria-label="Настройки">
+                <div class="main-menu__button-icon">
+                    <SettingsIcon />
+                </div>
                 <span>Настройки</span>
             </button>
             <button class="main-menu__button" data-select-id="favourite-towns" aria-label="Избранные города">
+                <div class="main-menu__button-icon">
+                    <HeartIcon />
+                </div>
                 <span>Избранные города</span>
             </button>
             <button class="main-menu__button" data-select-id="about" aria-label="О приложении">
+                <div class="main-menu__button-icon">
+                    <InfoIcon />
+                </div>
                 <span>О приложении</span>
             </button>
         </div>
@@ -286,6 +298,7 @@
         position: relative;
         display: flex;
         align-items: center;
+        gap: 5px;
         width: 100%;
         padding: 7px;
         border-radius: 10px;
@@ -294,7 +307,7 @@
         text-align: left;
         font-family: "Sourse Sans Pro", sans-serif;
         font-size: 20px;
-        font-weight: 600;
+        font-weight: 600; 
         color: var(--text-color-1);
         transition: .2s ease;
         box-sizing: border-box;
@@ -302,6 +315,20 @@
     .main-menu__button span,
     .main-menu__button svg {
         pointer-events: none;
+    }
+    .main-menu__button>div {
+        position: relative;
+        top: 1px;
+        width: 22px;
+        height: 22px;
+    }
+    .main-menu__button svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: inherit;
+        height: inherit;
+        fill: var(--text-color-1);
     }
     .main-menu__button:hover,
     .main-menu__button:focus {

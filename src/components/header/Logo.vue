@@ -5,7 +5,7 @@
 <template>
     <div class="logo">
         <div class="icon">
-            <LogoIcon></LogoIcon>
+            <LogoIcon />
         </div>
         <h1 class="logo-text">
             <slot></slot>
