@@ -1,8 +1,16 @@
 <script setup>
+    import Settings from "./settings/Settings.vue";
+    import FavouriteTows from "./favoutite-towns/FavouriteTows.vue";
+    import About from "./about/About.vue";
+
     import { onMounted, ref } from "vue";
 
     const header = document.querySelector(".header");
     const headerContent = document.querySelector(".header-content");
+
+    // !Mutable (once) in OnMounted()!
+    let modalMenuWidth = 0;
+    let burgerWidth = 0
 
     const padding = 15;
     const burger = ref(null);
@@ -16,6 +24,8 @@
     let burgerMenuButtonTransformX = ref(0);
     let burgerMenuButtonTransformY = ref(0);
 
+
+    // !Mutable (once) in menuPosition()!
     let headerWidth = 0;
     let headerHeight = 0;
     let headerContentwidth = 0
@@ -28,6 +38,10 @@
             // From arrow to open mode
             isMenuArrowMode.value = false;
             isMenuOpen.value = true;
+            closeMenuSelect();
+
+            burgerMenuButtonTransformX.value = -menu.clientWidth + 65 + (headerWidth - headerContentwidth)/2;
+            burgerMenuButtonTransformY.value = 0;
         } else if (isMenuOpen.value) {
             // From open to default mode
             isMenuArrowMode.value = false;
@@ -38,7 +52,7 @@
         } else if (!isMenuOpen.value && !isMenuArrowMode.value) {
             // From default to open mode
             isMenuOpen.value = true;
-            burgerMenuButtonTransformX.value = burgerMenuButtonTransformX.value - menu.clientWidth + 65 + (headerWidth - headerContentwidth)/2;
+            burgerMenuButtonTransformX.value =  -menu.clientWidth + 65 + (headerWidth - headerContentwidth)/2;
             burgerMenuButtonTransformY.value = 0;
             header.style = `transform: translateX(${-menu.clientWidth}px);`;
         }
@@ -52,16 +66,31 @@
         headerLeft = header.clientLeft;
         headerTop = header.clientTop;
         
-        burgerMenuButtonPositionX.value = headerWidth - padding - burgerElement.clientWidth - headerLeft - (headerWidth - headerContentwidth)/2;
+        burgerMenuButtonPositionX.value = headerWidth - padding - burgerWidth - headerLeft - (headerWidth - headerContentwidth)/2;
         burgerMenuButtonPositionY.value = headerHeight - burgerElement.clientHeight + headerTop;
     }
 
     function openSelectedMenu(event) {
-        console.log(event.target);
+        if (event.target.className != "main-menu__button") return;
+
         isMenuArrowMode.value = true;
+        let id = event.target.dataset.selectId;
+        let modalMenu = document.getElementById(id);
+        modalMenu.classList.add("active");
+
+        burgerMenuButtonTransformX.value = -modalMenuWidth + padding + burgerWidth + headerLeft + (headerWidth - headerContentwidth)/2 + 10;
+    }
+
+    function closeMenuSelect() {
+        let element = document.querySelectorAll(".page-modal");
+        element.forEach(element => {
+            element.classList.remove("active");
+        });
     }
 
     onMounted(() => {
+        modalMenuWidth = document.querySelector(".level2-menu").clientWidth;
+        burgerWidth = burger.value.clientWidth;
         menu = mainMenu.value;
 
         menuPosition(burger.value);
@@ -95,6 +124,9 @@
             </button>
         </div>
     </div>
+    <Settings />
+    <FavouriteTows />
+    <About />
 </template>
 
 <style scoped>

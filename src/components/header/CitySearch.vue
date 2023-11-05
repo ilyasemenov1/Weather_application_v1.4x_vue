@@ -6,10 +6,10 @@
     let isFocused = ref(false);
     let isFindTowns = ref(false);
 
-    const storagedTowns = ["Всеволожск", "126345678"]
+    const storagedTowns = ["Всеволожск", "126345678"];
     let resultTowns = [];
 
-    function ScarchStoregedTowns(value) {
+    function searchStoregedTowns(value) {
         resultTowns = [];
         if (value) {
             for (let element of storagedTowns) {
@@ -22,13 +22,13 @@
                         town += townTextArr[i];
                         if (i != townTextArr.length-1) town += `<b>${value}</b>`;
                     }
-                    resultTowns.push(town)
+                    resultTowns.push(town);
                  }
             }
             towns.value = resultTowns;
-            resultTowns.length > 0 && value !== "" ? isFindTowns.value = true : isFindTowns.value = false;
+            resultTowns.length > 0 ? isFindTowns.value = true : isFindTowns.value = false;
         } else {
-            isFindTowns.value = false
+            isFindTowns.value = false;
             setTimeout(() => {
                 towns.value = [];
             }, 200);
@@ -45,17 +45,20 @@
                 <SearchIcon></SearchIcon>
             </button>
             <input type="search" autocomplete="off" placeholder="Введите название города" 
-            @input="event => ScarchStoregedTowns(event.target.value)" 
+            @input="event => searchStoregedTowns(event.target.value)" 
             @keyup.enter="console.log('search')" 
             @keyup.esc="(event) => event.target.blur()"
             @keyup.shift.delete="(event) => event.target.value = ''"
             @focus="isFocused=true" 
             @blur="isFocused=false">
         </div>
-        <div class="search-towns" :class="{active: isFocused && isFindTowns}">
+        <div class="search-towns" :class="{ active: isFocused && isFindTowns }">
             <h3 class="search-towns__label">Избранные города</h3>
             <div class="search-towns__content">
-                <button class="search-town__town-button" v-for="town of towns" @click="console.log({town})" v-html="town"></button>
+                <button class="search-town__town-button" 
+                v-for="town of towns" 
+                @click="console.log({ town })" 
+                v-html="town"></button>
             </div>
         </div>
     </search>
