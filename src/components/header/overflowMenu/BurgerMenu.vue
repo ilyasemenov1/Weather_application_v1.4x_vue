@@ -81,7 +81,7 @@
         let modalMenu = document.getElementById(id);
         modalMenu.classList.add("active");
 
-        burgerMenuButtonTransformX.value = -modalMenuWidth + padding + burgerWidth + headerLeft + (headerWidth - headerContentwidth)/2 + 10;
+        burgerMenuButtonTransformX.value = -modalMenuWidth + padding + burgerWidth + headerLeft + (headerWidth - headerContentwidth)/2 + 15;
         setPageContentTransformX(-modalMenuWidth);
     }
 
@@ -100,6 +100,7 @@
         isPageBlurActive.value = false;
 
         closeMenuSelect();
+        setPageContentTransformX(0);
     }
 
     function setPageContentTransformX(transformValue) {
@@ -123,7 +124,6 @@
         pageBlur.forEach(element => {
             element.addEventListener("click", () => {
                 closeMenu();
-                setPageContentTransformX(0);
             });
         });
     });

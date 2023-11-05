@@ -18,3 +18,27 @@ a:focus-visible,
 button:focus-visible {
     outline: var(--bg-color-16) solid;
 }
+.level2-menu__content h2 {
+    margin: 12px 0 9px 0;
+    font-size: 22px;
+    color: var(--text-color-1);
+}
+.level2-menu__content li {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-color-1);
+}
+.level2-menu__content ul {
+    margin: 5px 0;
+}
+.level2-menu__content a {
+    display: inline;
+    color: var(--text-color-1);
+    text-decoration-color: var(--text-decoration-color-1);
+    transition: .2s ease;
+}
+.level2-menu__content a:hover,
+.level2-menu__content a:focus-visible {
+    background: var(--bg-color-12);
+    text-decoration-color: var(--text-decoration-color-2);
+}

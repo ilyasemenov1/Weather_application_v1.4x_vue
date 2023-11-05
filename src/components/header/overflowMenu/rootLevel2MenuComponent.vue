@@ -11,14 +11,14 @@
 
 <template>
     <section class="level2-menu">
-        <div class="level2-menu__label--conteiner" :class="{ shadow: isLabelShadow }">
+        <header class="level2-menu__label--conteiner" :class="{ shadow: isLabelShadow }">
             <h2 class="level2-menu__label">
                 <slot name="labelText"></slot>
             </h2>
-        </div>
-        <div class="level2-menu__content" @scroll="(event) => contentScrollEvent(event)">
+        </header>
+        <main class="level2-menu__content" @scroll="(event) => contentScrollEvent(event)">
             <slot name="content"></slot>
-        </div>
+        </main>
     </section>
 </template>
 
@@ -73,10 +73,13 @@
         max-width: calc(100% - 24px);
     }
     .level2-menu__content {
-        padding: 0 12px 12px 12px;
+        padding: 0 20px 12px 20px;
         margin: 0 10px 25px 0;
         overflow-y: visible;
         overflow-x: hidden;  
+    }
+    .level2-menu__content::-webkit-scrollbar {
+        width: 7px;
     }
     .level2-menu__content::-webkit-scrollbar-thumb {
         background: var(--scroll-bar-color);
