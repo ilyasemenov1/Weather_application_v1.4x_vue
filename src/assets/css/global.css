@@ -82,7 +82,7 @@ input[type="search"]::-webkit-search-results-decoration {
   -webkit-appearance:none;
 }
 
-h1, h2, h3, h5, h6, button, input, span, b, code, p, div, body, header, footer {
+h1, h2, h3, h5, h6, button, input, span, b, code, p, div, header, footer {
     font-family: "Sourse Sans Pro", sans-serif;
     transition: .2s ease;
 }

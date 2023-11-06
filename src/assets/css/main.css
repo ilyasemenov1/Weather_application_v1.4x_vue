@@ -1,5 +1,6 @@
 @import "./global.css";
 @import "./page-blur.css";
+@import "./info-menu.css";
 
 body {
     display: grid;

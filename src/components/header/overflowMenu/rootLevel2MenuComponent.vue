@@ -40,7 +40,7 @@
 
         transform: translateX(200px);
         opacity: 0;
-        pointer-events: all;
+        pointer-events: none;
         visibility: hidden;
 
     }
