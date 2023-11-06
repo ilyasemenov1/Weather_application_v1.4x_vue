@@ -9,6 +9,8 @@
     let markerWidth = ref(0);
     let markerLeft = ref(0);
 
+    const loadingLeft = ref(12);
+
     function setMarkerPosition() {
         const formInputs = document.querySelectorAll(".dark-mode-form input");
         const form = document.querySelector(".dark-mode-form");
@@ -65,6 +67,7 @@
             setPageTheme();
             setMarkerPosition();
         }, 50);
+        loadingLeft.value = 0;
     }
 </script>
 
@@ -85,7 +88,7 @@
                 <label for="night-mode-disactive">Светлая</label>
             </div>
         </div>
-        <div class="marker" :style="{ width: `${markerWidth}px`, transform: `translateX(${markerLeft}px)`}"></div>
+        <div class="marker" :style="{ width: `${markerWidth}px`, transform: `translateX(${markerLeft - loadingLeft}px)`}"></div>
     </form>
 </template>
 
