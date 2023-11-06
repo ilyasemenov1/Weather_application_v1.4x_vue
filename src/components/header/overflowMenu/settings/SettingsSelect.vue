@@ -1,11 +1,15 @@
 <script setup>
     import { ref } from "vue";
     import SelectIcon from "../../../icons/SelectIcon.vue";
+    import { updateSettings, getSettingsValue } from "../../../../assets/js/settings.js";
 
-    const props = defineProps(["options"]);
-
+    const props = defineProps(["options", "path"]);
     let options = ref(props.options);
-    let selected = ref("12h");
+    let path = props.path;
+
+    const settings = JSON.parse(localStorage.getItem("settings"));
+
+    let selected = ref(getSettingsValue(settings, path));
     let isOpen = ref(false);
 
     function selectOptionEvent(event) {
@@ -14,6 +18,8 @@
         let children = target.children;
         selected.value = children[0].value;
         isOpen.value = false;
+
+        updateSettings(settings, path, selected.value);
     }
 </script>
 
