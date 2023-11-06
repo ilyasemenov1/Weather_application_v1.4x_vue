@@ -1,13 +1,13 @@
 <script setup>
     import { ref } from "vue";
     import SelectIcon from "../../../icons/SelectIcon.vue";
-    import { updateSettings, getSettingsValue } from "../../../../assets/js/settings.js";
+    import { updateSettings, getSettingsValue, getSettings } from "../../../../assets/js/settings.js";
 
     const props = defineProps(["options", "path"]);
     let options = ref(props.options);
     let path = props.path;
 
-    const settings = JSON.parse(localStorage.getItem("settings"));
+    const settings = getSettings();
 
     let selected = ref(getSettingsValue(settings, path));
     let isOpen = ref(false);

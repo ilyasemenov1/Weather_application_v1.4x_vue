@@ -1,11 +1,17 @@
 <script setup>
     import { ref } from "vue";
+    import { updateSettings, getSettingsValue, getSettings } from "../../../../assets/js/settings.js";
 
-    let isChecked = ref(true);
+    const settings = ref(getSettings());
+
+    const props = defineProps(["path"]);
+    const path = ref(props.path);
+
+    let isChecked = ref(getSettingsValue(settings.value, path.value));
 </script>
 
 <template>
-    <label class="settings-button">
+    <label class="settings-button" @click="updateSettings(settings, path, !isChecked)">
         <input class="settings-button__checkbox" type="checkbox" v-model="isChecked">
         <span class="settings-button__label">
             <slot></slot>

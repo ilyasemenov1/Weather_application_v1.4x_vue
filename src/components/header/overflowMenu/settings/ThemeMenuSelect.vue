@@ -1,7 +1,11 @@
 <script setup>
     import { onMounted, ref } from "vue";
+    import { updateSettings, getSettingsValue, getSettings } from "../../../../assets/js/settings.js";
     
-    let selectMode = ref("auto");
+    const settings = getSettings();
+    const path = "nightMode";
+
+    let selectMode = ref(getSettingsValue(settings, path));
     let markerWidth = ref(0);
     let markerLeft = ref(0);
 
@@ -28,12 +32,19 @@
     onMounted(() => {
         setMarkerPosition();
     });
+
+    function updateSetingsOnClick() {
+        setTimeout(() => {
+            updateSettings(settings, path, selectMode.value);
+            setMarkerPosition();
+        }, 50);
+    }
 </script>
 
 <template>
     <form class="dark-mode-form">
         <span class="dark-mode-form__button-name">Тема:</span>
-        <div class="dark-mode-form__theme-select" @click="setMarkerPosition">
+        <div class="dark-mode-form__theme-select" @click="updateSetingsOnClick">
             <div class="dark-mode-form__select-container">
                 <input type="radio" id="night-mode-active" class="dark-mode-form__button-input" name="dark-mode" value="active" v-model="selectMode">
                 <label for="night-mode-active">Тёмная</label>

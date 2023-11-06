@@ -4,21 +4,6 @@
     import SettingsSwitch from './SettingsSwitch.vue';
     import SettingsSelect from './SettingsSelect.vue';
 
-    const documentВefaultSettings = {
-        "nightMode": "auto",
-        "fixHeader": true,
-        "menuAnimation": false,
-        "timeFormat": "24h",
-        "systemTheme": true,
-        "dataUpdate": "10min",
-        "units": {
-            "temp": "c",
-            "speed": "mps",
-            "pressure": "mm-rt"
-        }
-    }
-
-    localStorage.setItem("settings", JSON.stringify(documentВefaultSettings));
 </script>
 
 <template>
@@ -27,13 +12,13 @@
         <template #content>
             <h2>Интерфейс:</h2>
             <ThemeMenuSelect />
-            <SettingsSwitch>
+            <SettingsSwitch :path="'fixHeader'">
                 Фиксировать шапку сайта при прокручивании
             </SettingsSwitch>
-            <SettingsSwitch>
+            <SettingsSwitch :path="'menuAnimation'">
                 Упростить анимацию открытия меню
             </SettingsSwitch>
-            <SettingsSwitch>
+            <SettingsSwitch :path="'showFavouriteTowns'">
                 Показывать избранные города при поиске
             </SettingsSwitch>
             <SettingsSelect :options='{
