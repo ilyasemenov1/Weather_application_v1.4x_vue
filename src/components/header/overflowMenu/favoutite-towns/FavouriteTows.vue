@@ -3,9 +3,12 @@
     import NoTownsIcon from '../../../icons/NoTownsIcon.vue';
     import LocationIcon from '../../../icons/LocationIcon.vue';
 
-    import { ref, defineComponent  } from "vue";
+    import { ref, onMounted  } from "vue";
 
-    let storagedTowns = ref([{"name":"всеволожск","lat":60,"lon":31},{"name":"минск","lat":54,"lon":28},{"name":"киев","lat":50,"lon":31},{"name":"магадан","lat":60,"lon":151},{"name":"мариуполь","lat":47,"lon":38},{"name":"брянск","lat":53,"lon":34},{"name":"светлогорск","lat":53,"lon":30},{"name":"омск","lat":55,"lon":73},{"name":"гатчина","lat":60,"lon":30},{"name":"казань","lat":56,"lon":49},{"name":"улан-удэ","lat":52,"lon":108},{"name":"махачкала","lat":43,"lon":48},{"name":"псков","lat":58,"lon":28},{"name":"зеленогорск","lat":56,"lon":95},{"name":"зеленоград","lat":56,"lon":37},{"name":"ростов","lat":57,"lon":39},{"name":"великий новгород","lat":59,"lon":31},{"name":"москва","lat":56,"lon":38},{"name":"севастополь","lat":45,"lon":34},{"name":"кемерово","lat":55,"lon":86}])
+    let storagedTowns = ref([]);
+
+    let favouriteTowns = JSON.parse(localStorage.getItem("favourite-towns"));
+    if (!isNaN(favouriteTowns) && favouriteTowns) storagedTowns = ref(favouriteTowns);
     let isShowNoTownsNotify = ref(storagedTowns.value.length < 1);
     let isUnicTown = ref(true);
     let isinputValue = ref(false);
@@ -14,6 +17,8 @@
     let isSearch = ref(true);
     let delay = ref(0);
     let isMobile = ref(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+
+    let input = ref(null);
 
     function isShowTown() {
         let isUnic = true;
@@ -98,12 +103,12 @@
             let target = event.target;
 
             if (target.id == "info-del-button") {
-                element.remove();
-
-                localStorage.setItem("favorite-towns", JSON.stringify(parentElement));
+                removeFafouriteTown(cityName);
             } else if (target.id == "info-search-button") {
-                console.log(cityName);
+                searchEvent(cityName);
             }
+
+            removeInfoMenu();
         });
     }
 
@@ -122,9 +127,37 @@
         console.log(town);
     }
 
-    function removePopup() {
-        isSearch.value = true;
+    function removeInfoMenu() {
+        let elements = document.querySelectorAll(".info-menu");
+
+        if (!isNaN(elements)) {
+            return;
+        }
+
+        elements.forEach(element => {
+            isSearch.value = true;
+            if (element.classList.contains("top")) {
+                element.classList.add("remove-top");
+            } else {
+                element.classList.add("remove-bottom");
+            }
+            setTimeout(() => {
+                element.remove();
+            }, 200);
+        });
     }
+
+    function removeFafouriteTown(name) {
+        for (let i = 0; i < storagedTowns.value.length; i++) {
+            if (storagedTowns.value[i].name === name) storagedTowns.value = storagedTowns.value.slice(i, 1);
+        }
+
+        localStorage.setItem("favourite-towns", JSON.stringify("storagedTowns.value"));
+    }
+
+    onMounted(() => {
+        input.value;
+    });
 </script>
 
 <template>
@@ -132,7 +165,7 @@
         <template #labelText>Избранные города</template>
         <template #content class="favorite-towns-content">
             <div class="add-town" :class="{ active: isUnicTown && isinputValue && isFocused }">
-                <input type="text" placeholder="Введите название города" class="add-town__input" v-model="inputValue" @input="isShowTown" @focus="isFocused = true" @blur="isFocused = false">
+                <input type="text" placeholder="Введите название города" class="add-town__input" v-model="inputValue" @input="isShowTown" @focus="isFocused = true" @blur="isFocused = false" ref="input">
                 <button class="add-town__button" @focus="isFocused = true" @blur="isFocused = false">
                     <span class="plus-s-1"></span>
                     <span class="plus-s-2"></span>
@@ -148,7 +181,7 @@
                         </div>
                         <span>У вас нет избранных городов</span>
                     </span>
-                    <button class="favorite-towns__add-button">Добавить город</button>
+                    <button class="favorite-towns__add-button" @click="input.focus()">Добавить город</button>
                 </div>
             </div>
             <div class="favourite-towns">
@@ -156,7 +189,7 @@
                 v-for="town in storagedTowns" 
                 @mousedown="(event) => { if (!isMobile) touchEvent(town, event) }" 
                 @focus="(event) => { if (isMobile) touchEvent(town, event) }" 
-                @blur="removePopup"
+                @blur="removeInfoMenu"
                 @click="searchEvent(town)"> 
                     <h3 class="favorite-town__name">{{ town.name }}</h3>
                     <div class="favorite-town__coords">
@@ -194,13 +227,18 @@
         visibility: hidden;
         pointer-events: none;
     }
+    .favourite-towns-content {
+        position: relative;
+        top: calc(50% - 35px);
+        transform: translateY(-50%);
+    }
     .favourite-towns-no-towns.active {
         position: relative;
         left: 0;
         opacity: 1;
         transform: translateX(0);
         visibility: visible;
-        pointer-events: all;
+        pointer-events: inherit;
     }
     .favorite-towns-no-towns__label {
         display: flex;
@@ -208,7 +246,6 @@
         align-items: center;
         gap: 5px;
         position: relative;
-        margin: 60px 0 0 0;
         font-family: "Sourse Sans Pro", sans-serif;
         font-size: 24px;
         font-weight: 700;

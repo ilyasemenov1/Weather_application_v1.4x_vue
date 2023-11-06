@@ -47,7 +47,7 @@
     .level2-menu.active {
         transform: translateX(0);
         opacity: 1;
-        pointer-events: all;
+        pointer-events: inherit;
         visibility: visible;
     }
     .level2-menu__label--conteiner {
