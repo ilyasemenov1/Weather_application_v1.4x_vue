@@ -10,6 +10,8 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "cyrillic-to-translit-js": "^3.2.1",
+    "lvovich": "^2.0.0",
     "vue": "^3.3.4",
     "vuex": "^4.0.2"
   },

@@ -19,7 +19,7 @@ button:focus-visible {
     outline: var(--bg-color-16) solid;
 }
 .level2-menu__content h2 {
-    margin: 12px 0 9px 0;
+    margin: 0 0 12px 0;
     font-size: 22px;
     color: var(--text-color-1);
 }
