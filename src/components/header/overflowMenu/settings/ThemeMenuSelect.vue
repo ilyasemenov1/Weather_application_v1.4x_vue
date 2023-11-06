@@ -29,13 +29,40 @@
         markerWidth.value = parentWidth;
     }
 
+    function setPageTheme() {
+        switch (selectMode.value) {
+        case "active":
+            document.body.classList.add("night-mode");
+            break
+        case "auto":
+            getAutoTheme();
+            break
+        case "disactive":
+            document.body.classList.remove("night-mode");
+            break
+        default:
+            getAutoTheme();
+    }
+    }
+
+    function getAutoTheme() {
+        if (window.matchMedia && 
+        window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.body.classList.add("night-mode");
+        } else {
+            document.body.classList.remove("night-mode");
+        }
+}
+
     onMounted(() => {
+        setPageTheme();
         setMarkerPosition();
     });
 
     function updateSetingsOnClick() {
         setTimeout(() => {
             updateSettings(settings, path, selectMode.value);
+            setPageTheme();
             setMarkerPosition();
         }, 50);
     }

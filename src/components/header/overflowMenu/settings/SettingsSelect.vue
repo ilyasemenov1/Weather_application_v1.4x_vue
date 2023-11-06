@@ -37,7 +37,7 @@
                     <SelectIcon />
                 </div>
             </button>
-            <div class="select__menu time-format">
+            <div class="select__menu">
                 <div class="select__option" v-for="option, index in options" :class="{ disactive: index === selected }" @click="(event) => selectOptionEvent(event)" role="button">
                     <input type="radio" :id="index" :value="index" v-model="selected">
                     <label :for="index">{{ option }}</label>
