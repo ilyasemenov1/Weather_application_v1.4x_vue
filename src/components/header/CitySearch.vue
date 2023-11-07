@@ -1,20 +1,32 @@
 <script setup>
     import SearchIcon from "../icons/SearchIcon.vue";
-    import { ref } from 'vue';
+    import { ref, onMounted } from 'vue';
 
     let towns = ref([]);
     let isFocused = ref(false);
     let isFindTowns = ref(false);
+    let storagedTowns = ref([]);
 
-    const storagedTowns = ["Всеволожск", "126345678"];
+    let searchInput = ref(null);
+
+    let favouriteTowns = JSON.parse(localStorage.getItem("favourite-towns"));
+    if (isNaN(favouriteTowns) && favouriteTowns) storagedTowns = ref(favouriteTowns);
     let resultTowns = [];
+
+    window.addEventListener("keydown", (event) => {
+        if ([191, 111].includes(event.keyCode)) {
+            setTimeout(() => {
+                searchInput.value.focus();
+            }, 50);
+        }
+    });
 
     function searchStoregedTowns(value) {
         resultTowns = [];
         if (value) {
-            for (let element of storagedTowns) {
+            for (let element of storagedTowns.value) {
                 value = value.toLowerCase();
-                element = element.toLowerCase();
+                element = element.name.toLowerCase();
                 if (element.includes(value)) { 
                     let townTextArr = element.split(value);
                     let town = ""
@@ -35,7 +47,9 @@
         }
     }
 
-
+    onMounted(() => {
+        searchInput.value;
+    });
 </script>
 
 <template>
@@ -50,7 +64,8 @@
             @keyup.esc="(event) => event.target.blur()"
             @keyup.shift.delete="(event) => event.target.value = ''"
             @focus="isFocused=true" 
-            @blur="isFocused=false">
+            @blur="isFocused=false"
+            ref="searchInput">
         </div>
         <div class="search-towns" :class="{ active: isFocused && isFindTowns }">
             <h3 class="search-towns__label">Избранные города</h3>

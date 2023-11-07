@@ -129,7 +129,7 @@
 
         window.addEventListener("keydown", (event) => {
             if (event.keyCode == 27) {
-                if (!isMenuOpen) return;
+                if (!isMenuOpen.value) return;
                 changeMenuState();
             }
         })

@@ -37,6 +37,9 @@
     }
 
     function createInfoMenu(cityName, element) {
+        removeInfoMenu();
+
+        const parentParentElement = element.parentElement.parentElement;
         const parentElement = element.parentElement;
 
         const margin = 12;
@@ -44,9 +47,11 @@
 
         const rectElement = element.getBoundingClientRect();
         const rectParentElement = parentElement.getBoundingClientRect();
+        const rectParentParentElement = parentParentElement.getBoundingClientRect();
+        let scrollTop = parentParentElement.scrollTop;
 
         const menuLeft = rectElement.left - rectParentElement.left;
-        const conteinerHeight = rectParentElement.height;
+        const conteinerHeight = rectParentParentElement.height;
         const menuTop = rectElement.top - rectParentElement.top + rectElement.height + margin - 3;
 
         const infoMenu = document.createElement("div");
@@ -92,7 +97,7 @@
         const menuBottom = rectElement.top - rectParentElement.top - margin + 2 - infoMenuHeight;
 
 
-        if (conteinerHeight - (menuTop + infoMenuHeight) >= pagePadding) {
+        if (scrollTop + conteinerHeight - 70 - (menuTop + infoMenuHeight) >= pagePadding) {
             infoMenu.style = `top: ${menuTop}px; left: ${menuLeft}px`;
             infoMenu.classList.add("top");
         } else if (menuBottom > 0) {
@@ -113,6 +118,10 @@
 
             removeInfoMenu();
         });
+
+        parentParentElement.addEventListener("scroll", () => {
+            scrollTop = parentParentElement.scrollTop;
+        })
     }
 
     function touchEvent(cityName, event) {
@@ -177,6 +186,7 @@
             localStorage.setItem("favourite-towns", JSON.stringify(storagedTowns.value));
 
             isShowNoTownsNotify.value = storagedTowns.value.length === 0;
+            isShowTown();
         })
         .finally(() => {
             isFetching.value = false;
@@ -193,8 +203,21 @@
         <template #labelText>Избранные города</template>
         <template #content class="favourite-towns-content">
             <div class="add-town" :class="{ active: isUnicTown && isinputValue && isFocused }">
-                <input type="text" placeholder="Введите название города" class="add-town__input" v-model="inputValue" @input="isShowTown" @focus="isFocused = true" @blur="isFocused = false" @keypress.enter="addFavoutiteTown" ref="input">
-                <button class="add-town__button" @focus="isFocused = true" @blur="isFocused = false" @click="addFavoutiteTown" :class="{ loading: isFetching }">
+                <input type="text" placeholder="Введите название города" class="add-town__input" 
+                v-model="inputValue" 
+                @input="isShowTown" 
+                @focus="() => {
+                    isFocused = true;
+                    isShowTown();
+                    }" 
+                @blur="isFocused = false" 
+                @keypress.enter="addFavoutiteTown" 
+                ref="input">
+                <button class="add-town__button" 
+                @focus="isFocused = true" 
+                @blur="isFocused = false" 
+                @click="addFavoutiteTown" 
+                :class="{ loading: isFetching }">
                     <span class="plus-s-1"></span>
                     <span class="plus-s-2"></span>
                     <span class="plus-s-3"></span>
@@ -245,6 +268,7 @@
         align-items: center;
         gap: 10px;
         width: 100%;
+        height: calc(100% - 70px);
         padding: 10px;
         transition: .2s ease;
         opacity: 0;
