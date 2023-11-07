@@ -1,35 +1,40 @@
-# wwather-app
 
-This template should help get you started developing with Vue 3 in Vite.
+# Weather application v1.4.3 beta
 
-## Recommended IDE Setup
+The weather application that can generate weather forecast in any world point!
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## Features
 
-## Customize configuration
+- Crossplatform
+- Auto location definition
+- Search by city name, country name or city id
+- Daily forecast
+- Hourly forecast
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+## APIs that used by project 
 
-## Project Setup
+- [Openweathermap api](https://openweathermap.org/api)
+- [Locationiq api](https://locationiq.com/)
+
+## Icons
+
+- [Meteocons](https://github.com/basmilius/weather-icons)
+
+## App
+
+ - [App link](https://weather-app-vue.si1ogdev.ru/)
+
+## Changes from weather app v1.4.2.2
+
+1. App rewriten to [Vue.js](https://vuejs.org/)
+1. Fixed minor bugs
+
+## To run app:
+
+1. Install [Node.js](https://nodejs.org/en)
+1. Open shell in app folder and enter: 
 
 ```sh
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
 ```

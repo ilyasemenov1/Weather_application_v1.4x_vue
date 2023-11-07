@@ -43,3 +43,6 @@ button:focus-visible {
     background: var(--bg-color-12);
     text-decoration-color: var(--text-decoration-color-2);
 }
+.search-towns button b {
+    font-weight: 700;
+}

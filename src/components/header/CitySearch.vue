@@ -31,8 +31,8 @@
                     let townTextArr = element.split(value);
                     let town = ""
                     for (let i = 0; i < townTextArr.length; i++) {
-                        town += townTextArr[i];
-                        if (i != townTextArr.length-1) town += `<b>${value}</b>`;
+                        town += `<b>${townTextArr[i]}</b>`;
+                        if (i != townTextArr.length-1) town += value;
                     }
                     resultTowns.push(town);
                  }
@@ -200,10 +200,6 @@
         color: var(--text-color-1);
         background: var(--bg-color-1);
         transition: .2s ease;
-    }
-    .search-towns button b {
-        font-weight: 700;
-        text-decoration: underline;
     }
     .search-towns button::before {
         position: absolute;
