@@ -122,3 +122,28 @@ h1, h2, h3, h5, h6, button, input, span, b, code, p, div, header, footer {
     font-weight: 800;
     font-display: swap;
 }
+
+@keyframes lds-ellipsis1 {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+@keyframes lds-ellipsis3 {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(0);
+    }
+}
+@keyframes lds-ellipsis2 {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(11px, 0);
+    }
+}

@@ -3,18 +3,21 @@
     import NoTownsIcon from '../../../icons/NoTownsIcon.vue';
     import LocationIcon from '../../../icons/LocationIcon.vue';
 
+    import { getWeatherNow } from '../../../../assets/js/weatherInfo.js';
+
     import { ref, onMounted  } from "vue";
 
     let storagedTowns = ref([]);
 
     let favouriteTowns = JSON.parse(localStorage.getItem("favourite-towns"));
-    if (!isNaN(favouriteTowns) && favouriteTowns) storagedTowns = ref(favouriteTowns);
-    let isShowNoTownsNotify = ref(storagedTowns.value.length < 1);
+    if (isNaN(favouriteTowns) && favouriteTowns) storagedTowns = ref(favouriteTowns);
+    let isShowNoTownsNotify = ref(storagedTowns.value.length === 0);
     let isUnicTown = ref(true);
     let isinputValue = ref(false);
     let isFocused = ref(false);
     let inputValue = ref("");
     let isSearch = ref(true);
+    let isFetching = ref(false);
     let delay = ref(0);
     let isMobile = ref(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
 
@@ -23,7 +26,7 @@
     function isShowTown() {
         let isUnic = true;
         for (let town of storagedTowns.value) {
-            if (town.name === inputValue.value) {
+            if (town.name.toLowerCase() === inputValue.value.toLocaleLowerCase()) {
                 isUnic = false;
                 break;
             }
@@ -103,9 +106,9 @@
             let target = event.target;
 
             if (target.id == "info-del-button") {
-                removeFafouriteTown(cityName);
+                removeFafouriteTown(cityName.name);
             } else if (target.id == "info-search-button") {
-                searchEvent(cityName);
+                searchEvent(cityName.name);
             }
 
             removeInfoMenu();
@@ -149,10 +152,35 @@
 
     function removeFafouriteTown(name) {
         for (let i = 0; i < storagedTowns.value.length; i++) {
-            if (storagedTowns.value[i].name === name) storagedTowns.value = storagedTowns.value.slice(i, 1);
+            if (storagedTowns.value[i].name.toLowerCase() === name.toLowerCase()) {
+                storagedTowns.value.splice(i, 1);
+            };
         }
 
-        localStorage.setItem("favourite-towns", JSON.stringify("storagedTowns.value"));
+        localStorage.setItem("favourite-towns", JSON.stringify(storagedTowns.value));
+
+        isShowNoTownsNotify.value = storagedTowns.value.length === 0;
+    }
+
+    async function addFavoutiteTown() {
+        isFetching.value = true;
+        getWeatherNow(inputValue.value)
+        .then((resp) => resp.json())
+        .then((data) => {
+            if (data.cod != 200) return;
+            let town = {
+                name: data.city.name,
+                lat: Math.round(data.city.coord.lat),
+                lon: Math.round(data.city.coord.lon)
+            }
+            storagedTowns.value.push(town);
+            localStorage.setItem("favourite-towns", JSON.stringify(storagedTowns.value));
+
+            isShowNoTownsNotify.value = storagedTowns.value.length === 0;
+        })
+        .finally(() => {
+            isFetching.value = false;
+        })
     }
 
     onMounted(() => {
@@ -163,26 +191,24 @@
 <template>
     <rootLevel2MenuComponent id="favourite-towns">
         <template #labelText>Избранные города</template>
-        <template #content class="favorite-towns-content">
+        <template #content class="favourite-towns-content">
             <div class="add-town" :class="{ active: isUnicTown && isinputValue && isFocused }">
-                <input type="text" placeholder="Введите название города" class="add-town__input" v-model="inputValue" @input="isShowTown" @focus="isFocused = true" @blur="isFocused = false" ref="input">
-                <button class="add-town__button" @focus="isFocused = true" @blur="isFocused = false">
+                <input type="text" placeholder="Введите название города" class="add-town__input" v-model="inputValue" @input="isShowTown" @focus="isFocused = true" @blur="isFocused = false" @keypress.enter="addFavoutiteTown" ref="input">
+                <button class="add-town__button" @focus="isFocused = true" @blur="isFocused = false" @click="addFavoutiteTown" :class="{ loading: isFetching }">
                     <span class="plus-s-1"></span>
                     <span class="plus-s-2"></span>
                     <span class="plus-s-3"></span>
                     <span class="plus-s-4"></span>
                 </button>
             </div>
-            <div class="favourite-towns-content">
-                <div class="favourite-towns-no-towns" :class="{ active: isShowNoTownsNotify }">
-                    <span class="favorite-towns-no-towns__label">
-                        <div class="favorite-towns-no-towns__icon">
-                            <NoTownsIcon />
-                        </div>
-                        <span>У вас нет избранных городов</span>
-                    </span>
-                    <button class="favorite-towns__add-button" @click="input.focus()">Добавить город</button>
-                </div>
+            <div class="favourite-towns-no-towns" :class="{ active: isShowNoTownsNotify }">
+                <span class="favourite-towns-no-towns__label">
+                    <div class="favourite-towns-no-towns__icon">
+                        <NoTownsIcon />
+                    </div>
+                    <span>У вас нет избранных городов</span>
+                </span>
+                <button class="favourite-towns__add-button" @click="input.focus()">Добавить город</button>
             </div>
             <div class="favourite-towns">
                 <button class="favorite-town" 
@@ -205,7 +231,7 @@
 </template>
 
 <style scoped>
-    .favorite-towns-content {
+    .favourite-towns-content {
         display: grid;
         grid-template-rows: 45px 1fr;
         gap: 25px;
@@ -213,7 +239,6 @@
     }
     .favourite-towns-no-towns {
         position: absolute;
-        left: 1000px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -240,7 +265,7 @@
         visibility: visible;
         pointer-events: inherit;
     }
-    .favorite-towns-no-towns__label {
+    .favourite-towns-no-towns__label {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -251,18 +276,18 @@
         font-weight: 700;
         color: var(--text-color-1);
     }
-    .favorite-towns-no-towns__icon {
+    .favourite-towns-no-towns__icon {
         position: relative;
         width: 70px;
         height: 70px;
     }
-    .favorite-towns-no-towns__icon svg {
+    .favourite-towns-no-towns__icon svg {
         position: absolute;
         width: inherit;
         height: inherit;
         fill: var(--text-color-1);
     }
-    .favorite-towns__add-button {
+    .favourite-towns__add-button {
         position: relative;
         width: max-content;
         padding: 8px 10px 8px 34px;
@@ -275,9 +300,8 @@
         color: var(--text-color-1);
         background: var(--bg-color-3);
         transition: .2s ease;
-
     }
-    .favorite-towns__add-button::after {
+    .favourite-towns__add-button::after {
         position: absolute;
         content: "+";
         left: 8px;
@@ -290,8 +314,8 @@
         line-height: 20px;
         background: var(--bg-color-10);
     }
-    .favorite-towns__add-button:hover,
-    .favorite-towns__add-button:focus {
+    .favourite-towns__add-button:hover,
+    .favourite-towns__add-button:focus {
         cursor: pointer;
         box-shadow: 0px 1px 12px #0000001f;
         transform: translateY(-3px);
@@ -370,6 +394,28 @@
     .add-town__button .plus-s-1 {
         transform: rotate(90deg);
     }
+    .add-town__button.loading span {
+        top: calc(50% - 3px);
+        width: 7px;
+        height: 7px;
+        animation-timing-function: cubic-bezier(0, 1, 1, 0);
+    }
+    .add-town__button.loading span:nth-child(1) {
+        left: 8px;
+        animation: lds-ellipsis1 0.6s infinite;
+    }
+    .add-town__button.loading span:nth-child(2) {
+        left: 8px;
+        animation: lds-ellipsis2 0.6s infinite;
+    }
+    .add-town__button.loading span:nth-child(3) {
+        left: 20px;
+        animation: lds-ellipsis2 0.6s infinite;
+    }
+    .add-town__button.loading span:nth-child(4) {
+        left: 32px;
+        animation: lds-ellipsis3 0.6s infinite;
+    }
     .favourite-towns {
         position: relative;
         display: flex;
@@ -394,6 +440,16 @@
         transition: .2s ease;
         animation: favorite-town-add .2S ease forwards;
         overflow: hidden;
+    }
+    @keyframes favorite-town-add {
+        0% {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0px);
+        }
     }
     .favorite-town__name {
         font-size: 20px;
@@ -430,5 +486,4 @@
     .favorite-town__name::first-letter {
         text-transform: uppercase;
     }
-
 </style>

@@ -1,6 +1,13 @@
 
-export async function getWeather(place, key) {
+const key = '5ba78f463e9dddeead6f1f0cf154d3ca';
+const token = 'pk.5458a1a49de64870a499080d6af514dc';
+
+export async function getWeather(place) {
     return await fetch(`https://api.openweathermap.org/data/2.5/forecast/?q=${place}&appid=${key}&lang=ru&cnt=40`)
+}
+
+export async function getWeatherNow(place) {
+    return await fetch(`https://api.openweathermap.org/data/2.5/forecast/?q=${place}&appid=${key}&lang=ru&cnt=1`)
 }
 
 function success(pos) {
