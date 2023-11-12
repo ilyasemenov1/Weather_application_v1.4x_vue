@@ -5,12 +5,24 @@
 
     import { getWeatherNow } from '../../../../assets/js/weatherInfo.js';
 
-    import { ref, onMounted  } from "vue";
+    import { ref, onMounted, watch } from "vue";
 
-    let storagedTowns = ref([]);
+    import { favouriteTownsStore } from "@/stores/favouriteTowns.js";
+    import { storeToRefs } from 'pinia'
 
-    let favouriteTowns = JSON.parse(localStorage.getItem("favourite-towns"));
-    if (isNaN(favouriteTowns) && favouriteTowns) storagedTowns = ref(favouriteTowns);
+    const store = favouriteTownsStore();
+    const { storagedTowns } = storeToRefs(store); 
+
+    // FavouriteTownsWatcher
+    watch(
+        storagedTowns.value,
+        () => {
+            localStorage.setItem("favourite-towns", JSON.stringify(storagedTowns.value));
+            isShowNoTownsNotify.value = storagedTowns.value.length === 0;
+        }
+    )
+
+
     let isShowNoTownsNotify = ref(storagedTowns.value.length === 0);
     let isUnicTown = ref(true);
     let isinputValue = ref(false);
@@ -166,8 +178,6 @@
             };
         }
 
-        localStorage.setItem("favourite-towns", JSON.stringify(storagedTowns.value));
-
         isShowNoTownsNotify.value = storagedTowns.value.length === 0;
     }
 
@@ -183,7 +193,6 @@
                 lon: Math.round(data.city.coord.lon)
             }
             storagedTowns.value.push(town);
-            localStorage.setItem("favourite-towns", JSON.stringify(storagedTowns.value));
 
             isShowNoTownsNotify.value = storagedTowns.value.length === 0;
             isShowTown();

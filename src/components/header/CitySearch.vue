@@ -1,18 +1,21 @@
 <script setup>
     import SearchIcon from "../icons/SearchIcon.vue";
-    import { ref, onMounted } from 'vue';
+    import CloseIcon from "../icons/CloseIcon.vue";
+    import { ref, onMounted, watch } from 'vue';
+
+    import { favouriteTownsStore } from "@/stores/favouriteTowns.js";
+    import { storeToRefs } from 'pinia'
+
+    const store = favouriteTownsStore();
+    const { storagedTowns } = storeToRefs(store); 
 
     let towns = ref([]);
     let isFocused = ref(false);
     let isFindTowns = ref(false);
-    let storagedTowns = ref([]);
 
     let searchInput = ref(null);
 
-    let favouriteTowns = JSON.parse(localStorage.getItem("favourite-towns"));
-    if (isNaN(favouriteTowns) && favouriteTowns) storagedTowns = ref(favouriteTowns);
-    let resultTowns = [];
-
+    
     window.addEventListener("keydown", (event) => {
         if ([191, 111].includes(event.keyCode)) {
             setTimeout(() => {
@@ -20,9 +23,9 @@
             }, 50);
         }
     });
-
+    
     function searchStoregedTowns(value) {
-        resultTowns = [];
+        let resultTowns = [];
         if (value) {
             for (let element of storagedTowns.value) {
                 value = value.toLowerCase();
@@ -34,7 +37,7 @@
                         town += `<b>${townTextArr[i]}</b>`;
                         if (i != townTextArr.length-1) town += value;
                     }
-                    resultTowns.push(town);
+                    resultTowns.push({townHTML: town, town: element});
                  }
             }
             towns.value = resultTowns;
@@ -44,6 +47,15 @@
             setTimeout(() => {
                 towns.value = [];
             }, 200);
+        }
+    }
+
+    function removeFafouriteTown(name) {
+        for (let i = 0; i < storagedTowns.value.length; i++) {
+            if (storagedTowns.value[i].name.toLowerCase() === name.toLowerCase()) {
+                storagedTowns.value.splice(i, 1);
+            };
+            storagedTowns.value.length > 0 ? isFindTowns.value = true : isFindTowns.value = false;
         }
     }
 
@@ -70,10 +82,15 @@
         <div class="search-towns" :class="{ active: isFocused && isFindTowns }">
             <h3 class="search-towns__label">Избранные города</h3>
             <div class="search-towns__content">
-                <button class="search-town__town-button" 
-                v-for="town of towns" 
-                @click="console.log({ town })" 
-                v-html="town"></button>
+                <div class="search-town__town-conteiner" v-for="town of towns" >
+                    <button class="search-town__town-button"
+                    @mousedown="console.log()" 
+                    v-html="town.townHTML"></button>
+                    <button class="search-town__town-delete-button"
+                    @mousedown="removeFafouriteTown(town.town)">
+                        <CloseIcon />
+                    </button>
+                </div>
             </div>
         </div>
     </search>
@@ -188,20 +205,28 @@
         font-weight: 500;
         color: var(--text-color-1);
     }
-    .search-towns button {
+    .search-town__town-conteiner {
+        display: grid;
+        grid-template-columns: 1fr 30px;
+        align-items: center;
+        gap: 10px;
+        padding: 0 15px;
+        background: var(--bg-color-1);
+    }
+    .search-towns .search-town__town-button {
         position: relative;
         margin: 0;
-        padding: 10px 15px;
+        padding: 10px 0;
         border: none;
         outline: none;
         text-align: left;
         font-size: 16px;
         font-weight: 500; 
         color: var(--text-color-1);
-        background: var(--bg-color-1);
+        background: none;
         transition: .2s ease;
     }
-    .search-towns button::before {
+    .search-towns .search-town__town-button::before {
         position: absolute;
         top: 0;
         left: 0;
@@ -214,19 +239,43 @@
         transform: translateX(-100%);
         transition: .2s ease;
     }
-    .search-towns button::first-letter {
+    .search-towns .search-town__town-button::first-letter {
         text-transform: uppercase;
     }
-    .search-towns button:hover,
-    .search-towns button:focus {
+    .search-towns .search-town__town-conteiner:hover,
+    .search-towns .search-town__town-conteiner:focus,
+    .search-town__town-conteiner:has(button:focus) {
         cursor: pointer;
         background: var(--bg-color-14);
     }
-    .search-towns button:focus {
+    .search-towns .search-town__town-button:focus {
         outline: none !important;
     }
-    .modal-block__recommend-button:focus::before {
+    .search-town__town-delete-button {
+        position: relative;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1px solid #00000000;
+        background: none;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+    .search-town__town-conteiner:hover .search-town__town-delete-button,
+    .search-town__town-conteiner:has(button:focus) .search-town__town-delete-button{
         opacity: 1;
-        transform: translateY(0);
-    } 
+        pointer-events: all;
+        visibility: visible;
+    }
+    .search-town__town-delete-button svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: calc(100% + 0px);
+        height: calc(100% + 0px);
+        stroke: var(--text-color-1);
+        fill: var(--text-color-1);
+        transform: translate(-50%, -50%);
+    }
 </style>
