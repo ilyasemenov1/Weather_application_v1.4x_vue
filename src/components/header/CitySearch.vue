@@ -75,14 +75,17 @@
             @keyup.enter="console.log('search')" 
             @keyup.esc="(event) => event.target.blur()"
             @keyup.shift.delete="(event) => event.target.value = ''"
-            @focus="isFocused=true" 
+            @focus="(event) => {
+                searchStoregedTowns(event.target.value);
+                isFocused=true;
+            }" 
             @blur="isFocused=false"
             ref="searchInput">
         </div>
         <div class="search-towns" :class="{ active: isFocused && isFindTowns }">
             <h3 class="search-towns__label">Избранные города</h3>
             <div class="search-towns__content">
-                <div class="search-town__town-conteiner" v-for="town of towns" >
+                <div class="search-town__town-conteiner" v-for="town in towns" >
                     <button class="search-town__town-button"
                     @mousedown="console.log()" 
                     v-html="town.townHTML"></button>
