@@ -4,6 +4,21 @@
     import SettingsSwitch from './SettingsSwitch.vue';
     import SettingsSelect from './SettingsSelect.vue';
 
+    import { watch } from 'vue';
+
+    import { settingsStore } from "@/stores/settings.js";
+    import { storeToRefs } from 'pinia'
+
+    const store = settingsStore();
+    const { settings } = storeToRefs(store); 
+
+    watch(
+        settings.value,
+        () => {
+            localStorage.setItem("settings", JSON.stringify(settings.value));
+        }
+    )
+
 </script>
 
 <template>

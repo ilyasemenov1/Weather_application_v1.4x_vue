@@ -1,11 +1,16 @@
 <script setup>
     import { onMounted, ref } from "vue";
-    import { updateSettings, getSettingsValue, getSettings } from "../../../../assets/js/settings.js";
+    import { updateSettings, getSettingsValue } from "../../../../assets/js/settings.js";
     
-    const settings = getSettings();
+    import { settingsStore } from "@/stores/settings.js";
+    import { storeToRefs } from 'pinia'
+
+    const store = settingsStore();
+    const { settings } = storeToRefs(store); 
+
     const path = "nightMode";
 
-    let selectMode = ref(getSettingsValue(settings, path));
+    let selectMode = ref(getSettingsValue(settings.value, path));
     let markerWidth = ref(0);
     let markerLeft = ref(0);
 
@@ -63,7 +68,7 @@
 
     function updateSetingsOnClick() {
         setTimeout(() => {
-            updateSettings(settings, path, selectMode.value);
+            settings.value = updateSettings(settings.value, path, selectMode.value);
             setPageTheme();
             setMarkerPosition();
         }, 50);

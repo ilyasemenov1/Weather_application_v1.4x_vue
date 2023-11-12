@@ -1,8 +1,12 @@
 <script setup>
     import { ref } from "vue";
-    import { updateSettings, getSettingsValue, getSettings } from "../../../../assets/js/settings.js";
+    import { updateSettings, getSettingsValue } from "../../../../assets/js/settings.js";
 
-    const settings = ref(getSettings());
+    import { settingsStore } from "@/stores/settings.js";
+    import { storeToRefs } from 'pinia'
+
+    const store = settingsStore();
+    const { settings } = storeToRefs(store); 
 
     const props = defineProps(["path"]);
     const path = ref(props.path);
@@ -11,7 +15,7 @@
 </script>
 
 <template>
-    <label class="settings-button" @click="updateSettings(settings, path, !isChecked)">
+    <label class="settings-button" @click="settings = updateSettings(settings, path, !isChecked)">
         <input class="settings-button__checkbox" type="checkbox" v-model="isChecked">
         <span class="settings-button__label">
             <slot></slot>

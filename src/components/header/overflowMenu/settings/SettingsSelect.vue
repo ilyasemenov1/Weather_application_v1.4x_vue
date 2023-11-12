@@ -1,15 +1,19 @@
 <script setup>
     import { ref } from "vue";
     import SelectIcon from "../../../icons/SelectIcon.vue";
-    import { updateSettings, getSettingsValue, getSettings } from "../../../../assets/js/settings.js";
+    import { updateSettings, getSettingsValue } from "../../../../assets/js/settings.js";
+
+    import { settingsStore } from "@/stores/settings.js";
+    import { storeToRefs } from 'pinia'
+
+    const store = settingsStore();
+    const { settings } = storeToRefs(store); 
 
     const props = defineProps(["options", "path"]);
     let options = ref(props.options);
     let path = props.path;
 
-    const settings = getSettings();
-
-    let selected = ref(getSettingsValue(settings, path));
+    let selected = ref(getSettingsValue(settings.value, path));
     let isOpen = ref(false);
 
     function selectOptionEvent(event) {
@@ -19,7 +23,7 @@
         selected.value = children[0].value;
         isOpen.value = false;
 
-        updateSettings(settings, path, selected.value);
+        settings.value = updateSettings(settings.value, path, selected.value);
     }
 </script>
 
