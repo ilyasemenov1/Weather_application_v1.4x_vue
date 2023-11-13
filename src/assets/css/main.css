@@ -3,13 +3,15 @@
 @import "./info-menu.css";
 
 body {
-    display: grid;
-    grid-template-rows: 1fr min-content;
-    justify-items: center;
     min-height: 100vh;
     margin: 0;
     background: var(--bg-color-2);
     overflow-x: hidden;
+}
+#app {
+    display: grid;
+    grid-template-rows: 1fr min-content;
+    justify-items: center;
 }
 a, button {
     display: block;

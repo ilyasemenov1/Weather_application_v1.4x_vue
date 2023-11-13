@@ -10,7 +10,7 @@
 
     const header = document.querySelector(".header");
     const headerContent = document.querySelector(".header-content");
-    const pageContent = document.querySelectorAll(".header, .main, .footer");
+    let pageContent = "";
 
     // !Mutable (once) in OnMounted()!
     let modalMenuWidth = 0;
@@ -105,12 +105,14 @@
 
     function setPageContentTransformX(transformValue) {
         pageContent.forEach(element => {
-            element.style = `transform: translateX(${transformValue}px)`;
+            console.log(element);
+            element.style = `transform: translateX(${transformValue}px);`;
         })
     }
 
     onMounted(() => {
         const pageBlur = document.querySelectorAll(".page-blur");
+        pageContent = document.querySelectorAll(".header, .main, .footer");
 
         modalMenuWidth = document.querySelector(".level2-menu").clientWidth;
         burgerWidth = burger.value.clientWidth;
