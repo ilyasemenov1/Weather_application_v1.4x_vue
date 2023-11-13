@@ -32,7 +32,8 @@ The weather application that can generate weather forecast in any world point!
 ## To run app:
 
 1. Install [Node.js](https://nodejs.org/en)
-1. Open shell in app folder and enter: 
+1. Open terminal
+1. Cd app folder and enter: 
 
 ```sh
 npm install
