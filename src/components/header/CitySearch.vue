@@ -4,7 +4,11 @@
     import { ref, onMounted, watch } from 'vue';
 
     import { favouriteTownsStore } from "@/stores/favouriteTowns.js";
-    import { storeToRefs } from 'pinia'
+    import { settingsStore } from "@/stores/settings.js";
+    import { storeToRefs } from 'pinia';
+
+    const storeSettings = settingsStore();
+    const { settings } = storeToRefs(storeSettings); 
 
     const store = favouriteTownsStore();
     const { storagedTowns } = storeToRefs(store); 
@@ -82,7 +86,7 @@
             @blur="isFocused=false"
             ref="searchInput">
         </div>
-        <div class="search-towns" :class="{ active: isFocused && isFindTowns }">
+        <div class="search-towns" :class="{ active: isFocused && isFindTowns && settings.showFavouriteTowns}">
             <h3 class="search-towns__label">Избранные города</h3>
             <div class="search-towns__content">
                 <div class="search-town__town-conteiner" v-for="town in towns" >
