@@ -5,7 +5,8 @@
     let time = ref("22:00");
     let town = ref("Санкт-Петербург");
     let temp = ref("+20");
-    let iconSrc = ref("./icons/weather_icons/02d.svg");
+
+    let iconSrc = new URL('/src/assets/icons/weatherIcons/02d.svg', import.meta.url)
 </script>
 <template>
     <MainWeatherContentRoot>
@@ -23,7 +24,7 @@
                     <span class="weather-main__temp-block" id="temp">+20</span>
                 </span>
                 <div class="weather-main__status">
-                    <img src="./icons/weather_icons/02d.svg" class="weather-main__staus-icon" alt>
+                    <img :src="iconSrc" class="weather-main__staus-icon" alt="Иконка стастуса погоды">
                     <span class="weather-main__status-block">Облачно</span>
                     <div class="weather-main__self-temp">
                         <span class="weather-main__self-temp--label">Ощущается как </span>
@@ -192,5 +193,15 @@
         flex-wrap: wrap;
         row-gap: 10px;
         column-gap: 15px;
+    }
+    .weather-main__staus-icon {
+        position: absolute;
+        left: -75px;
+        top: -15px;
+        width: 70px;
+        height: 70px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 60px 60px;
     }
 </style>
