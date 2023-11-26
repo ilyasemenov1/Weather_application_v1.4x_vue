@@ -15,7 +15,7 @@
 
 </script>
 <template>
-    <errorSectionRoot v-show="isGeolocationErr">
+    <errorSectionRoot :class="{ disactive: !isGeolocationErr }">
         <template #label-content>
             <div class="error-notification__icon">
                 <span>

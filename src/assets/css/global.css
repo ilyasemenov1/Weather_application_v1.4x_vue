@@ -88,6 +88,11 @@ h1, h2, h3, h5, h6, button, input, span, b, code, p, div, header, footer {
     font-family: "Sourse Sans Pro", sans-serif;
     transition: .2s ease;
 }
+
+.disactive {
+    display: none !important;
+}
+
 @font-face {
     font-family: "Sourse Sans Pro";
     src: url("../../fonts/sourse_sans_pro/SourceSansPro-ExtraLight.ttf"),;

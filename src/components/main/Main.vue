@@ -93,7 +93,7 @@
 </script>
 
 <template>
-    <main class="main" v-show="isShowWeatherInfo">
+    <main class="main" :class="{ disactive: !isShowWeatherInfo }">
         <div class="first-content weather-content">
             <div class="main-content-block">
                 <MainWeather />
