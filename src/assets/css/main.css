@@ -1,6 +1,7 @@
 @import "./global.css";
 @import "./page-blur.css";
 @import "./info-menu.css";
+@import "./animations.css";
 
 body {
     min-height: 100vh;

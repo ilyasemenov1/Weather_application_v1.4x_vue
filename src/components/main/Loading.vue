@@ -72,16 +72,6 @@
     .animation span:nth-child(3) {
         animation-delay: -0.15s;
     }
-    @keyframes info-block-add {
-        0% {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        100% {
-            opacity: 1;
-            transform: translateY(0px);
-        }
-    }
     @keyframes lds-ring {
         0% {
             transform: rotate(0deg);

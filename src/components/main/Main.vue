@@ -71,6 +71,7 @@
                 console.log(data);
                 if (data.cod != "200") {
                     isShowSearchErr.value = true;
+                    isShowLoader.value = false;
                     return;
                 }
 
@@ -89,7 +90,7 @@
 </script>
 
 <template>
-    <main class="main" :class="{ active: isShowWeatherInfo }">
+    <main class="main" v-show="isShowWeatherInfo">
         <div class="first-content weather-content">
             <div class="main-content-block">
                 <MainWeather />
@@ -111,15 +112,8 @@
         margin: 70px 0 0 0;
         padding: 30px 20px;
         box-sizing: border-box;
-        transform: translateY(20px);
-        opacity: 0;
-        visibility: hidden;
+        animation: info-block-add .2s ease;
         transition: .3s ease;
-    }
-    .main.active {
-        transform: translateY(0);
-        opacity: 1;
-        visibility: visible;
     }
     .first-content {
         display: grid;

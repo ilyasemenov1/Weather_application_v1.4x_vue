@@ -1,18 +1,53 @@
 <script setup>
+    import { cityIn } from "lvovich";
+
     import MainWeatherContentRoot from './MainWeatherContentRoot.vue';
-    import { ref } from "vue";
+    import { ref, watch } from "vue";
 
-    let time = ref("22:00");
-    let town = ref("Санкт-Петербург");
-    let temp = ref("+20");
+    import { mainData } from '@/stores/mainData.js';
+    import { storeToRefs } from 'pinia';
 
-    let iconSrc = new URL('/src/assets/icons/weatherIcons/02d.svg', import.meta.url)
+    import { transformPressureToSettingUnit, transformSpeedToSettingUnit, transformTempToSettingUnit, constructDate } from "@/assets/js/appFunctions.js";
+
+    const store = mainData();
+    const { weatherData, cityNameShow } = storeToRefs(store); 
+
+    let time = ref(0);
+    let temp = ref(0);
+    let tempFeelsLike = ref(0);
+    let wind = ref(0);
+    let humidity = ref(0);
+    let pressure = ref(0);
+    let status = ref("");
+    let iconSrc = new URL('/src/assets/icons/weatherIcons/02d.svg', import.meta.url);
+
+    let predict = ref("");
+
+    watch(
+        weatherData,
+        () => {
+            let main = weatherData.value.list[0].main;
+
+            time.value = constructDate();
+            temp.value = transformTempToSettingUnit(main.temp);
+            tempFeelsLike.value = transformTempToSettingUnit(main.feels_like);
+            status.value = weatherData.value.list[0].weather[0].description;
+            iconSrc = new URL(`/src/assets/icons/weatherIcons/${weatherData.value.list[0].weather[0].icon}.svg`, import.meta.url);
+
+            wind.value = transformSpeedToSettingUnit(weatherData.value.list[0].wind.speed);
+            humidity.value = main.humidity;
+            pressure.value = transformPressureToSettingUnit(main.pressure);
+
+            cityNameShow.value.toLowerCase().match(/^в[с\з\ч\щ\к\м\л\ж\т\м\г\д\н\п\р\х]/) ? predict.value = "во" : predict.value = "в";
+            cityNameShow.value.toLowerCase().match(/[a-z]|^[0-9]/) ? predict.value = "в городе" : void(0);
+        }
+    )
 </script>
 <template>
     <MainWeatherContentRoot>
         <template #firstTextContent class="weather-main__text">
             <h2 class="weather-main__label">
-                Погода в городе {{ town }}
+                Погода {{ `${predict} ${cityIn(cityNameShow)}` }}
             </h2>
             <div class="weather-main__time">
                 Данные на {{ time }}
@@ -21,26 +56,26 @@
         <template #content>
             <div class="weather-main__content">
                 <span class="weather-main__temp">
-                    <span class="weather-main__temp-block" id="temp">+20</span>
+                    <span class="weather-main__temp-block" id="temp">{{ temp }}</span>
                 </span>
                 <div class="weather-main__status">
                     <img :src="iconSrc" class="weather-main__staus-icon" alt="Иконка стастуса погоды">
                     <span class="weather-main__status-block">Облачно</span>
                     <div class="weather-main__self-temp">
                         <span class="weather-main__self-temp--label">Ощущается как </span>
-                        <span class="weather-main__self-temp-block">+20</span>
+                        <span class="weather-main__self-temp-block">{{ tempFeelsLike }}</span>
                     </div>
                 </div>
             </div>
             <div class="weather-main__second-block">
                 <span class="weather-main__wind">
-                    <span class="weather-main__wind-block">5</span>
+                    <span class="weather-main__wind-block">{{ wind }}</span>
                 </span>
                 <span class="weather-main__humidity">
-                    <span class="weather-main__humidity-block">85</span>
+                    <span class="weather-main__humidity-block">{{ humidity }}</span>
                 </span>
                 <span class="weather-main__pressure">
-                    <span class="weather-main__pressure-block">1000</span>
+                    <span class="weather-main__pressure-block">{{ pressure }}</span>
                 </span>
             </div>
         </template>
