@@ -5,6 +5,7 @@
 
     import { favouriteTownsStore } from "@/stores/favouriteTowns.js";
     import { settingsStore } from "@/stores/settings.js";
+    import { mainData } from '@/stores/mainData.js';
     import { storeToRefs } from 'pinia';
 
     const storeSettings = settingsStore();
@@ -12,6 +13,9 @@
 
     const store = favouriteTownsStore();
     const { storagedTowns } = storeToRefs(store); 
+
+    const storeMainData = mainData();
+    const { cityName } = storeToRefs(storeMainData); 
 
     let towns = ref([]);
     let isFocused = ref(false);
@@ -71,12 +75,12 @@
 <template>
     <search class="search">
         <div class="search-content" :class="{active: isFocused}">
-            <button class="search-button" tabindex="-1" @click="console.log('clicked')" aria-label="Поиск">
+            <button class="search-button" tabindex="-1" @click="cityName = searchInput.value" aria-label="Поиск">
                 <SearchIcon></SearchIcon>
             </button>
             <input type="search" autocomplete="off" placeholder="Введите название города" 
             @input="event => searchStoregedTowns(event.target.value)" 
-            @keyup.enter="console.log('search')" 
+            @keyup.enter="(event) => cityName = event.target.value" 
             @keyup.esc="(event) => event.target.blur()"
             @keyup.shift.delete="(event) => event.target.value = ''"
             @focus="(event) => {
@@ -91,7 +95,10 @@
             <div class="search-towns__content">
                 <div class="search-town__town-conteiner" v-for="town in towns" >
                     <button class="search-town__town-button"
-                    @mousedown="console.log()" 
+                    @mousedown="() => {
+                        cityName = town.town;
+                        searchInput.value = town.town;
+                    }" 
                     v-html="town.townHTML"></button>
                     <button class="search-town__town-delete-button"
                     @mousedown="removeFafouriteTown(town.town)">

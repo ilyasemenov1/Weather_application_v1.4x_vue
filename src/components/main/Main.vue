@@ -1,6 +1,7 @@
 <script setup>
     import MainWeather from './weatherSections/MainWeather.vue';
     import HourlyForecast from './weatherSections/HourlyForecast.vue';
+    import Loading from "./Loading.vue";
 
     import { onMounted, watch } from 'vue';
     import { storeToRefs } from 'pinia'
@@ -77,6 +78,7 @@
                 weatherData.value = data;
 
                 isShowWeatherInfo.value = true;
+                isShowLoader.value = false;
             })
         }
     )
@@ -95,6 +97,7 @@
             </div>
         </div>
     </main>
+    <Loading />
 </template>
 <style scoped>
     .main {
@@ -111,7 +114,7 @@
         transform: translateY(20px);
         opacity: 0;
         visibility: hidden;
-        transition: .2s;
+        transition: .3s ease;
     }
     .main.active {
         transform: translateY(0);

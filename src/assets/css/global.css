@@ -4,6 +4,7 @@
 }
 
 :root {
+    color-scheme: light;
     --bg-color-1: #ffffff;
     --bg-color-2: #fcfcfc;
     --bg-color-3: #ffffff;
@@ -40,6 +41,7 @@
 }
 
 body.night-mode {
+    color-scheme: dark;
     --bg-color-1: #4a4c4e;
     --bg-color-2: #3d3d3f;
     --bg-color-3: #585858;
