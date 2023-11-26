@@ -15,7 +15,7 @@
     let prev = ref(null);
     let next = ref(null);
 
-    const modules = ref([Navigation, Keyboard, Mousewheel])
+    const modules = ref([Navigation, Keyboard, Mousewheel]);
 </script>
 
 <template>

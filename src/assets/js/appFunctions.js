@@ -63,16 +63,23 @@ export const transformTempToSettingUnit = (temp_k) => {
     const settings = JSON.parse(localStorage.getItem("settings"));
     const unit = settings["units"]["temp"];
 
+    const delta = 273.15;
+
     switch (unit) {
         case "c":
-            temp = Math.round(temp_k - 273.15);
+            temp = Math.round(temp_k - delta);
             break;
         case "f":
-            temp = Math.round((temp_k - 273.15) * 9/5 + 32);
+            temp = Math.round((temp_k - delta) * 9/5 + 32);
             break;
         case "k":
             temp = Math.round(temp_k);
+            break;
+        default:
+            temp = Math.round(temp_k - delta);
     }
+
+    if (unit == "k") return temp;
 
     let tempRet = 0;
 

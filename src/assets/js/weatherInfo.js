@@ -62,7 +62,7 @@ function getCity(lat, lng) {
 }
 
 function transferTimeFromSettingsToMs() {
-    const settings = JSON.parse(localStorage.getItem("document-settings"));
+    const settings = JSON.parse(localStorage.getItem("settings"));
 
     if (!isNaN(settings)) {
         throw new Error("Settings not found");
