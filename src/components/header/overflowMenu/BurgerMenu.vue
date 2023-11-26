@@ -105,7 +105,6 @@
 
     function setPageContentTransformX(transformValue) {
         pageContent.forEach(element => {
-            console.log(element);
             element.style = `transform: translateX(${transformValue}px);`;
         })
     }

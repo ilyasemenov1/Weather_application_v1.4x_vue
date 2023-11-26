@@ -22,6 +22,9 @@
         overflow: hidden;
         background: var(--gradient-1);
     }
+    .weather-content-block.hourly-forecast {
+        background: var(--gradient-2);
+    }
     .weather-content-block__text {
         font-family: "Sourse Sans Pro", sans-serif;
         font-size: 15px;

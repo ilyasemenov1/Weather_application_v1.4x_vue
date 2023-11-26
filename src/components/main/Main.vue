@@ -1,5 +1,6 @@
 <script setup>
     import MainWeather from './weatherSections/MainWeather.vue';
+    import HourlyForecast from './weatherSections/HourlyForecast.vue';
 </script>
 
 <template>
@@ -7,6 +8,7 @@
         <div class="first-content weather-content">
             <div class="main-content-block">
                 <MainWeather />
+                <HourlyForecast class="hourly-forecast"/>
             </div>
         </div>
     </main>

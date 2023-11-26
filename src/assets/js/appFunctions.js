@@ -1,6 +1,6 @@
 export const constructDate = () => {
 
-    const settings = JSON.parse(localStorage.getItem("document-settings"));
+    const settings = JSON.parse(localStorage.getItem("settings"));
 
     let options = {
         hour12: false,
@@ -31,7 +31,7 @@ export const setIcon = (index) => {
 }
 
 export const transformPressureToSettingUnit = (pressure) => {
-    const settings = JSON.parse(localStorage.getItem("document-settings"));
+    const settings = JSON.parse(localStorage.getItem("settings"));
     const unit = settings["units"]["pressure"];
 
     switch (unit) {
@@ -45,7 +45,7 @@ export const transformPressureToSettingUnit = (pressure) => {
 }
 
 export const transformSpeedToSettingUnit = (speed) => {
-    const settings = JSON.parse(localStorage.getItem("document-settings"));
+    const settings = JSON.parse(localStorage.getItem("settings"));
     const unit = settings["units"]["speed"];
 
     switch (unit) {
@@ -60,7 +60,7 @@ export const transformSpeedToSettingUnit = (speed) => {
 
 export const transformTempToSettingUnit = (temp_k) => {
     let temp = 0;
-    const settings = JSON.parse(localStorage.getItem("document-settings"));
+    const settings = JSON.parse(localStorage.getItem("settings"));
     const unit = settings["units"]["temp"];
 
     switch (unit) {
@@ -99,7 +99,7 @@ export const arrayMax = (arr) => {
 
 export const dtConventer = (dt, isUtc) => {
 
-    const settings = JSON.parse(localStorage.getItem("document-settings"));
+    const settings = JSON.parse(localStorage.getItem("settings"));
 
     let options = {
         hour12: false,
