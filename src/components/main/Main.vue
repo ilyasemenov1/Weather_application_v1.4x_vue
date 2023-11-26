@@ -2,6 +2,8 @@
     import MainWeather from './weatherSections/MainWeather.vue';
     import HourlyForecast from './weatherSections/HourlyForecast.vue';
     import Loading from "./Loading.vue";
+    import GeolocationErr from './errorSections/GeolocationErr.vue';
+    import SearchErr from './errorSections/SearchErr.vue';
 
     import { onMounted, watch } from 'vue';
     import { storeToRefs } from 'pinia'
@@ -10,7 +12,7 @@
     import { mainData } from '../../stores/mainData.js';
 
     const store = mainData();
-    const { weatherData, isShowWeatherInfo, isShowLoader, isShowSearchErr, isLocationNotFoundErr, cityName, cityNameShow } = storeToRefs(store); 
+    const { weatherData, isShowWeatherInfo, isShowLoader, isShowSearchErr, isGeolocationErr, cityName, cityNameShow } = storeToRefs(store); 
 
     const token = 'pk.5458a1a49de64870a499080d6af514dc';
 
@@ -22,7 +24,8 @@
 
     function error() {
         isShowWeatherInfo.value = false;
-        isLocationNotFoundErr.value = true;
+        isGeolocationErr.value = true;
+        isShowLoader.value = false;
     }
 
     function getUserLocation() {
@@ -63,7 +66,7 @@
             isShowLoader.value = true;
             isShowWeatherInfo.value = false;
             isShowSearchErr.value = false;
-            isLocationNotFoundErr.value = false;
+            isGeolocationErr.value = false;
 
             getWeather(cityName.value)
             .then((resp) => resp.json())
@@ -99,6 +102,8 @@
         </div>
     </main>
     <Loading />
+    <GeolocationErr />
+    <SearchErr />
 </template>
 <style scoped>
     .main {

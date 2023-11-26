@@ -88,7 +88,8 @@
                 isFocused=true;
             }" 
             @blur="isFocused=false"
-            ref="searchInput">
+            ref="searchInput"
+            id="searchInput">
         </div>
         <div class="search-towns" :class="{ active: isFocused && isFindTowns && settings.showFavouriteTowns}">
             <h3 class="search-towns__label">Избранные города</h3>
