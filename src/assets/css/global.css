@@ -89,6 +89,10 @@ h1, h2, h3, h5, h6, button, input, span, b, code, p, div, header, footer {
     transition: .2s ease;
 }
 
+h1, h2, h3, h5, h6 {
+    text-wrap: balance;
+}
+
 .disactive {
     display: none !important;
 }

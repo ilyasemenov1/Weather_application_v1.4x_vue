@@ -1,6 +1,7 @@
 <script setup>
     import MainWeather from './weatherSections/MainWeather.vue';
     import HourlyForecast from './weatherSections/HourlyForecast.vue';
+    import SunriseSunset from './weatherSections/SunriseSunset.vue';
     import Loading from "./Loading.vue";
     import GeolocationErr from './errorSections/GeolocationErr.vue';
     import SearchErr from './errorSections/SearchErr.vue';
@@ -116,6 +117,9 @@
             <div class="main-content-block">
                 <MainWeather />
                 <HourlyForecast class="hourly-forecast"/>
+            </div>
+            <div class="second-main-info-block">
+                <SunriseSunset />
             </div>
         </div>
     </main>
