@@ -8,10 +8,14 @@
     import { ref, onMounted, watch } from "vue";
 
     import { favouriteTownsStore } from "@/stores/favouriteTowns.js";
+    import { mainData } from '@/stores/mainData.js';
     import { storeToRefs } from 'pinia'
 
     const store = favouriteTownsStore();
     const { storagedTowns } = storeToRefs(store); 
+
+    const storeMainData = mainData();
+    const { cityName } = storeToRefs(storeMainData); 
 
     // FavouriteTownsWatcher
     watch(
@@ -125,6 +129,7 @@
             if (target.id == "info-del-button") {
                 removeFafouriteTown(cityName.name);
             } else if (target.id == "info-search-button") {
+                isSearch.value = true;
                 searchEvent(cityName.name);
             }
 
@@ -148,7 +153,7 @@
     function searchEvent(town) {
         if (!isSearch.value) return;
         clearTimeout(delay.value);
-        console.log(town);
+        cityName.value = town;
     }
 
     function removeInfoMenu() {
@@ -248,7 +253,7 @@
                 @mousedown="(event) => { if (!isMobile) touchEvent(town, event) }" 
                 @focus="(event) => { if (isMobile) touchEvent(town, event) }" 
                 @blur="removeInfoMenu"
-                @click="searchEvent(town)"> 
+                @click="searchEvent(town.name)"> 
                     <h3 class="favorite-town__name">{{ town.name }}</h3>
                     <div class="favorite-town__coords">
                         <div class="favorite-town__coords-icon">

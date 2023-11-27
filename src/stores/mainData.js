@@ -8,7 +8,6 @@ export const mainData = defineStore("main-data", () => {
     let isShowSearchErr = ref(false);
     let isGeolocationErr = ref(false);
     let isUpdateForecast = ref(true);
-    let isUpdateForecastWithGeolocation = ref(true);
     let cityName = ref("a");
     let cityNameShow = ref("a");
 
