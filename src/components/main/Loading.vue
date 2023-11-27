@@ -7,7 +7,7 @@
     const { isShowLoader } = storeToRefs(store); 
 </script>
 <template>
-    <div class="loading-animation--conteiner" v-show="isShowLoader">
+    <div class="loading-animation--conteiner" :class="{ disactive: !isShowLoader }">
         <span class="loading-animation">
             <span class="animation">
                 <span></span>

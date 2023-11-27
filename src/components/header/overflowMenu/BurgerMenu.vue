@@ -111,7 +111,7 @@
 
     onMounted(() => {
         const pageBlur = document.querySelectorAll(".page-blur");
-        pageContent = document.querySelectorAll(".header, .main, .footer");
+        pageContent = document.querySelectorAll(".header, .main, .footer, .error-notification__label, .loading-animation--conteiner, .error-notification__button");
 
         modalMenuWidth = document.querySelector(".level2-menu").clientWidth;
         burgerWidth = burger.value.clientWidth;
