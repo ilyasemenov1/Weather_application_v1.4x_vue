@@ -12,7 +12,7 @@
     import { mainData } from '../../stores/mainData.js';
 
     const store = mainData();
-    const { weatherData, isShowWeatherInfo, isShowLoader, isShowSearchErr, isGeolocationErr, cityName, cityNameShow } = storeToRefs(store); 
+    const { weatherData, isShowWeatherInfo, isShowLoader, isShowSearchErr, isGeolocationErr, cityName, cityNameShow, isUpdateForecast } = storeToRefs(store); 
 
     const token = 'pk.5458a1a49de64870a499080d6af514dc';
 
@@ -55,41 +55,54 @@
                 }
 
                 cityName.value = place;
-                console.log(cityName.value);
+                isUpdateForecast.value = false;
             }
         }, false);
+    }
+
+    async function updateWeather(place) {
+        isShowLoader.value = true;
+        isShowWeatherInfo.value = false;
+        isShowSearchErr.value = false;
+        isGeolocationErr.value = false;
+
+        getWeather(cityName.value)
+        .then((resp) => resp.json())
+        .then((data) => {
+            console.log(data);
+            if (data.cod != "200") {
+                isShowSearchErr.value = true;
+                isShowLoader.value = false;
+                return;
+            }
+
+            cityNameShow.value = data.city.name;
+            weatherData.value = data;
+
+            isShowWeatherInfo.value = true;
+            isShowLoader.value = false;
+        });
     }
 
     watch(
         cityName,
         () => {
-            isShowLoader.value = true;
-            isShowWeatherInfo.value = false;
-            isShowSearchErr.value = false;
-            isGeolocationErr.value = false;
+            updateWeather(cityName.value);
+        }
+    )
 
-            getWeather(cityName.value)
-            .then((resp) => resp.json())
-            .then((data) => {
-                console.log(data);
-                if (data.cod != "200") {
-                    isShowSearchErr.value = true;
-                    isShowLoader.value = false;
-                    return;
-                }
-
-                cityNameShow.value = data.city.name;
-                weatherData.value = data;
-
-                isShowWeatherInfo.value = true;
-                isShowLoader.value = false;
-            })
+    watch(
+        isUpdateForecast,
+        () => {
+            updateWeather(cityName.value);
+            isUpdateForecast.value = false;
         }
     )
 
     onMounted(() => {
         getUserLocation();
-    })
+    });
+
 </script>
 
 <template>

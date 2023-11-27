@@ -1,10 +1,16 @@
 <script setup>
-    import { ref } from "vue";
+    import { ref, watch } from "vue";
     import SelectIcon from "../../../icons/SelectIcon.vue";
     import { updateSettings, getSettingsValue } from "../../../../assets/js/settings.js";
 
     import { settingsStore } from "@/stores/settings.js";
     import { storeToRefs } from 'pinia'
+
+    import { mainData } from '@/stores/mainData.js';
+
+
+    const storeData = mainData();
+    const { isUpdateForecast } = storeToRefs(storeData);
 
     const store = settingsStore();
     const { settings } = storeToRefs(store); 
@@ -25,6 +31,13 @@
 
         settings.value = updateSettings(settings.value, path, selected.value);
     }
+
+    watch(
+        selected,
+        () => {
+            isUpdateForecast.value = true;
+        }
+    )
 </script>
 
 <template>

@@ -1,9 +1,14 @@
 <script setup>
-    import { ref } from "vue";
+    import { ref, watch } from "vue";
     import { updateSettings, getSettingsValue } from "../../../../assets/js/settings.js";
 
     import { settingsStore } from "@/stores/settings.js";
     import { storeToRefs } from 'pinia'
+
+    import { mainData } from '@/stores/mainData.js';
+
+    const storeData = mainData();
+    const { isUpdateForecast } = storeToRefs(storeData);
 
     const store = settingsStore();
     const { settings } = storeToRefs(store); 
@@ -12,6 +17,13 @@
     const path = ref(props.path);
 
     let isChecked = ref(getSettingsValue(settings.value, path.value));
+
+    watch(
+        isChecked,
+        () => {
+            isUpdateForecast.value = true;
+        }
+    )
 </script>
 
 <template>

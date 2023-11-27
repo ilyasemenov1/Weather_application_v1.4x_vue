@@ -7,8 +7,9 @@ export const mainData = defineStore("main-data", () => {
     let isShowLoader = ref(true);
     let isShowSearchErr = ref(false);
     let isGeolocationErr = ref(false);
+    let isUpdateForecast = ref(true);
     let cityName = ref("a");
     let cityNameShow = ref("a");
 
-    return { weatherData, isShowWeatherInfo, isShowLoader, isShowSearchErr, isGeolocationErr, cityName, cityNameShow }
+    return { weatherData, isShowWeatherInfo, isShowLoader, isShowSearchErr, isGeolocationErr, cityName, cityNameShow, isUpdateForecast }
 })
