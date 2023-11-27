@@ -100,6 +100,10 @@
                         cityName = town.town;
                         searchInput.value = town.town;
                     }" 
+                    @click="() => {
+                        cityName = town.town;
+                        searchInput.value = town.town;
+                    }" 
                     v-html="town.townHTML"></button>
                     <button class="search-town__town-delete-button"
                     @mousedown="removeFafouriteTown(town.town)">

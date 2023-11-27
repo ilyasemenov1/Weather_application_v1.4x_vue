@@ -60,7 +60,7 @@
                 </span>
                 <div class="weather-main__status">
                     <img :src="iconSrc" class="weather-main__staus-icon" alt="Иконка стастуса погоды">
-                    <span class="weather-main__status-block">Облачно</span>
+                    <span class="weather-main__status-block">{{ status }}</span>
                     <div class="weather-main__self-temp">
                         <span class="weather-main__self-temp--label">Ощущается как </span>
                         <span class="weather-main__self-temp-block">{{ tempFeelsLike }}</span>

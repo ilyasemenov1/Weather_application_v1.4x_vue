@@ -12,7 +12,7 @@ export const constructDate = () => {
         return;
     }
 
-    if (settings["time-format"] == "12h") {
+    if (settings["timeFormat"] == "12h") {
         options.hour12 = true;
     }
 
@@ -118,7 +118,7 @@ export const dtConventer = (dt, isUtc) => {
         return;
     }
 
-    if (settings["time-format"] == "12h") {
+    if (settings["timeFormat"] == "12h") {
         options.hour12 = true;
     }
 

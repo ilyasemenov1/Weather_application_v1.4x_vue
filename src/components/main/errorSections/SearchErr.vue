@@ -24,7 +24,7 @@
         </template>
         <template #button>
             <button class="error-notification__button"
-            @click="">        
+            @click="cityName = ''">        
                 <div class="icon">
                     <LocationIcon />
                 </div>

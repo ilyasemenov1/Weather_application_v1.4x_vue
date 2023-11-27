@@ -60,11 +60,16 @@
         }, false);
     }
 
-    async function updateWeather(place) {
+    async function updateWeather() {
         isShowLoader.value = true;
         isShowWeatherInfo.value = false;
         isShowSearchErr.value = false;
         isGeolocationErr.value = false;
+
+        if (cityName.value == "") {
+            getUserLocation();
+            return;
+        }
 
         getWeather(cityName.value)
         .then((resp) => resp.json())
@@ -87,17 +92,17 @@
     watch(
         cityName,
         () => {
-            updateWeather(cityName.value);
+            updateWeather();
         }
-    )
+    );
 
     watch(
         isUpdateForecast,
         () => {
-            updateWeather(cityName.value);
+            updateWeather();
             isUpdateForecast.value = false;
         }
-    )
+    );
 
     onMounted(() => {
         getUserLocation();
