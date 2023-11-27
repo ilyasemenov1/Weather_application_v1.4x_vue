@@ -6,11 +6,49 @@
     import { Swiper, SwiperSlide } from 'swiper/vue';
     import { Navigation, Keyboard, Mousewheel } from 'swiper/modules';
 
-    import { ref } from "vue";
+    import { ref, watch } from "vue";
 
     import 'swiper/css';
 
-    import { transformTempToSettingUnit } from "../../../assets/js/appFunctions.js";
+    import { mainData } from '@/stores/mainData.js';
+    import { storeToRefs } from 'pinia';
+
+    import { transformTempToSettingUnit, constructDate, conventDtTxt } from "@/assets/js/appFunctions.js";
+
+    const store = mainData();
+    const { weatherData } = storeToRefs(store); 
+
+    let weatherDataArr = ref([]);
+    let iconsArr = ref([]);
+    let gapToNewDate = ref(0);
+    let isGapedDate = false;
+
+    function newDayDate(index) {
+        let date = new Date();
+        date.setDate(date.getDate() + index);
+
+        let options = {
+            month: 'numeric', 
+            day: 'numeric' 
+        };
+
+        return date.toLocaleDateString('ru-RU', options);
+    }
+
+    watch(
+        weatherData,
+        () => {
+            weatherDataArr.value = weatherData.value.list;
+            for (let i = 0; i < [...weatherDataArr.value].length; i++) {
+                weatherDataArr.value[i].index = i;
+                iconsArr.value.push(new URL(`/src/assets/icons/weatherIcons/${weatherDataArr.value[i].weather[0].icon}.svg`, import.meta.url));
+                if (conventDtTxt(weatherDataArr.value[i].dt_txt) == "00:00" && !isGapedDate) {
+                    gapToNewDate.value = i;
+                    isGapedDate = true;
+                }
+            }
+        }
+    )
 
     let prev = ref(null);
     let next = ref(null);
@@ -45,12 +83,13 @@
                             nextEl: next
                         }"
                         :mousewheel="true">
-                        <swiper-slide v-for="i in 48" class="slider-block">
-                            <span class="slider-block__time">20:00</span>
-                            <span class="slider-block__status-icon"></span>
+                        <swiper-slide v-for="forecastElement in weatherDataArr" class="slider-block" :class="{'new-day': conventDtTxt(forecastElement.dt_txt) == '00:00'}">
+                            <span class="slider-block__time">{{ forecastElement.index == 0 ? constructDate() : conventDtTxt(forecastElement.dt_txt) }}</span>
+                            <img class="slider-block__status-icon" :src="iconsArr[forecastElement.index]" alt="Иконка статуса погоды">
                             <span class="slider-block__temp-block">
-                                <span class="slider-block__temp">{{ transformTempToSettingUnit(293) }}</span>
+                                <span class="slider-block__temp">{{ transformTempToSettingUnit(forecastElement.main.temp) }}</span>
                             </span>
+                            <span class="slider-date" v-show="conventDtTxt(forecastElement.dt_txt) == '00:00'">{{ newDayDate((forecastElement.index - gapToNewDate)/8 + 1) }}</span>
                         </swiper-slide>
                     </swiper>
                 </div>
