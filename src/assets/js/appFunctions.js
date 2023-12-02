@@ -26,10 +26,6 @@ export const conventDtTxt = (dt) => {
     return `${time[0]}:${time[1]}`;
 }
 
-export const setIcon = (index) => {
-    return `./icons/weather_icons/${index}.svg`;
-}
-
 export const transformPressureToSettingUnit = (pressure) => {
     const settings = JSON.parse(localStorage.getItem("settings"));
     const unit = settings["units"]["pressure"];

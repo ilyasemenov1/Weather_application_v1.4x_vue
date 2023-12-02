@@ -9,13 +9,16 @@
     import { mainData } from '@/stores/mainData.js';
     import { storeToRefs } from 'pinia';
 
-    import { transformTempToSettingUnit, constructDate, conventDtTxt } from "@/assets/js/appFunctions.js";
+    import {
+        transformTempToSettingUnit,
+        transformSpeedToSettingUnit, 
+        arrayMin,
+        arrayMax,
+        average
+    } from "@/assets/js/appFunctions.js";
 
     const store = mainData();
     const { weatherData } = storeToRefs(store); 
-
-    
-    let iconSrc = ref(new URL(`/src/assets/icons/weatherIcons/${"04d"}.svg`, import.meta.url))
 
     const swiperOptions = ref({
         breakpoints: {
@@ -43,6 +46,69 @@
         }
     })
     const modules = ref([Mousewheel]);
+
+    const mode = (arr) => {
+        return arr.sort((a,b) =>
+              arr.filter(v => v===a).length
+            - arr.filter(v => v===b).length
+        ).pop();
+    }
+
+    const addNewDayDate = (index) => {
+        const date = new Date();
+        date.setDate(date.getDate() + index);
+
+        let options = {
+            month: 'long', 
+            day: 'numeric' 
+        };
+        return date.toLocaleDateString('ru-RU', options);
+    }
+
+    const addWeekDay = (index) => {
+        const date = new Date();
+        date.setDate(date.getDate() + index);
+
+        if (index != 1) {
+            var options = { 
+                weekday: 'long',
+            };
+            return date.toLocaleDateString('ru-RU', options);
+        } else {
+            return "завтра";
+        }
+    }
+
+    const setMinMaxTemp = (index) => {
+        if (!weatherData.value.list) return 0;
+        console.log(weatherData.value);
+        const arr = weatherData.value.list.slice((index-1)*8, index*8).map((e) => e.main.temp);
+        return `${transformTempToSettingUnit(arrayMax(arr))} / ${transformTempToSettingUnit(arrayMin(arr))}`;
+    }
+
+    const setSpeed = (index) => {
+        if (!weatherData.value.list) return 0;
+        const arr = weatherData.value.list.slice((index-1)*8, index*8).map((e) => e.wind.speed);
+        return transformSpeedToSettingUnit(average(arr));
+    }
+
+    const setHumidity = (index) => {
+        if (!weatherData.value.list) return 0;
+        const arr = weatherData.value.list.slice((index-1)*8, index*8).map((e) => e.main.humidity);
+        return Math.round(average(arr))
+    }
+
+    const setIconSrc = (index) => {
+        if (!weatherData.value.list) return 0;
+        const arr = weatherData.value.list.slice((index-1)*8, index*8).map((e) => e.weather[0].icon);
+        return new URL(`/src/assets/icons/weatherIcons/${mode(arr)}.svg`, import.meta.url);
+    } 
+
+    const setStatus = (index) => {
+        if (!weatherData.value.list) return 0;
+        const arr = weatherData.value.list.slice((index-1)*8, index*8).map((e) => e.weather[0].description);
+        return mode(arr);
+    }
 </script>
 <template>
     <section class="four-day-forecast-short js-scroll">
@@ -58,25 +124,25 @@
                     <a :href="`#day-info-block-${i}`" class="day-card">
                         <div class="day-card__label--conteiner">
                             <span class="day-card__label">
-                                Завтра
+                                {{ addWeekDay(i) }}
                             </span>
                             <span class="day-card__date">
-                                03.12
+                                {{ addNewDayDate(i) }}
                             </span>
                         </div>
-                        <img class="day-card__weather-icon" :src="iconSrc" alt="Иконка статуса погоды">
-                        <span class="day-card__status">Облачно</span>
+                        <img class="day-card__weather-icon" :src="setIconSrc(i)" alt="Иконка статуса погоды">
+                        <span class="day-card__status">{{ setStatus(i) }}</span>
                         <div class="day-card__main-info">
                             <span class="day-card__temp-block">
-                                <span class="day-card__temp">20</span>
+                                <span class="day-card__temp">{{ setMinMaxTemp(i) }}</span>
                             </span>
                         </div>
                         <div class="day-card__second-block">
                             <span class="day-card__wind">
-                                <span class="day-card__wind-block">5</span>
+                                <span class="day-card__wind-block">{{ setSpeed(i) }}</span>
                             </span>
                             <span class="day-card__humidity">
-                                <span class="day-card__humidity-block">85</span>
+                                <span class="day-card__humidity-block">{{ setHumidity(i) }}</span>
                             </span>
                         </div>
                     </a>
@@ -151,6 +217,9 @@
         font-size: 20px;
         font-weight: 700;
     }
+    .day-card__label::first-letter {
+        text-transform: uppercase;
+    }
     .day-card__date {
         font-size: 15px;
         font-weight: 600;
@@ -183,5 +252,8 @@
     .day-card__temp::after {
         position: absolute;
         content: "°C";
+    }
+    .day-card__status::first-letter {
+        text-transform: uppercase;
     }
 </style>
