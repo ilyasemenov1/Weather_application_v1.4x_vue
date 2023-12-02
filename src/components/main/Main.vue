@@ -5,6 +5,8 @@
     import Loading from "./Loading.vue";
     import GeolocationErr from './errorSections/GeolocationErr.vue';
     import SearchErr from './errorSections/SearchErr.vue';
+    import WeatherDetails from './weatherSections/WeatherDetails.vue';
+    import ShortFourDaysForecast from './weatherSections/ShortFourDaysForecast.vue';
 
     import { onMounted, watch } from 'vue';
     import { storeToRefs } from 'pinia'
@@ -120,6 +122,8 @@
             </div>
             <div class="second-main-info-block">
                 <SunriseSunset />
+                <WeatherDetails />
+                <ShortFourDaysForecast />
             </div>
         </div>
     </main>
@@ -153,4 +157,11 @@
         grid-template-rows: auto auto;
         grid-gap: 25px
     }
-    </style>
+    .second-main-info-block {
+        display: grid;
+        grid-template-columns: 1fr 155px;
+        grid-template-rows: min-content auto;
+        gap: 25px;
+        height: 100%;
+    }
+</style>
