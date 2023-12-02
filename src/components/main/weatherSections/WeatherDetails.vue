@@ -1,23 +1,47 @@
-<script setup></script>
+<script setup>
+    import { onMounted, ref, watch } from "vue";
+
+    import { mainData } from '@/stores/mainData.js';
+    import { storeToRefs } from 'pinia';
+
+    const store = mainData();
+    const { weatherData } = storeToRefs(store); 
+
+    let clouds = ref(0);
+    let precipitations = ref(0);
+
+    watch(
+        weatherData,
+        () => {
+            clouds.value = weatherData.value.list[0].clouds.all;
+            precipitations.value = weatherData.value.list[0].pop*100;
+            console.log(`${250*(clouds.value/100)} 400;`);
+        }
+    )
+</script>
 <template>
     <div class="weather-ditails js-scroll">
         <div class="weather-ditails__info">
             <span class="weather-ditails__label">Облачноть</span>
             <div class="weather-ditails__content">
-                <span class="weather-ditails__data clouds">85</span>
+                <span class="weather-ditails__data clouds">{{ clouds }}</span>
                 <svg>
                     <circle cx="50%" xy="50%" r="40"></circle>
-                    <circle cx="50%" xy="50%" r="40" id="clouds"></circle>
+                    <circle cx="50%" xy="50%" r="40" id="clouds" 
+                    :style="{ strokeDasharray: `${250*(clouds/100)} 400` }" 
+                    :class="{ 'no-data': !clouds }"></circle>
                 </svg>
             </div>
         </div>
         <div class="weather-ditails__info">
             <span class="weather-ditails__label">Осадки</span>
             <div class="weather-ditails__content">
-                <span class="weather-ditails__data pop">85</span>
+                <span class="weather-ditails__data pop">{{ precipitations }}</span>
                 <svg>
                     <circle cx="50%" xy="50%" r="40"></circle>
-                    <circle cx="50%" xy="50%" r="40" id="pop"></circle>
+                    <circle cx="50%" xy="50%" r="40" id="pop"  
+                    :style="{ strokeDasharray: `${250*(precipitations/100)} 400` }" 
+                    :class="{ 'no-data': !precipitations }">{{ precipitations }}</circle>
                 </svg>
             </div>
         </div>
@@ -104,5 +128,8 @@
         top: 4px;
         content: "%";
         font-size: 18px;
+    }
+    .no-data {
+        stroke: transparent !important;
     }
 </style>
