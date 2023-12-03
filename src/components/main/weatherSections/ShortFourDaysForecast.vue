@@ -137,7 +137,7 @@
             :slides-per-group="4"
             :space-between="10"
             :breakpoints="swiperOptions.breakpoints"
-            :mousewheel="true">
+            :mousewheel="false">
                 <swiper-slide v-for="i in 4">
                     <a :href="`#day-info-block-${i}`" class="day-card">
                         <div class="day-card__label--conteiner">

@@ -142,6 +142,7 @@
                 setPageContentTransformX(-modalMenuWidth);
             } else if (isMenuOpen.value) {
                 setOpenMenuTransform();
+                setPageContentTransformX(-menu.clientWidth);
             }
         });
 
@@ -309,7 +310,7 @@
         pointer-events: none;
         transform: translateX(300px);
         visibility: hidden;
-        transition: .3s ease;
+        transition: .3s ease opacity, .3s ease transform;
         box-sizing: border-box;
         @media (max-width: 768px) {
             position: fixed;
