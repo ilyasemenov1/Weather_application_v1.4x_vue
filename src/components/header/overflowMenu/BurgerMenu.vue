@@ -265,13 +265,6 @@
         top: -5px;
         left: -5px;
     }
-    @media (max-width: 768px) { 
-        .burger-menu-button.arrow {
-            top: 16px;
-            left: 445px !important;
-            animation: main-block-add-rew .3s ease forwards;
-        }
-    }
     .burger-menu-button:hover,
     .burger-menu-button:focus-visible {
         cursor: pointer;
