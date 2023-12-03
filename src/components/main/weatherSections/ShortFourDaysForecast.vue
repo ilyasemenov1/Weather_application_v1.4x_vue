@@ -81,7 +81,6 @@
 
     const setMinMaxTemp = (index) => {
         if (!weatherData.value.list) return 0;
-        console.log(weatherData.value);
         const arr = weatherData.value.list.slice((index-1)*8, index*8).map((e) => e.main.temp);
         return `${transformTempToSettingUnit(arrayMax(arr))} / ${transformTempToSettingUnit(arrayMin(arr))}`;
     }
@@ -109,6 +108,13 @@
         const arr = weatherData.value.list.slice((index-1)*8, index*8).map((e) => e.weather[0].description);
         return mode(arr);
     }
+
+    const isWrap = (index) => {
+        const element = document.getElementById(`day-card-data-${index}`);
+        if (!element) return;
+        console.log(element.clientHeight > 100);
+        return element.clientHeight > 100;
+    }
 </script>
 <template>
     <section class="four-day-forecast-short js-scroll">
@@ -131,19 +137,21 @@
                             </span>
                         </div>
                         <img class="day-card__weather-icon" :src="setIconSrc(i)" alt="Иконка статуса погоды">
-                        <span class="day-card__status">{{ setStatus(i) }}</span>
-                        <div class="day-card__main-info">
-                            <span class="day-card__temp-block">
-                                <span class="day-card__temp">{{ setMinMaxTemp(i) }}</span>
-                            </span>
-                        </div>
-                        <div class="day-card__second-block">
-                            <span class="day-card__wind">
-                                <span class="day-card__wind-block">{{ setSpeed(i) }}</span>
-                            </span>
-                            <span class="day-card__humidity">
-                                <span class="day-card__humidity-block">{{ setHumidity(i) }}</span>
-                            </span>
+                        <div class="day-card__data" :id="`day-card-data-${i}`">
+                            <span class="day-card__status">{{ setStatus(i) }}</span>
+                            <div class="day-card__main-info">
+                                <span class="day-card__temp-block">
+                                    <span class="day-card__temp">{{ setMinMaxTemp(i) }}</span>
+                                </span>
+                            </div>
+                            <div class="day-card__second-block" :class="{ 'wrap': isWrap(i) }">
+                                <span class="day-card__wind">
+                                    <span class="day-card__wind-block">{{ setSpeed(i) }}</span>
+                                </span>
+                                <span class="day-card__humidity">
+                                    <span class="day-card__humidity-block">{{ setHumidity(i) }}</span>
+                                </span>
+                            </div>
                         </div>
                     </a>
                 </swiper-slide>
@@ -229,10 +237,8 @@
         position: relative;
         left: -6px;
         width: 70px;
-        height: 70px;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: 70px 70px;
+        height: max-content;
+        min-height: 50px;
     }
     .day-card__temp-block {
         display: flex;
@@ -242,6 +248,10 @@
     .day-card__second-block {
         display: flex;
         flex-direction: column;
+    }
+    .day-card__second-block.wrap {
+        flex-direction: row;
+        flex-wrap: wrap;
     }
     .day-card__main-info {
         margin: 5px 0;
@@ -254,6 +264,6 @@
         content: "°C";
     }
     .day-card__status::first-letter {
-        text-transform: uppercase;
+        text-transform: uppercase !important;
     }
 </style>
