@@ -65,6 +65,14 @@
         box-shadow: rgb(0 0 0 / 9%) 0px 5px 10px;
         background: var(--bg-color-1);
         box-sizing: border-box;
+        @media (max-width: 640px) {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr;
+            grid-column-start: 1;
+            grid-column-end: 2;
+            grid-row-start: 2;
+            grid-row-end: 3;
+        }
     }
     .weather-ditails::after {
         position: absolute;
@@ -74,6 +82,11 @@
         width: calc(100% - 40px);
         border-radius: 25px;
         background: var(--bg-color-9);
+        @media (max-width: 640px) {
+            top: 15px;
+            width: 1px;
+            height: calc(100% - 30px);
+        }
     }
     .weather-ditails__info {
         display: grid;

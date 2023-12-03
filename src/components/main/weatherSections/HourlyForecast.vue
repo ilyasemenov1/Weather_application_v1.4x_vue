@@ -115,6 +115,9 @@
         grid-template-columns: 30px 1fr 30px;
         grid-column-gap: 10px;
         height: 100px;
+        @media (max-width: 768px) {
+            grid-template-columns: 1fr;
+        }
     }
     .hourly-forecast__slider-block {
         position: relative;
@@ -136,6 +139,9 @@
         border: none;
         background: none;
         cursor: pointer;
+        @media (max-width: 768px) {
+            display: none;
+        }
     }
 
     .hourly-forecast__right-button-view,

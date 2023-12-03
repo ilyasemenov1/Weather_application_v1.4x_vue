@@ -42,7 +42,13 @@
         opacity: 0;
         pointer-events: none;
         visibility: hidden;
-
+        @media (max-width: 768px) {
+            left: 0;
+            max-height: 100vh;
+            max-width: none;
+            height: 100%;
+            padding: 20px;
+        }
     }
     .level2-menu.active {
         transform: translateX(0);

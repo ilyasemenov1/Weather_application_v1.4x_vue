@@ -1,0 +1,189 @@
+@media (max-width: 1175px) {
+    .first-content {
+        grid-template-columns: 1fr;
+    }
+    .main-content-block {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: 1fr;
+    }
+}
+@media (max-width: 955px) {
+    .seven-days-foracast-ditails {
+        grid-template-columns: 1fr;
+    }
+    .main-content-block {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+    }
+}
+@media (max-width: 768px) {
+    .main-menu {
+        position: fixed;
+        top: 0;
+        left: 0vw;
+        justify-content: center;
+        align-items: center;
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0px;
+        background: var(--bg-color-1);
+        opacity: 1;
+        transform: translateX(100%);
+    }
+    .header-content__function-menu.menu-active .main-menu {
+        pointer-events: all;
+        transform: translateX(0%);
+    }
+    .main-menu__button {
+        width: auto;
+        font-size: 25px;
+        text-transform: uppercase;
+        line-height: 33px;
+    }
+    .header-content__label {
+        display: none;
+    }
+    .main-menu__button-name {
+        margin: 0;
+    }
+    .main-menu__button-name::before {
+        display: none;
+    }
+    .hourly-forecast__slider {
+        grid-template-columns: 1fr;
+    }
+    .active-button {
+        display: none;
+    }
+    .header-content {
+        column-gap: 20px;
+    }
+    .page-modal {
+        padding: 0;
+        backdrop-filter: blur(0px);
+    }
+    .page-modal-block {
+        left: 0;
+        max-height: 100vh;
+        max-width: none;
+        height: 100%;
+        padding: 20px;
+    }
+    .page-modal-settings-content__settings-menu {
+        display: none;
+    }
+    .page-modal-settings-content {
+        grid-template-columns: 1fr;
+    }
+    .page-modal-settings__label,
+    .page-modal-favorite-towns__label,
+    .page-modal-latest-towns__label {
+        top: 1ox;
+        margin: 0 0 0 50px;
+        font-size: 30px;
+    }
+    .modal-close-button {
+        width: 34px;
+        height: 34px;
+        background-size: 15px 15px;
+    }
+    .main-menu__label {
+        display: none;
+    }
+    .menu-burger.arrow {
+        top: 16px;
+        left: 15px !important;
+        animation: main-block-add-rew .3s ease forwards;
+    }
+    .favorite-towns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: min-content min-content;
+    }
+    @keyframes modal-block-back {
+        0% {
+            transform: translateX(0%);
+        }
+        100% {
+            transform: translateX(50%);
+        }   
+    }
+    @keyframes modal-block-add {
+        0% {
+            transform: translateX(100%);
+        }
+        100% {
+            transform: translateX(0%);
+        }
+    }
+    @keyframes modal-block-remove {
+        0% {
+            transform: translateX(0%);
+        }
+        100% {
+            transform: translateX(100%);
+        }
+    }
+    .page-modal__label--conteiner.scrolled {
+        box-shadow: 0px 3px 8px #00000011;
+    }
+}
+@media (max-width: 640px) {
+    .main-info-block-add-info {
+        flex-direction: column;
+    }
+    .sinrise-sunset {
+        width: auto;
+    }
+    .second-main-info-block {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(3 auto);
+        gap: 0;
+        row-gap: 20px;
+    }
+    .weather-ditails {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
+        grid-column-start: 1;
+        grid-column-end: 2;
+        grid-row-start: 2;
+        grid-row-end: 3;
+    }
+    .weather-ditails::after {
+        top: 15px;
+        width: 1px;
+        height: calc(100% - 30px);
+    }
+    .favorite-towns {
+        display: flex;
+    }
+}
+@media (max-width: 500px) {
+    .day-info-block-content__block {
+        grid-template-columns: 1fr;
+    }
+    .select__menu {
+        width: 100%;
+    }
+}
+@media (max-width: 450px) {
+    .main-menu__button-name {
+        font-size: 23px;
+    }
+    .sinrise-sunset__sunrise,
+    .sinrise-sunset__sunset {
+        font-size: 15px;
+        padding: 0 0 0 35px;
+    }
+    .sinrise-sunset__sunset-icon,
+    .sinrise-sunset__sunrise-icon {
+        width: 35px;
+        height: 35px;
+    }
+}
+@media (max-width: 375px) {
+    .page-modal__label {
+        top: 5px;
+        font-size: 25px;
+    }
+}

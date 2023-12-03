@@ -2,6 +2,7 @@
 @import "./page-blur.css";
 @import "./info-menu.css";
 @import "./animations.css";
+@import "./ui-adaptivity.css";
 
 body {
     min-height: 100vh;

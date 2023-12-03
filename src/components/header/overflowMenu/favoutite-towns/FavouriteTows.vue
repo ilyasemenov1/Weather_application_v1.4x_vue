@@ -460,6 +460,14 @@
         flex-direction: column;
         gap: 15px;
         margin: 15px 0 0 0;
+        @media (max-width: 768px) {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: min-content min-content;
+        }
+        @media (max-width: 640px) {
+            display: flex;
+        }
     }
     .favorite-town {
         position: relative;

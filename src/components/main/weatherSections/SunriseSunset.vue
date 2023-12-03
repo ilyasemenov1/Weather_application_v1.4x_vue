@@ -52,6 +52,9 @@
         gap: 25px;
         grid-column-start: 1;
         grid-column-end: 3;
+        @media (max-width: 640px) {
+            flex-direction: column;
+        }
     }
     .sunrise-sunset {
         padding: 12px;
@@ -61,6 +64,9 @@
         font-weight: 600;
         font-size: 17px;
         color: var(--text-color-1);
+        @media (max-width: 640px) {
+            width: auto;
+        }
     }
     .sunrise-sunset {
         position: relative;

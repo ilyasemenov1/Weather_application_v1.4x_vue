@@ -22,6 +22,9 @@
         font-weight: 800;
         letter-spacing: 1px;
         color: var(--text-color-1);
+        @media (max-width: 768px) {
+            display: none;
+        }
     }
     .icon {
         width: 22px;
