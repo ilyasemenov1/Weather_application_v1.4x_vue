@@ -34,7 +34,7 @@
         padding: 0 !important;
         box-shadow: 0px 0px 18px #00000021;
         background: var(--bg-color-1);
-        transition: .3s ease transform, .3s ease opacity;
+        transition: .3s ease, height 10ms;
         box-sizing: border-box;
         z-index: 200;
 

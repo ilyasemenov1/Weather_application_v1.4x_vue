@@ -15,7 +15,6 @@
         () => {
             clouds.value = weatherData.value.list[0].clouds.all;
             precipitations.value = weatherData.value.list[0].pop*100;
-            console.log(`${250*(clouds.value/100)} 400;`);
         }
     )
 </script>
@@ -82,7 +81,9 @@
         width: calc(100% - 40px);
         border-radius: 25px;
         background: var(--bg-color-9);
-        @media (max-width: 640px) {
+    }
+    @media (max-width: 640px) {
+        .weather-ditails::after { 
             top: 15px;
             width: 1px;
             height: calc(100% - 30px);

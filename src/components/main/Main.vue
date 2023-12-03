@@ -77,7 +77,6 @@
         getWeather(cityName.value)
         .then((resp) => resp.json())
         .then((data) => {
-            console.log(data);
             if (data.cod != "200") {
                 isShowSearchErr.value = true;
                 isShowLoader.value = false;

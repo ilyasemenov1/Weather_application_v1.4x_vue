@@ -310,7 +310,7 @@
         pointer-events: none;
         transform: translateX(300px);
         visibility: hidden;
-        transition: .3s ease opacity, .3s ease transform;
+        transition: .3s ease;
         box-sizing: border-box;
         @media (max-width: 768px) {
             position: fixed;
@@ -334,6 +334,9 @@
         font-size: 27px;
         font-weight: 700;
         color: var(--text-color-1);
+        @media (max-width: 768px) {
+            display: none;
+        }
     }
     .main-menu__content {
         display: flex;
@@ -356,6 +359,12 @@
         color: var(--text-color-1);
         transition: .2s ease;
         box-sizing: border-box;
+        @media (max-width: 768px) {
+            width: auto;
+            font-size: 25px;
+            text-transform: uppercase;
+            line-height: 33px;
+        }
     }
     .main-menu__button span,
     .main-menu__button svg {
@@ -366,6 +375,9 @@
         top: 1px;
         width: 22px;
         height: 22px;
+        @media (max-width: 768px) {
+            display: none;
+        }
     }
     .main-menu__button svg {
         position: absolute;
