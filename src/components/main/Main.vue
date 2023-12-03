@@ -89,6 +89,40 @@
 
             isShowWeatherInfo.value = true;
             isShowLoader.value = false;
+
+            setTempAtr();
+            setSpeedAtr();
+            setPressureAtr();
+        });
+    }
+
+    function setTempAtr() {
+        const elements = document.querySelectorAll(".weather-main__temp-block, .day-card__temp, .day-info-block-day-time__temp, .slider-block__temp, .weather-main__self-temp-block");
+        const settings = JSON.parse(localStorage.getItem("settings"));
+
+        elements.forEach(element => {
+            element.classList.remove("c", "k", "f");
+            element.classList.add(settings["units"]["temp"]);
+        });
+    }
+
+    function setSpeedAtr() {
+        const elements = document.querySelectorAll(".weather-main__wind-block, .day-card__wind-block, .day-info-block-day-time__wind");
+        const settings = JSON.parse(localStorage.getItem("settings"));
+
+        elements.forEach(element => {
+            element.classList.remove("mps", "kmph", "milph");
+            element.classList.add(settings["units"]["speed"]);
+        });
+    }
+
+    function setPressureAtr() {
+        const elements = document.querySelectorAll(".weather-main__pressure-block, .day-info-block-day-time__pressure");
+        const settings = JSON.parse(localStorage.getItem("settings"));
+
+        elements.forEach(element => {
+            element.classList.remove("mm-rt", "hpa");
+            element.classList.add(settings["units"]["pressure"]);
         });
     }
 

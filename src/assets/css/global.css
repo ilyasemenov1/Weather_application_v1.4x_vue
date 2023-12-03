@@ -153,19 +153,10 @@ h1, h2, h3, h5, h6 {
     font-size: 16px;
     color: var(--text-color-3);
 }
-.weather-main__wind-block::after,
-.day-card__wind-block::after {
-    width: 30px;
-    content: "м/с";
-}
 .weather-main__humidity-block::after,
 .day-card__humidity-block::after {
     width: 20px;
     content: "%";
-}
-.weather-main__pressure-block::after {
-    width: 100px;
-    content: "мм. рс. ст.";
 }
 .weather-main__wind-block {
     margin-right: 28px;
@@ -175,6 +166,71 @@ h1, h2, h3, h5, h6 {
 }
 .weather-main__pressure-block {
     margin-right: 73px;
+}
+.weather-main__temp-block.c::after,
+.day-card__temp.c::after,
+.slider-block__temp.c::after,
+.day-info-block-day-time__temp.c::after,
+.weather-main__self-temp-block.c::after {
+    content: "°C" !important;
+}
+.weather-main__temp-block.f::after,
+.day-card__temp.f::after,
+.slider-block__temp.f::after,
+.day-info-block-day-time__temp.f::after,
+.weather-main__self-temp-block.f::after {
+    content: "°F" !important;
+}
+.weather-main__temp-block.k::after,
+.day-card__temp.k::after,
+.slider-block__temp.k::after,
+.day-info-block-day-time__temp.k::after,
+.weather-main__self-temp-block.k::after {
+    left: 110% !important;
+    content: "K" !important;
+}
+.weather-main__wind-block.mps::after,
+.day-card__wind-block.mps::after,
+.day-info-block-day-time__wind.mps::after {
+    content: "м/с" !important;
+    width: 27px !important;
+}
+.weather-main__wind-block.kmph::after,
+.day-card__wind-block.kmph::after,
+.day-info-block-day-time__wind.kmph::after {
+    content: "км/ч" !important;
+    width: 40px !important;
+}
+.weather-main__wind-block.milph::after,
+.day-card__wind-block.milph::after,
+.day-info-block-day-time__wind.milph::after {
+    content: "мл/ч" !important;
+    width: 40px !important;
+}
+.weather-main__wind-block.mps,
+.day-card__wind-block.mps,
+.day-info-block-day-time__wind.mps {
+    margin-right: 27px !important;
+}
+.weather-main__wind-block.kmph,
+.day-card__wind-block.kmph,
+.day-info-block-day-time__wind.kmph,
+.weather-main__wind-block.milph,
+.day-card__wind-block.milph,
+.day-info-block-day-time__wind.milph {
+    margin-right: 40px !important;
+}
+.weather-main__pressure-block.mm-rt::after,
+.day-info-block-day-time__pressure.mm-rt::after {
+    content: "мм. рс. ст." !important;
+}
+.weather-main__pressure-block.hpa::after,
+.day-info-block-day-time__pressure.hpa::after {
+    content: "гПа" !important;
+}
+.weather-main__pressure-block.hpa,
+.day-info-block-day-time__pressure.hpa {
+    margin-right: 30px !important;
 }
 
 @font-face {

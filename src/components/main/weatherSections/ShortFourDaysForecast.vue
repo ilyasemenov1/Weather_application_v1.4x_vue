@@ -109,12 +109,24 @@
         return mode(arr);
     }
 
+    // TODO: Fix data update bugs
+
     const isWrap = (index) => {
-        const element = document.getElementById(`day-card-data-${index}`);
-        if (!element) return;
-        console.log(element.clientHeight > 100);
-        return element.clientHeight > 100;
+        setTimeout(() => {
+            const element = document.getElementById(`day-card-data-${index}`);
+            const data = document.getElementById(`day-card-wind-and-speed-${index}`);
+            if (!element) return;
+            element.clientHeight > 100 ? data.classList.add("wrap") : data.classList.remove("wrap");
+        }, 100);
+
     }
+
+    watch(weatherData,
+    () => {
+        for (let i = 1; i < 5; i++) {
+            isWrap(i);
+        }
+    })
 </script>
 <template>
     <section class="four-day-forecast-short js-scroll">
@@ -144,7 +156,7 @@
                                     <span class="day-card__temp">{{ setMinMaxTemp(i) }}</span>
                                 </span>
                             </div>
-                            <div class="day-card__second-block" :class="{ 'wrap': isWrap(i) }">
+                            <div class="day-card__second-block" :id="`day-card-wind-and-speed-${i}`">
                                 <span class="day-card__wind">
                                     <span class="day-card__wind-block">{{ setSpeed(i) }}</span>
                                 </span>
@@ -252,6 +264,7 @@
     .day-card__second-block.wrap {
         flex-direction: row;
         flex-wrap: wrap;
+        gap: 5px;
     }
     .day-card__main-info {
         margin: 5px 0;
