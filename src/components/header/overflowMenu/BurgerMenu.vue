@@ -37,6 +37,24 @@
     let headerLeft = 0;
     let headerTop = 0;
 
+    function setOpenMenuTransform() {
+        if (window.innerWidth > 768) {
+            burgerMenuButtonTransformX.value = -menu.clientWidth + 65 + (headerWidth - headerContentwidth)/2;
+            burgerMenuButtonTransformY.value = 0;
+        } else {
+            burgerMenuButtonTransformX.value = 0;
+            burgerMenuButtonTransformY.value = 0;
+        }
+    }
+
+    function setArrowModeMenuPositon() {
+        if (window.innerWidth > 768) {
+            burgerMenuButtonTransformX.value = -modalMenuWidth + padding + burgerWidth + headerLeft + (headerWidth - headerContentwidth)/2 + 15;
+        } else {
+            burgerMenuButtonTransformX.value = -modalMenuWidth + padding + burgerWidth + 15;
+        }
+    }
+
     function changeMenuState() {
         if (isMenuArrowMode.value) {
             // From arrow to open mode
@@ -44,9 +62,7 @@
             isMenuOpen.value = true;
             isPageBlurActive.value = true;
             closeMenuSelect();
-
-            burgerMenuButtonTransformX.value = -menu.clientWidth + 65 + (headerWidth - headerContentwidth)/2;
-            burgerMenuButtonTransformY.value = 0;
+            setOpenMenuTransform();
             setPageContentTransformX(-menu.clientWidth);
         } else if (isMenuOpen.value) {
             // From open to default mode
@@ -55,8 +71,7 @@
             // From default to open mode
             isMenuOpen.value = true;
             isPageBlurActive.value = true;
-            burgerMenuButtonTransformX.value =  -menu.clientWidth + 65 + (headerWidth - headerContentwidth)/2;
-            burgerMenuButtonTransformY.value = 0;
+            setOpenMenuTransform();
             setPageContentTransformX(-menu.clientWidth);
         }
     }
@@ -81,7 +96,7 @@
         let modalMenu = document.getElementById(id);
         modalMenu.classList.add("active");
 
-        burgerMenuButtonTransformX.value = -modalMenuWidth + padding + burgerWidth + headerLeft + (headerWidth - headerContentwidth)/2 + 15;
+        setArrowModeMenuPositon();
         setPageContentTransformX(-modalMenuWidth);
     }
 
@@ -120,6 +135,14 @@
         setMenuPosition(burger.value);
         window.addEventListener("resize", () => {
             setMenuPosition(burger.value);
+            modalMenuWidth = document.querySelector(".level2-menu").clientWidth;
+            
+            if (isMenuArrowMode.value) {
+                setArrowModeMenuPositon();
+                setPageContentTransformX(-modalMenuWidth);
+            } else if (isMenuOpen.value) {
+                setOpenMenuTransform();
+            }
         });
 
         pageBlur.forEach(element => {
