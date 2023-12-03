@@ -1,11 +1,23 @@
 <script setup>
+    import { ref, onMounted } from "vue";
+
     import Logo from "./Logo.vue";
     import CitySearch from "./CitySearch.vue";
     import BurgerMenu from "./overflowMenu/BurgerMenu.vue";
+
+    let header = ref(null);
+
+    function setHeaderPosition() {
+        
+    }
+
+    onMounted(() => {
+        window.addEventListener("scroll", setHeaderPosition);
+    });
 </script>
 
 <template>
-    <header class="header">
+    <header class="header" ref="header">
         <div class="header-content" ref="headerContent">
             <div class="header-blocks">
                 <Logo>
@@ -31,14 +43,36 @@
         box-shadow: 0px 0px 15px #00000015;
         background: var(--bg-color-1);
         z-index: 9;
-        transition: transform .3s;
+        transition: transform ease .3s;
         box-sizing: border-box;
+    }
+    .header.not-scrolled {
+        position: fixed;
+        animation: headerNotScrolled .2s ease forwards;
     }
     .header.scrolled {
         position: fixed;
-        min-height: 60px;
-        padding: 8px 20px;
-        box-shadow: 0px 0px 18px #00000025;
+        animation: headerScrolled .2s ease forwards;
+    }
+    @keyframes headerScrolled {
+        from {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    @keyframes headerNotScrolled {
+        from {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
     }
     .header-content {
         display: flex;

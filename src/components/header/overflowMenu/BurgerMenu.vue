@@ -6,10 +6,10 @@
     import HeartIcon from "../../icons/HeartIcon.vue";
     import InfoIcon from "../../icons/InfoIcon.vue";
 
-    import { onMounted, ref } from "vue";
+    import { onMounted, ref, watch } from "vue";
 
-    const header = document.querySelector(".header");
-    const headerContent = document.querySelector(".header-content");
+    let header = document.querySelector(".header");
+    let headerContent = document.querySelector(".header-content");
     let pageContent = "";
 
     // !Mutable (once) in OnMounted()!
@@ -125,6 +125,9 @@
     }
 
     onMounted(() => {
+        header = document.querySelector(".header");
+        headerContent = document.querySelector(".header-content");
+
         const pageBlur = document.querySelectorAll(".page-blur");
         pageContent = document.querySelectorAll(".header, .main, .footer, .error-notification__label, .loading-animation--conteiner, .error-notification__button");
 
@@ -159,6 +162,15 @@
             }
         })
     });
+
+    watch(
+        isMenuOpen,
+        () => {
+            setTimeout(() => {
+                isMenuOpen.value ? document.body.style = "overflow: hidden;" : document.body.style = "";
+            }, 50);
+        }
+    )
 </script>
 
 <template>
@@ -202,7 +214,7 @@
 
 <style scoped>
     .burger-menu-button {
-        position: fixed;
+        position: absolute;
         top: 15px;
         right: 30px;
         width: 40px;
