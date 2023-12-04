@@ -130,9 +130,9 @@ export const dtConventer = (dt, isUtc) => {
 
 export const getDate = (index) => {
     const date = new Date();
-    date.setDate(date.getDate() + index + 1);
+    date.setDate(date.getDate() + index);
 
-    if (index != 0) {
+    if (index != 1) {
         var options = {
             weekday: 'long',
             month: 'long', 
@@ -148,6 +148,13 @@ export const getDate = (index) => {
 
         return `завтра, ${date.toLocaleDateString('ru-RU', options)}`;
     }
+}
+
+export const mode = (arr) => {
+    return arr.sort((a,b) =>
+          arr.filter(v => v===a).length
+        - arr.filter(v => v===b).length
+    ).pop();
 }
 
 export const average = (array) => array.reduce((a, b) => a + b) / array.length;

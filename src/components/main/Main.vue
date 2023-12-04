@@ -7,6 +7,7 @@
     import SearchErr from './errorSections/SearchErr.vue';
     import WeatherDetails from './weatherSections/WeatherDetails.vue';
     import ShortFourDaysForecast from './weatherSections/ShortFourDaysForecast.vue';
+    import FullFourDaysForecast from './weatherSections/FullFourDaysForecast.vue';
 
     import { onMounted, watch } from 'vue';
     import { storeToRefs } from 'pinia'
@@ -159,6 +160,9 @@
                 <ShortFourDaysForecast />
             </div>
         </div>
+        <div class="full-four-days-foracast">
+            <FullFourDaysForecast />
+        </div>
     </main>
     <Loading />
     <GeolocationErr />
@@ -213,5 +217,11 @@
             gap: 0;
             row-gap: 20px;
         }
+    }
+    .full-four-days-foracast {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 25px;
+        width: 100%;
     }
 </style>

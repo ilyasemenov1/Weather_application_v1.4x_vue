@@ -223,6 +223,7 @@ h1, h2, h3, h5, h6 {
 .weather-main__pressure-block.mm-rt::after,
 .day-info-block-day-time__pressure.mm-rt::after {
     content: "мм. рс. ст." !important;
+    width: 75px;
 }
 .weather-main__pressure-block.hpa::after,
 .day-info-block-day-time__pressure.hpa::after {
@@ -231,6 +232,10 @@ h1, h2, h3, h5, h6 {
 .weather-main__pressure-block.hpa,
 .day-info-block-day-time__pressure.hpa {
     margin-right: 30px !important;
+}
+.weather-main__pressure-block.mm-rt,
+.day-info-block-day-time__pressure.mm-rt {
+    margin-right: 75px !important;
 }
 
 @font-face {

@@ -14,7 +14,8 @@
         transformSpeedToSettingUnit, 
         arrayMin,
         arrayMax,
-        average
+        average,
+        mode
     } from "@/assets/js/appFunctions.js";
 
     const store = mainData();
@@ -46,13 +47,6 @@
         }
     })
     const modules = ref([Mousewheel]);
-
-    const mode = (arr) => {
-        return arr.sort((a,b) =>
-              arr.filter(v => v===a).length
-            - arr.filter(v => v===b).length
-        ).pop();
-    }
 
     const addNewDayDate = (index) => {
         const date = new Date();
