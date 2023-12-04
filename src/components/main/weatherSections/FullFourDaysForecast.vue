@@ -20,6 +20,58 @@
     const store = mainData();
     const { weatherData } = storeToRefs(store);
 
+    function getDataByIndex(indexLevel1, indexLevel2) {
+        try {
+            return weatherData.value.list.slice((indexLevel1 - 1) * 8, indexLevel1 * 8).slice((indexLevel2 - 1) * 2, indexLevel2 * 2);
+        } catch {
+            return null;
+        }
+    }
+
+    function setTemp(indexLevel1, indexLevel2) {
+        const data = getDataByIndex(indexLevel1, indexLevel2);
+        if (!data) return 0;
+        const resultData = data.map(e => e.main.temp);
+        return transformTempToSettingUnit(average(resultData));
+    }
+
+    function setWind(indexLevel1, indexLevel2) {
+        const data = getDataByIndex(indexLevel1, indexLevel2);
+        if (!data) return 0;
+        const resultData = data.map(e => e.wind.speed);
+        return transformSpeedToSettingUnit(average(resultData));
+    }
+
+    function setHumidity(indexLevel1, indexLevel2) {
+        const data = getDataByIndex(indexLevel1, indexLevel2);
+        if (!data) return 0;
+        const resultData = data.map(e => e.main.humidity);
+        return Math.round(average(resultData));
+    }
+
+    function setPressure(indexLevel1, indexLevel2) {
+        const data = getDataByIndex(indexLevel1, indexLevel2);
+        if (!data) return 0;
+        const resultData = data.map(e => e.main.pressure);
+        return transformPressureToSettingUnit(average(resultData));
+    }
+
+    function setStatus(indexLevel1, indexLevel2) {
+        const data = getDataByIndex(indexLevel1, indexLevel2);
+        if (!data) return 0;
+        const resultData = data.map(e => e.weather[0].description);
+        return mode(resultData);
+    }
+
+    function setIcon(indexLevel1, indexLevel2) {
+        const data = getDataByIndex(indexLevel1, indexLevel2);
+        if (!data) return 0;
+        const resultData = data.map(e => e.weather[0].icon);
+        return new URL(`/src/assets/icons/weatherIcons/${mode(resultData)}.svg`, import.meta.url);
+    }
+
+
+
     const dayTimes = ref(["Ночью", "Утром", "Днём", "Вечером"]);
 
 </script> 
@@ -36,16 +88,16 @@
                     <span class="day-info-block-day-time__label">{{ dayTimes[j-1] }}</span>
                     <div class="day-info-block-day-time__content">
                         <div class="day-info-block-day-time__info-block-1">
-                            <span class="day-info-block-day-time__temp">20</span>
+                            <span class="day-info-block-day-time__temp">{{ setTemp(i, j) }}</span>
                             <span class="day-info-block-day-time__status">
-                                <img class="day-info-block-day-time__icon" src="#" alt="Иконка статуса погоды">
-                                Облачно
+                                <img class="day-info-block-day-time__icon" :src="setIcon(i, j)" alt="Иконка статуса погоды">
+                                {{ setStatus(i, j) }}
                             </span>
                         </div>
                         <div class="day-info-block-day-time__info-block-2">
-                            <span class="day-info-block-day-time__wind">5</span>
-                            <span class="day-info-block-day-time__humidity">85</span>
-                            <span class="day-info-block-day-time__pressure">1000</span>
+                            <span class="day-info-block-day-time__wind">{{ setWind(i, j) }}</span>
+                            <span class="day-info-block-day-time__humidity">{{ setHumidity(i, j) }}</span>
+                            <span class="day-info-block-day-time__pressure">{{  setPressure(i, j) }}</span>
                         </div>
                     </div>
                 </div>
