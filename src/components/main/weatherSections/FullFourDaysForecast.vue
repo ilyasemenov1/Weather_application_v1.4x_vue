@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, watch, onMounted } from "vue";
+    import { ref } from "vue";
 
     import { mainData } from '@/stores/mainData.js';
     import { storeToRefs } from 'pinia';
@@ -9,10 +9,6 @@
         transformPressureToSettingUnit,
         transformSpeedToSettingUnit,
         getDate,
-        arrayMin,
-        arrayMax,
-        constructDate,
-        conventDtTxt,
         average,
         mode
      } from "@/assets/js/appFunctions.js";
@@ -278,5 +274,13 @@
     }
     .day-info-block-day-time__humidity {
         margin-right: 15px;
+    }
+    @media (max-width: 550px) {
+        .day-info-block-content__block {
+            grid-template-columns: 1fr;
+        }
+        .select__menu {
+            width: 100%;
+        }
     }
 </style>
