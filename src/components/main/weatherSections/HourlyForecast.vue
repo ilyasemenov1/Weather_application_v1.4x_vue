@@ -11,12 +11,25 @@
     import 'swiper/css';
 
     import { mainData } from '@/stores/mainData.js';
+    import { settingsStore } from '@/stores/settings.js';
     import { storeToRefs } from 'pinia';
 
-    import { transformTempToSettingUnit, constructDate, conventDtTxt } from "@/assets/js/appFunctions.js";
+    import { transformTempToSettingUnit, constructDate, conventDtTxt, dtConventer } from "@/assets/js/appFunctions.js";
 
     const store = mainData();
     const { weatherData } = storeToRefs(store); 
+
+    const settingsSt = settingsStore();
+    const { settings } = storeToRefs(settingsSt);
+
+    let timeFormat = ref(settings.value.timeFormat);
+
+    watch(
+        settings,
+        () => {
+            timeFormat.value = settings.value.timeFormat;
+        }
+    )
 
     let weatherDataArr = ref([]);
     let iconsArr = ref([]);
@@ -42,7 +55,7 @@
             for (let i = 0; i < [...weatherDataArr.value].length; i++) {
                 weatherDataArr.value[i].index = i;
                 iconsArr.value.push(new URL(`/src/assets/icons/weatherIcons/${weatherDataArr.value[i].weather[0].icon}.svg`, import.meta.url));
-                if (conventDtTxt(weatherDataArr.value[i].dt_txt) == "00:00" && !isGapedDate) {
+                if (conventDtTxt(weatherDataArr.value[i].dt_txt) == "00:00" && !isGapedDate && i != 0) {
                     gapToNewDate.value = i;
                     isGapedDate = true;
                 }
@@ -83,8 +96,11 @@
                             nextEl: next
                         }"
                         :mousewheel="true">
-                        <swiper-slide v-for="forecastElement in weatherDataArr" class="slider-block" :class="{'new-day': conventDtTxt(forecastElement.dt_txt) == '00:00'}">
-                            <span class="slider-block__time">{{ forecastElement.index == 0 ? constructDate() : conventDtTxt(forecastElement.dt_txt) }}</span>
+                        <swiper-slide 
+                        v-for="forecastElement in weatherDataArr"
+                        class="slider-block" 
+                        :class="{'new-day': conventDtTxt(forecastElement.dt_txt) == '00:00' && forecastElement.index != 0 }">
+                            <span class="slider-block__time" :class="{ 'h12': timeFormat === '12h' }">{{ forecastElement.index == 0 ? constructDate() : dtConventer(forecastElement.dt) }}</span>
                             <img class="slider-block__status-icon" :src="iconsArr[forecastElement.index]" alt="Иконка статуса погоды">
                             <span class="slider-block__temp-block">
                                 <span class="slider-block__temp">{{ transformTempToSettingUnit(forecastElement.main.temp) }}</span>
