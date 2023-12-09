@@ -1,6 +1,9 @@
 <script setup>
     import rootLevel2MenuComponent from '../rootLevel2MenuComponent.vue';
     import Logo from "../../Logo.vue";
+    import Link from '../../../global/Link.vue';
+    import GithubIcon from '../../../icons/GithubIcon.vue';
+    import GitIcon from '../../../icons/GitIcon.vue';
 </script>
 
 <template>
