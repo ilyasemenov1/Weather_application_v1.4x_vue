@@ -2,9 +2,15 @@
     import Link from '../global/Link.vue';
     import CloudIcon from "../icons/CloudIcon.vue";
     import GitHubIcon from "../icons/GithubIcon.vue";
+
+    import { mainData } from '@/stores/mainData.js';
+    import { storeToRefs } from 'pinia';
+
+    const store = mainData();
+    const { isShowWeatherInfo } = storeToRefs(store);
 </script>
 <template>
-    <footer class="footer">
+    <footer class="footer" :class="{ 'bottom': !isShowWeatherInfo }">
         <div class="footer__content">
             <Link link-href="https://openweathermap.org/">
                 <template #icon>
@@ -34,6 +40,10 @@
         box-sizing: border-box;
         transition: .3s ease, background 0ms;
         z-index: 5;
+    }
+    .footer.bottom {
+        position: absolute;
+        bottom: 0;
     }
     .footer__content {
         display: flex;
