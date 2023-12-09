@@ -18,7 +18,8 @@
     .link {
         display: flex;
         align-items: center;
-        gap: 5px;
+        gap: 6px;
+        width: fit-content;
         padding: 4px 10px;
         border-radius: 12px;
         color: var(--text-color-1);

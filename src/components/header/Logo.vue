@@ -23,7 +23,10 @@
         letter-spacing: 1px;
         color: var(--text-color-1);
         @media (max-width: 768px) {
-            display: none;
+            position: absolute;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
         }
     }
     .icon {

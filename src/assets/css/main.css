@@ -35,14 +35,14 @@ button:focus-visible {
 .level2-menu__content ul {
     margin: 5px 0;
 }
-.level2-menu__content a {
+.level2-menu__content a.inline {
     display: inline;
     color: var(--text-color-1);
     text-decoration-color: var(--text-decoration-color-1);
     transition: .2s ease;
 }
-.level2-menu__content a:hover,
-.level2-menu__content a:focus-visible {
+.level2-menu__content a.inline:hover,
+.level2-menu__content a.inline:focus-visible {
     background: var(--bg-color-12);
     text-decoration-color: var(--text-decoration-color-2);
 }

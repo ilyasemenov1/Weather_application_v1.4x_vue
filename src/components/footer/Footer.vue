@@ -15,7 +15,7 @@
             <div class="footer-nav">
                 <Link link-href="https://github.com/ilyasemenov1/Weather_application_v1.4x_vue">
                     <template #icon>
-                        <GitHubIcon />
+                        <GitHubIcon :style="{left: '1px'}"/>
                     </template>
                     <template #text>GitHub</template>
                 </Link>
