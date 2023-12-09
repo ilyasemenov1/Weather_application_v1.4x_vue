@@ -100,12 +100,17 @@
                         v-for="forecastElement in weatherDataArr"
                         class="slider-block" 
                         :class="{'new-day': conventDtTxt(forecastElement.dt_txt) == '00:00' && forecastElement.index != 0 }">
-                            <span class="slider-block__time" :class="{ 'h12': timeFormat === '12h' }">{{ forecastElement.index == 0 ? constructDate() : dtConventer(forecastElement.dt) }}</span>
-                            <img class="slider-block__status-icon" :src="iconsArr[forecastElement.index]" alt="Иконка статуса погоды">
+                            <span class="slider-block__time" 
+                            :class="{ 'h12': timeFormat === '12h' }">{{ 
+                                forecastElement.index == 0 ? constructDate() : dtConventer(forecastElement.dt, true) }}
+                            </span>
+                            <img class="slider-block__status-icon" 
+                            :src="iconsArr[forecastElement.index]"
+                            alt="Иконка статуса погоды">
                             <span class="slider-block__temp-block">
                                 <span class="slider-block__temp">{{ transformTempToSettingUnit(forecastElement.main.temp) }}</span>
                             </span>
-                            <span class="slider-date" v-show="conventDtTxt(forecastElement.dt_txt) == '00:00'">{{ newDayDate((forecastElement.index - gapToNewDate)/8 + 1) }}</span>
+                            <span class="slider-date" v-show="conventDtTxt(forecastElement.dt_txt) == '00:00' && forecastElement.index != 0">{{ newDayDate((forecastElement.index - gapToNewDate)/8 + 1) }}</span>
                         </swiper-slide>
                     </swiper>
                 </div>
