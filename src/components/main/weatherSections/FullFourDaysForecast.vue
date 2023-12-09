@@ -72,7 +72,8 @@
 
 </script> 
 <template>
-    <section class="day-info-block" :id="`day-info-block-${i}`" v-for="i in 4">
+    <section class="day-info-block" v-for="i in 4">
+        <div class="day-info-block__scroll-anchor" :id="`day-info-block-${i}`"></div>
         <h2 class="info-name-block">
         <div class="info-name-block__day-info">
             <span class="info-name-block__week-day">{{ getDate(i) }}</span>
@@ -104,6 +105,7 @@
 
 <style scoped>
     .day-info-block {
+        position: relative;
         display: flex;
         flex-direction: column;
         row-gap: 20px;
@@ -111,6 +113,10 @@
         border-radius: 15px;
         box-shadow: 0px 5px 10px #00000018;
         background: var(--bg-color-1);
+    }
+    .day-info-block__scroll-anchor {
+        position: absolute;
+        top: -20px;
     }
     .js-scroll.not-scrolled {
         visibility: hidden;
