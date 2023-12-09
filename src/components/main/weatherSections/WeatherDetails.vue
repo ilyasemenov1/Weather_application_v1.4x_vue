@@ -10,11 +10,17 @@
     let clouds = ref(0);
     let precipitations = ref(0);
 
+    function getStrokeDasharrayValue(value) {
+        const k = 250;
+        let returnValue = `${k * (value / 100)}`;
+        return returnValue + " 400"
+    }
+
     watch(
         weatherData,
         () => {
-            clouds.value = weatherData.value.list[0].clouds.all;
-            precipitations.value = weatherData.value.list[0].pop*100;
+            clouds.value = +`${weatherData.value.list[0].clouds.all}`.slice(0,3);
+            precipitations.value = +`${weatherData.value.list[0].pop * 100}`.slice(0,3);
         }
     )
 </script>
@@ -27,7 +33,7 @@
                 <svg>
                     <circle cx="50%" xy="50%" r="40"></circle>
                     <circle cx="50%" xy="50%" r="40" id="clouds" 
-                    :style="{ strokeDasharray: `${250*(clouds/100)} 400` }" 
+                    :style="{ strokeDasharray: getStrokeDasharrayValue(clouds) }" 
                     :class="{ 'no-data': !clouds }"></circle>
                 </svg>
             </div>
@@ -39,7 +45,7 @@
                 <svg>
                     <circle cx="50%" xy="50%" r="40"></circle>
                     <circle cx="50%" xy="50%" r="40" id="pop"  
-                    :style="{ strokeDasharray: `${250*(precipitations/100)} 400` }" 
+                    :style="{ strokeDasharray: getStrokeDasharrayValue(precipitations) }" 
                     :class="{ 'no-data': !precipitations }">{{ precipitations }}</circle>
                 </svg>
             </div>
