@@ -175,35 +175,40 @@
 
     function pageScrolled(scroll) {
 
+        const header = document.querySelector(".header");
+        const burgerTop = Math.round(header.clientHeight / 2 - burger.value.clientHeight / 2 - 1);
+
         if (!settings.value["fixHeader"]) {
             isBurgerScrolled.value = false;
+		    burger.value.style.top = `${burgerTop}px`;
             return;
+        }
+
+        if (window.pageYOffset < header.clientHeight + pageScroll && window.pageYOffset > pageScroll - header.clientHeight) {
+            burger.value.style.top = `${window.pageYOffset - pageScroll - burger.value.clientHeight - burgerTop}px`;
+        } else if (window.pageYOffset < header.clientHeight + pageScroll) {
+            burger.value.style.top = `${-window.pageYOffset + burgerTop}px`;
+        } else {
+            burger.value.style.top = `${burgerTop}px`;
         }
 
         if (window.pageYOffset < scroll) {
             isBurgerScrolled.value = false;
-            burger.value.style.top = `14px`;
         } else if (window.pageYOffset > scroll) {
             isBurgerScrolled.value = true;
-            if (-(burger.value.clientHeight - (window.pageYOffset - pageScroll)) <= 0) {
-                burger.value.style.top = `${-(burger.value.clientHeight - (window.pageYOffset - pageScroll))}px`;		
-            } else if (burger.value.style.top.split("px")[0] < 0) {
-                burger.value.style.top = `14px`;
-            }
         }
     }
 
-
     onMounted(() => {
-        pageScrolled(95);
+        pageScrolled(100);
         window.addEventListener("scroll", () => {
-            pageScrolled(95);
+            pageScrolled(100);
         });
     });
 
     watch(settings,
     () => {
-        pageScrolled(95);
+        pageScrolled(100);
     })
 
     watch(
@@ -225,10 +230,11 @@
         <span class="burger"></span>
     </button>
     <div class="main-menu" 
-    :class="{ active: isMenuOpen }"
+    :class="{ active: isMenuOpen, 'not-visible': isMenuArrowMode }"
     ref="mainMenu">
         <h2 class="main-menu__label">Главное меню</h2>
-        <div class="main-menu__content" @click="(event) => openSelectedMenu(event)">
+        <div class="main-menu__content" 
+        @click="(event) => openSelectedMenu(event)">
             <button class="main-menu__button" data-select-id="settings" aria-label="Настройки">
                 <div class="main-menu__button-icon">
                     <SettingsIcon />
@@ -459,5 +465,7 @@
         pointer-events: all;
         visibility: visible;
     }
-    
+    .main-menu.not-visible {
+        visibility: hidden;
+    }
 </style>
