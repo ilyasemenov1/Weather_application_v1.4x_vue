@@ -14,7 +14,7 @@
     let header = ref(null);
     let isHeaderScrolled = ref(false);
 
-    const pageScroll = 175;
+    const pageScroll = 195;
 
     function pageScrolled(scroll) {
 
