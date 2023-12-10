@@ -161,7 +161,7 @@
 </script>
 
 <template>
-    <main class="main" :class="{ disactive: !isShowWeatherInfo }">
+    <main class="main" :class="{ disactive: !isShowWeatherInfo }" :style="{ left: '0px' }">
         <div class="first-content weather-content">
             <div class="main-content-block">
                 <MainWeather />
@@ -194,7 +194,7 @@
         padding: 30px 20px;
         box-sizing: border-box;
         animation: info-block-add .2s ease;
-        transition: .3s ease;
+        transition: left .3s ease;
     }
     .first-content {
         display: grid;

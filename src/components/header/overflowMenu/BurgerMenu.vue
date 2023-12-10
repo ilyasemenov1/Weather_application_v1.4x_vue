@@ -126,7 +126,7 @@
 
     function setPageContentTransformX(transformValue) {
         pageContent.forEach(element => {
-            element.style = `transform: translateX(${transformValue}px);`;
+            element.style = `left: ${transformValue}px;`;
         })
     }
 

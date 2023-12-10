@@ -77,7 +77,7 @@
         box-shadow: 0px 0px 15px #00000015;
         background: var(--bg-color-1);
         z-index: 9;
-        transition: transform ease .3s;
+        transition: left ease .3s;
         box-sizing: border-box;
     }
     .header.not-scrolled {
