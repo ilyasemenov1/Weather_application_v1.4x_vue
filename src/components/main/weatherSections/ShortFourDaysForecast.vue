@@ -106,23 +106,6 @@
         })
         return mode(upperCaseArr);
     }
-
-    // TODO: Fix data update bugs
-
-    // const isWrap = (index) => {
-    //     const element = document.getElementById(`day-card-data-${index}`);
-    //     const data = document.getElementById(`day-card-wind-and-speed-${index}`);
-    //     if (!element) return;
-    //     element.clientHeight > 100 ? data.classList.add("wrap") : data.classList.remove("wrap");
-
-    // }
-
-    // watch(weatherData,
-    // () => {
-    //     for (let i = 1; i < 5; i++) {
-    //         isWrap(i);
-    //     }
-    // })
 </script>
 <template>
     <section class="four-day-forecast-short js-scroll">
@@ -145,14 +128,14 @@
                             </span>
                         </div>
                         <img class="day-card__weather-icon" :src="setIconSrc(i)" alt="Иконка статуса погоды">
-                        <div class="day-card__data" :id="`day-card-data-${i}`">
+                        <div class="day-card__data">
                             <span class="day-card__status">{{ setStatus(i) }}</span>
                             <div class="day-card__main-info">
                                 <span class="day-card__temp-block">
                                     <span class="day-card__temp">{{ setMinMaxTemp(i) }}</span>
                                 </span>
                             </div>
-                            <div class="day-card__second-block" :id="`day-card-wind-and-speed-${i}`">
+                            <div class="day-card__second-block">
                                 <span class="day-card__wind">
                                     <span class="day-card__wind-block">{{ setSpeed(i) }}</span>
                                 </span>

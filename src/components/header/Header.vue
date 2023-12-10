@@ -1,23 +1,57 @@
 <script setup>
-    import { ref, onMounted } from "vue";
+    import { ref, onMounted, watch } from "vue";
 
     import Logo from "./Logo.vue";
     import CitySearch from "./CitySearch.vue";
     import BurgerMenu from "./overflowMenu/BurgerMenu.vue";
 
-    let header = ref(null);
+    import { settingsStore } from "@/stores/settings.js";
+    import { storeToRefs } from 'pinia';
 
-    function setHeaderPosition() {
-        
+    const storeSettings = settingsStore();
+    const { settings } = storeToRefs(storeSettings); 
+
+    let header = ref(null);
+    let isHeaderScrolled = ref(false);
+
+    const pageScroll = 175;
+
+    function pageScrolled(scroll) {
+
+        if (!settings.value["fixHeader"]) {
+            isHeaderScrolled.value = false;
+            return;
+        }
+
+        if (window.pageYOffset < scroll) {
+            isHeaderScrolled.value = false;
+            header.value.style.top = `0px`;
+        } else if (window.pageYOffset > scroll) {
+            isHeaderScrolled.value = true;
+            if (-(header.value.clientHeight - (window.pageYOffset - pageScroll)) <= 0) {
+                header.value.style.top = `${-(header.value.clientHeight - (window.pageYOffset - pageScroll))}px`;		
+            } else if (header.value.style.top.split("px")[0] < 0) {
+                header.value.style.top = `0px`;
+            }
+        }
     }
 
+
+    watch(settings,
+    () => {
+        pageScrolled(100);
+    })
+
     onMounted(() => {
-        window.addEventListener("scroll", setHeaderPosition);
+        pageScrolled(100);
+        window.addEventListener("scroll", () => {
+            pageScrolled(100);
+        });
     });
 </script>
 
 <template>
-    <header class="header" ref="header">
+    <header class="header" ref="header" :class="{ scrolled: isHeaderScrolled }">
         <div class="header-content" ref="headerContent">
             <div class="header-blocks">
                 <Logo>

@@ -6,7 +6,13 @@
     import HeartIcon from "../../icons/HeartIcon.vue";
     import InfoIcon from "../../icons/InfoIcon.vue";
 
+    import { settingsStore } from "@/stores/settings.js";
+    import { storeToRefs } from 'pinia';
+
     import { onMounted, ref, watch } from "vue";
+
+    const storeSettings = settingsStore();
+    const { settings } = storeToRefs(storeSettings); 
 
     let header = document.querySelector(".header");
     let headerContent = document.querySelector(".header-content");
@@ -163,6 +169,43 @@
         })
     });
 
+    let isBurgerScrolled = ref(false);
+
+    const pageScroll = 175;
+
+    function pageScrolled(scroll) {
+
+        if (!settings.value["fixHeader"]) {
+            isBurgerScrolled.value = false;
+            return;
+        }
+
+        if (window.pageYOffset < scroll) {
+            isBurgerScrolled.value = false;
+            burger.value.style.top = `14px`;
+        } else if (window.pageYOffset > scroll) {
+            isBurgerScrolled.value = true;
+            if (-(burger.value.clientHeight - (window.pageYOffset - pageScroll)) <= 0) {
+                burger.value.style.top = `${-(burger.value.clientHeight - (window.pageYOffset - pageScroll))}px`;		
+            } else if (burger.value.style.top.split("px")[0] < 0) {
+                burger.value.style.top = `14px`;
+            }
+        }
+    }
+
+
+    onMounted(() => {
+        pageScrolled(95);
+        window.addEventListener("scroll", () => {
+            pageScrolled(95);
+        });
+    });
+
+    watch(settings,
+    () => {
+        pageScrolled(95);
+    })
+
     watch(
         isMenuOpen,
         () => {
@@ -177,7 +220,7 @@
     <button class="burger-menu-button" 
     ref="burger" 
     @click="changeMenuState()" 
-    :class="{ active: isMenuOpen, arrow: isMenuArrowMode }"
+    :class="{ active: isMenuOpen, arrow: isMenuArrowMode, scrolled: isBurgerScrolled }"
     :style="{ top: `{${burgerMenuButtonPositionY}px`, left: `${burgerMenuButtonPositionX}px`, transform: `translate(${burgerMenuButtonTransformX}px, ${burgerMenuButtonTransformY}px)` }">
         <span class="burger"></span>
     </button>
@@ -226,6 +269,9 @@
         animation: main-block-add .3s ease;
         transition: background .3s, border .3s, transform .3s, opacity .3s;
         z-index: 300;
+    }
+    .burger-menu-button.scrolled {
+        position: fixed;
     }
     .burger-menu-button span {
         position: absolute;
