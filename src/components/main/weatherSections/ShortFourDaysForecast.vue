@@ -100,27 +100,29 @@
     const setStatus = (index) => {
         if (!weatherData.value.list) return 0;
         const arr = weatherData.value.list.slice((index-1)*8, index*8).map((e) => e.weather[0].description);
-        return mode(arr);
+        const upperCaseArr = arr.map((e) => {
+            const firstLetter = e[0];
+            return firstLetter.toUpperCase() + e.slice(1);
+        })
+        return mode(upperCaseArr);
     }
 
     // TODO: Fix data update bugs
 
-    const isWrap = (index) => {
-        setTimeout(() => {
-            const element = document.getElementById(`day-card-data-${index}`);
-            const data = document.getElementById(`day-card-wind-and-speed-${index}`);
-            if (!element) return;
-            element.clientHeight > 100 ? data.classList.add("wrap") : data.classList.remove("wrap");
-        }, 100);
+    // const isWrap = (index) => {
+    //     const element = document.getElementById(`day-card-data-${index}`);
+    //     const data = document.getElementById(`day-card-wind-and-speed-${index}`);
+    //     if (!element) return;
+    //     element.clientHeight > 100 ? data.classList.add("wrap") : data.classList.remove("wrap");
 
-    }
+    // }
 
-    watch(weatherData,
-    () => {
-        for (let i = 1; i < 5; i++) {
-            isWrap(i);
-        }
-    })
+    // watch(weatherData,
+    // () => {
+    //     for (let i = 1; i < 5; i++) {
+    //         isWrap(i);
+    //     }
+    // })
 </script>
 <template>
     <section class="four-day-forecast-short js-scroll">
@@ -272,5 +274,6 @@
     }
     .day-card__status::first-letter {
         text-transform: uppercase !important;
+        color: black;
     }
 </style>
