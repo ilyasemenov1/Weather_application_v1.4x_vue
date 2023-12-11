@@ -9,6 +9,7 @@
 
     import { favouriteTownsStore } from "@/stores/favouriteTowns.js";
     import { mainData } from '@/stores/mainData.js';
+    import { burgerMenuDataStore } from "@/stores/burgerMenu.js";
     import { storeToRefs } from 'pinia'
 
     const store = favouriteTownsStore();
@@ -16,6 +17,9 @@
 
     const storeMainData = mainData();
     const { cityName } = storeToRefs(storeMainData); 
+
+    const menuStore = burgerMenuDataStore();
+    let { isMenuOpen, isMenuArrowMode } = storeToRefs(menuStore);
 
     // FavouriteTownsWatcher
     watch(
@@ -154,6 +158,8 @@
         if (!isSearch.value) return;
         clearTimeout(delay.value);
         cityName.value = town;
+        isMenuOpen.value = false;
+        isMenuArrowMode.value = false;
     }
 
     function removeInfoMenu() {
