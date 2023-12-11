@@ -6,6 +6,7 @@
     import { favouriteTownsStore } from "@/stores/favouriteTowns.js";
     import { settingsStore } from "@/stores/settings.js";
     import { mainData } from '@/stores/mainData.js';
+    import { burgerMenuDataStore } from "@/stores/burgerMenu.js";
     import { storeToRefs } from 'pinia';
 
     const storeSettings = settingsStore();
@@ -17,6 +18,9 @@
     const storeMainData = mainData();
     const { cityName } = storeToRefs(storeMainData); 
 
+    const menuStore = burgerMenuDataStore();
+    let { isMenuOpen, isMenuArrowMode } = storeToRefs(menuStore);
+
     let towns = ref([]);
     let isFocused = ref(false);
     let isFindTowns = ref(false);
@@ -27,6 +31,8 @@
     window.addEventListener("keydown", (event) => {
         if ([191, 111].includes(event.keyCode)) {
             setTimeout(() => {
+                isMenuOpen.value = false;
+                isMenuArrowMode.value = false;
                 searchInput.value.focus();
             }, 50);
         }

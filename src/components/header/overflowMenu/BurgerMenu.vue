@@ -219,6 +219,7 @@
             setTimeout(() => {
                 isMenuOpen.value ? document.body.style = "overflow: hidden;" : document.body.style = "";
             }, 50);
+            if (!isMenuOpen.value) closeMenu();
         }
     )
 </script>
