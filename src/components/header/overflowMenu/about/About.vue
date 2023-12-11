@@ -12,12 +12,13 @@
                     <LogoIcon />
                 </div>
                 <div class="app-logo__text">
-                    Погода v1.4.3 beta
+                    Погода v1.4.3
                 </div>
             </div>
             <h2>Что нового?</h2>
             <ul>
                 <li>Приложение переписано на <a class="inline" href="https://vuejs.org/" target="_blank">Vue.js framework</a></li>
+                <li>Исправлены мелкие ошибки</li>
             </ul>
             <h2>Другие ветки приложения:</h2>
             <ul>
