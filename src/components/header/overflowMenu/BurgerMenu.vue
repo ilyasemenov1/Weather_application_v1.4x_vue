@@ -127,6 +127,7 @@
     }
 
     function setPageContentTransformX(transformValue) {
+        if (settings.value["menuAnimation"] && transformValue < 0) return;
         pageContent.forEach(element => {
             element.style = `left: ${transformValue}px;`;
         })
@@ -187,6 +188,7 @@
         }
 
         if (window.pageYOffset < header.clientHeight + pageScroll && window.pageYOffset > pageScroll - header.clientHeight) {
+            //TODO: Change to burgerMenuButtonPositionY
             burger.value.style.top = `${window.pageYOffset - pageScroll - burger.value.clientHeight - burgerTop}px`;
         } else if (window.pageYOffset < header.clientHeight + pageScroll) {
             burger.value.style.top = `${-window.pageYOffset + burgerTop}px`;
