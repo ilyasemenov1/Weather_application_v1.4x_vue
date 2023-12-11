@@ -11,12 +11,16 @@
 
     import { onMounted, watch } from 'vue';
     import { storeToRefs } from 'pinia'
-
+    
     import { getWeather } from "../../assets/js/weatherInfo.js";
     import { mainData } from '../../stores/mainData.js';
+    import { burgerMenuDataStore } from "@/stores/burgerMenu.js";
 
     const store = mainData();
     const { weatherData, isShowWeatherInfo, isShowLoader, isShowSearchErr, isGeolocationErr, cityName, cityNameShow, isUpdateForecast } = storeToRefs(store); 
+
+    const menuStore = burgerMenuDataStore();
+    let { isMenuOpen } = storeToRefs(menuStore);
 
     const token = 'pk.5458a1a49de64870a499080d6af514dc';
 
@@ -144,6 +148,23 @@
             updateWeather();
         }
     );
+    
+    watch(
+        isMenuOpen,
+        () => {
+            const interactiveElements = document.querySelectorAll(".main a, .main button, .main input, .header input, .header button, .footer a");
+            if (isMenuOpen.value) {
+                interactiveElements.forEach(e => {
+                    e.setAttribute("tabindex", "-1");
+                })
+            }
+            else {
+                interactiveElements.forEach(e => {
+                    e.removeAttribute("tabindex");
+                })
+            }
+        }
+    );
 
     watch(
         isUpdateForecast,
@@ -161,7 +182,7 @@
 </script>
 
 <template>
-    <main class="main" :class="{ disactive: !isShowWeatherInfo }" :style="{ left: '0px' }">
+    <main class="main" :class="{ disactive: !isShowWeatherInfo, 'not-visible': isMenuOpen }" :style="{ left: '0px' }">
         <div class="first-content weather-content">
             <div class="main-content-block">
                 <MainWeather />
