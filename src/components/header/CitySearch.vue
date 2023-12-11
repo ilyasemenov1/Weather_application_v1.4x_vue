@@ -129,6 +129,10 @@
         height: 50px;
         margin: 0 50px 0 0;
     }
+    .header.scrolled .search-content {
+        top: 2px;
+        height: 47px;
+    }
     .search-content {
         position: relative;
         display: grid;

@@ -80,13 +80,11 @@
         transition: left ease .3s;
         box-sizing: border-box;
     }
-    .header.not-scrolled {
-        position: fixed;
-        animation: headerNotScrolled .2s ease forwards;
-    }
     .header.scrolled {
         position: fixed;
-        animation: headerScrolled .2s ease forwards;
+        min-height: 60px;
+        padding: 8px 20px;
+        box-shadow: 0px 0px 18px #00000025;
     }
     @keyframes headerScrolled {
         from {

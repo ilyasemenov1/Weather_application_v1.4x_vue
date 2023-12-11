@@ -219,7 +219,12 @@
             setTimeout(() => {
                 isMenuOpen.value ? document.body.style = "overflow: hidden;" : document.body.style = "";
             }, 50);
-            if (!isMenuOpen.value) closeMenu();
+            if (!isMenuOpen.value) {
+                closeMenu();
+                pageScrolled(100);
+            } else {
+                burger.value.style.top = "15px";
+            }
         }
     )
 </script>
