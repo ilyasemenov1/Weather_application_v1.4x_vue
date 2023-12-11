@@ -1,7 +1,7 @@
 <script setup>
     import SearchIcon from "../icons/SearchIcon.vue";
     import CloseIcon from "../icons/CloseIcon.vue";
-    import { ref, onMounted, watch } from 'vue';
+    import { ref, onMounted } from 'vue';
 
     import { favouriteTownsStore } from "@/stores/favouriteTowns.js";
     import { settingsStore } from "@/stores/settings.js";

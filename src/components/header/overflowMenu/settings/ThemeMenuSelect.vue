@@ -88,15 +88,15 @@
         <span class="dark-mode-form__button-name">Тема:</span>
         <div class="dark-mode-form__theme-select" @click="updateSetingsOnClick">
             <div class="dark-mode-form__select-container">
-                <input type="radio" id="night-mode-active" class="dark-mode-form__button-input" name="dark-mode" value="active" v-model="selectMode">
+                <input type="radio" id="night-mode-active" class="dark-mode-form__button-input" name="dark-mode" value="active" v-model="selectMode" tabindex="0">
                 <label for="night-mode-active">Тёмная</label>
             </div>
             <div class="dark-mode-form__select-container">
-                <input type="radio" id="night-mode-auto" class="dark-mode-form__button-input" name="dark-mode" value="auto" v-model="selectMode">
+                <input type="radio" id="night-mode-auto" class="dark-mode-form__button-input" name="dark-mode" value="auto" v-model="selectMode" tabindex="0">
                 <label for="night-mode-auto">Авто</label>
             </div>
             <div class="dark-mode-form__select-container">
-                <input type="radio" id="night-mode-disactive" class="dark-mode-form__button-input" name="dark-mode" value="disactive" v-model="selectMode">
+                <input type="radio" id="night-mode-disactive" class="dark-mode-form__button-input" name="dark-mode" value="disactive" v-model="selectMode" tabindex="0">
                 <label for="night-mode-disactive">Светлая</label>
             </div>
         </div>
@@ -137,13 +137,22 @@
     .dark-mode-form__theme-select {
         display: flex;
         gap: 10px;
-        padding: 8px 5px;
+        padding: 4px 5px;
         border-radius: 30px;
         outline: #00000000 solid;
         background: #a3a3a32b;
     }
     .dark-mode-form__select-container {
+        display: flex;
+        align-items: center;
+        min-height: 30px;
+        border-radius: 50px;
+        outline: 2px solid #00000000;
+        transition: .2s ease;
         z-index: 11;
+    }
+    .dark-mode-form__select-container:has(input:focus-visible) {
+        outline: 2px solid var(--bg-color-16);
     }
     .marker {
         position: absolute;
