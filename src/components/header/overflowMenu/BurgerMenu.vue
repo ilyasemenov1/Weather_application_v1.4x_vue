@@ -7,12 +7,16 @@
     import InfoIcon from "../../icons/InfoIcon.vue";
 
     import { settingsStore } from "@/stores/settings.js";
+    import { burgerMenuDataStore } from "@/stores/burgerMenu.js";
     import { storeToRefs } from 'pinia';
 
     import { onMounted, ref, watch } from "vue";
 
     const storeSettings = settingsStore();
     const { settings } = storeToRefs(storeSettings); 
+
+    const menuStore = burgerMenuDataStore();
+    let { isMenuOpen, isMenuArrowMode } = storeToRefs(menuStore);
 
     let header = document.querySelector(".header");
     let headerContent = document.querySelector(".header-content");
@@ -27,8 +31,6 @@
     const mainMenu = ref(null);
     let menu = "";
 
-    let isMenuOpen = ref(false);
-    let isMenuArrowMode = ref(false);
     let isPageBlurActive = ref(false);
     let burgerMenuButtonPositionX = ref(0);
     let burgerMenuButtonPositionY = ref(0);
@@ -178,7 +180,7 @@
         const header = document.querySelector(".header");
         const burgerTop = Math.round(header.clientHeight / 2 - burger.value.clientHeight / 2 - 1);
 
-        if (!settings.value["fixHeader"]) {
+        if (!settings.value["fixHeader"] || /Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
             isBurgerScrolled.value = false;
 		    burger.value.style.top = `${burgerTop}px`;
             return;
@@ -206,7 +208,7 @@
         });
     });
 
-    watch(settings,
+    watch(settings.value,
     () => {
         pageScrolled(100);
     })

@@ -1,20 +1,22 @@
 <script setup>
-    import { onMounted, ref } from "vue";
+    import { onMounted, ref, watch } from "vue";
     import { updateSettings, getSettingsValue } from "../../../../assets/js/settings.js";
     
     import { settingsStore } from "@/stores/settings.js";
+    import { burgerMenuDataStore } from "@/stores/burgerMenu.js";
     import { storeToRefs } from 'pinia'
 
     const store = settingsStore();
     const { settings } = storeToRefs(store); 
+
+    const menuStore = burgerMenuDataStore();
+    let { isMenuArrowMode } = storeToRefs(menuStore);
 
     const path = "nightMode";
 
     let selectMode = ref(getSettingsValue(settings.value, path));
     let markerWidth = ref(0);
     let markerLeft = ref(0);
-
-    const loadingLeft = ref(12);
 
     function setMarkerPosition() {
         const formInputs = document.querySelectorAll(".dark-mode-form input");
@@ -25,7 +27,6 @@
             if (element.checked) selected = element;
         })
 
-        
         let parent = selected.parentElement;
         let parentWidth = parent.clientWidth;
         let parentRect = parent.getBoundingClientRect();
@@ -72,8 +73,14 @@
             setPageTheme();
             setMarkerPosition();
         }, 50);
-        loadingLeft.value = 0;
     }
+
+    watch(
+        isMenuArrowMode,
+        () => {
+            if (isMenuArrowMode.value) setMarkerPosition();
+        }
+    )
 </script>
 
 <template>
@@ -93,7 +100,7 @@
                 <label for="night-mode-disactive">Светлая</label>
             </div>
         </div>
-        <div class="marker" :style="{ width: `${markerWidth}px`, transform: `translateX(${markerLeft - loadingLeft}px)`}"></div>
+        <div class="marker" :style="{ width: `${markerWidth}px`, transform: `translateX(${markerLeft}px)`}"></div>
     </form>
 </template>
 

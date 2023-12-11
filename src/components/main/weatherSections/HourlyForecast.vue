@@ -25,7 +25,7 @@
     let timeFormat = ref(settings.value.timeFormat);
 
     watch(
-        settings,
+        settings.value,
         () => {
             timeFormat.value = settings.value.timeFormat;
         }

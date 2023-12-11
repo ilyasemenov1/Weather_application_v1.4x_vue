@@ -18,7 +18,7 @@
 
     function pageScrolled(scroll) {
 
-        if (!settings.value["fixHeader"]) {
+        if (!settings.value["fixHeader"] || /Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
             isHeaderScrolled.value = false;
             return;
         }
@@ -37,7 +37,7 @@
     }
 
 
-    watch(settings,
+    watch(settings.value,
     () => {
         pageScrolled(100);
     })
