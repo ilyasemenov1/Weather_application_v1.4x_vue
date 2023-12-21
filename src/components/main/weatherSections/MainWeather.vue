@@ -2,15 +2,20 @@
     import { cityIn } from "lvovich";
 
     import MainWeatherContentRoot from './MainWeatherContentRoot.vue';
+    import HeartIcon from "../../icons/HeartIcon.vue";
     import { ref, watch } from "vue";
 
     import { mainData } from '@/stores/mainData.js';
+    import { favouriteTownsStore } from '@/stores/favouriteTowns.js';
     import { storeToRefs } from 'pinia';
 
     import { transformPressureToSettingUnit, transformSpeedToSettingUnit, transformTempToSettingUnit, constructDate } from "@/assets/js/appFunctions.js";
 
     const store = mainData();
     const { weatherData, cityNameShow } = storeToRefs(store); 
+
+    const favouriteTowns = favouriteTownsStore();
+    const { storagedTowns } = storeToRefs(favouriteTowns);
 
     let time = ref(0);
     let temp = ref(0);
@@ -45,12 +50,24 @@
 </script>
 <template>
     <MainWeatherContentRoot>
-        <template #firstTextContent class="weather-main__text">
-            <h2 class="weather-main__label">
-                Погода {{ `${predict} ${cityIn(cityNameShow)}` }}
-            </h2>
-            <div class="weather-main__time">
-                Данные на {{ time }}
+        <template #firstTextContent>
+            <div class="weather-main__label-content">
+                <div class="weather-main__text">
+                    <h2 class="weather-main__label">
+                        Погода {{ `${predict} ${cityIn(cityNameShow)}` }}
+                    </h2>
+                    <div class="weather-main__time">
+                        Данные на {{ time }}
+                    </div>
+                </div>
+                <button class="weather-main__favourite-town-button">
+                    <span class="icon">
+                        <HeartIcon />
+                    </span>
+                    <span class="text">
+                        Добавить в избранные
+                    </span>
+                </button>
             </div>
         </template>
         <template #content>
@@ -238,5 +255,42 @@
         background-position: center;
         background-repeat: no-repeat;
         background-size: 60px 60px;
+    }
+    .weather-main__label-content {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+    }
+    .weather-main__favourite-town-button {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        height: fit-content;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 12px;
+        background: rgb(255 255 255 / 12%);
+        font-size: 14px;
+        font-weight: 600;
+        color: #ffffffce;
+        opacity: .8;
+    }
+    body:not(.night-mode) .weather-main__favourite-town-button {
+        color: #ffffff;
+        background: rgb(255 255 255 / 16%);
+    }
+    .weather-main__favourite-town-button .icon {
+        width: 16px;
+        height: 16px;
+    }
+    .weather-main__favourite-town-button .icon svg {
+        fill: #ffffffce;
+    }
+    .weather-main__favourite-town-button:hover,
+    .weather-main__favourite-town-button:focus {
+        cursor: pointer;
+        opacity: 1;
+        background: rgb(255 255 255 / 15%);
+        box-shadow: 0 1px 6px #00000013;
     }
 </style>

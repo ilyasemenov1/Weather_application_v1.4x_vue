@@ -478,4 +478,7 @@
     .main-menu.not-visible {
         visibility: hidden;
     }
+    .main-menu__button-icon {
+        pointer-events: none;
+    }
 </style>
