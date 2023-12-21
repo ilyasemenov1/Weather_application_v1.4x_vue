@@ -165,6 +165,7 @@
         font-family: "Sourse Sans Pro", sans-serif;
         font-size: 22px;
         color: var(--text-color-2);
+        max-width: 280px;
     }
     .weather-main__temp {
         display: flex;
@@ -366,5 +367,18 @@
     }
     body.night-mode .animation span {
         border-color: #c9c9c9 transparent transparent transparent;
+    }
+    @media (max-width: 565px) or ((max-width: 1070px) and (min-width: 956px)) {
+        .weather-main__favourite-town-button {
+            border-radius: 50%;
+            padding: 10px;
+        }
+        .weather-main__favourite-town-button .text {
+            display: none;
+        }
+        .weather-main__favourite-town-button .icon {
+            width: 18px;
+            height: 18px;
+        }
     }
 </style>
