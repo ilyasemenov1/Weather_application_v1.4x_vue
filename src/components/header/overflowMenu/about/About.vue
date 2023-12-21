@@ -12,7 +12,7 @@
                     <LogoIcon />
                 </div>
                 <div class="app-logo__text">
-                    Погода v1.4.3
+                    Погода v1.4.3.1
                 </div>
             </div>
             <h2>Что нового?</h2>
