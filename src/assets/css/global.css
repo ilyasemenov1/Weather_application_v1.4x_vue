@@ -35,9 +35,9 @@
     --scroll-bar-color-2: #a3a3a39a;
     --text-decoration-color-1: #c6c6c6;
     --text-decoration-color-2: #646464;
-    --gradient-1: linear-gradient(190deg, #7496c9 0%, #96a2b1 92%);
-    --gradient-2: linear-gradient(190deg, #72b0c4 0%, #94a3b1 92%);
-    --gradient-3: linear-gradient(190deg, #9895cc 16%, #a2a1aa 100%);
+    --gradient-1: linear-gradient(190deg, #6686b4 0%, #7f8b99 92%);
+    --gradient-2: linear-gradient(190deg, #6da3b4 0%, #8090a0 92%);
+    --gradient-3: linear-gradient(190deg, #8f8dbb 16%, #96959e 100%);
 }
 
 body.night-mode {
