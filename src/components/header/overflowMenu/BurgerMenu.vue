@@ -283,7 +283,7 @@
         background: none;
         background-size: 28px 28px;
         animation: main-block-add .3s ease;
-        transition: background .3s, border .3s, transform .3s, opacity .3s;
+        transition: background .3s ease, border .3s ease, transform .3s ease, opacity .3s ease;
         z-index: 300;
     }
     .burger-menu-button.scrolled {
