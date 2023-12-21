@@ -5,6 +5,8 @@
     import HeartIcon from "../../icons/HeartIcon.vue";
     import { ref, watch } from "vue";
 
+    import { getWeatherNow } from '../../../assets/js/weatherInfo.js';
+
     import { mainData } from '@/stores/mainData.js';
     import { favouriteTownsStore } from '@/stores/favouriteTowns.js';
     import { storeToRefs } from 'pinia';
@@ -26,7 +28,50 @@
     let status = ref("");
     let iconSrc = new URL('/src/assets/icons/weatherIcons/02d.svg', import.meta.url);
 
+    let isInFavouriteTowns = ref(false);
+    let isFetching = ref(false);
+
     let predict = ref("");
+
+    function isUnicTown(townArg) {
+        for (let town of storagedTowns.value) {
+            if (townArg.toLowerCase() === town.name.toLowerCase()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    function removeFafouriteTown(town) {
+        for (let i = 0; i < storagedTowns.value.length; i++) {
+            if (storagedTowns.value[i].name.toLowerCase() === town.toLowerCase()) {
+                storagedTowns.value.splice(i, 1);
+            };
+        }
+    }
+
+    async function addFavoutiteTown(town) {
+        isFetching.value = true;
+        getWeatherNow(town)
+        .then((resp) => resp.json())
+        .then((data) => {
+            if (data.cod != 200) return;
+            let town = {
+                name: data.city.name,
+                lat: Math.round(data.city.coord.lat),
+                lon: Math.round(data.city.coord.lon)
+            }
+            storagedTowns.value.push(town);
+        })
+        .finally(() => {
+            isFetching.value = false;
+        })
+    }
+
+    function favouriteTownButtonEvent() {
+        isInFavouriteTowns.value ? removeFafouriteTown(cityNameShow.value) : addFavoutiteTown(cityNameShow.value);
+    }
 
     watch(
         weatherData,
@@ -45,6 +90,15 @@
 
             cityNameShow.value.toLowerCase().match(/^в[с\з\ч\щ\к\м\л\ж\т\м\г\д\н\п\р\х]/) ? predict.value = "во" : predict.value = "в";
             cityNameShow.value.toLowerCase().match(/[a-z]|^[0-9]/) ? predict.value = "в городе" : void(0);
+
+            isInFavouriteTowns.value = !isUnicTown(cityNameShow.value);
+        }
+    )
+
+    watch(
+        storagedTowns.value,
+        () => {
+            isInFavouriteTowns.value = !isUnicTown(cityNameShow.value);
         }
     )
 </script>
@@ -60,12 +114,12 @@
                         Данные на {{ time }}
                     </div>
                 </div>
-                <button class="weather-main__favourite-town-button">
+                <button class="weather-main__favourite-town-button" :class="{'in-favourite-towns': !isInFavouriteTowns}" @click="favouriteTownButtonEvent()">
                     <span class="icon">
                         <HeartIcon />
                     </span>
                     <span class="text">
-                        Добавить в избранные
+                        {{ isInFavouriteTowns ? "Удалить из избранных" : "Добавить в избранные" }}
                     </span>
                 </button>
             </div>
