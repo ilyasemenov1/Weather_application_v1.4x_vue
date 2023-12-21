@@ -1,8 +1,10 @@
 <script setup>
     import { cityIn } from "lvovich";
 
-    import MainWeatherContentRoot from './MainWeatherContentRoot.vue';
     import HeartIcon from "../../icons/HeartIcon.vue";
+    import RemoveIcon from "../../icons/RemoveIcon.vue";
+
+    import MainWeatherContentRoot from './MainWeatherContentRoot.vue';
     import { ref, watch } from "vue";
 
     import { getWeatherNow } from '../../../assets/js/weatherInfo.js';
@@ -43,34 +45,26 @@
         return true;
     }
 
-    function removeFafouriteTown(town) {
+    function removeFafouriteTown() {
         for (let i = 0; i < storagedTowns.value.length; i++) {
-            if (storagedTowns.value[i].name.toLowerCase() === town.toLowerCase()) {
+            if (storagedTowns.value[i].name.toLowerCase() === cityNameShow.value.toLowerCase()) {
                 storagedTowns.value.splice(i, 1);
             };
         }
     }
 
-    async function addFavoutiteTown(town) {
-        isFetching.value = true;
-        getWeatherNow(town)
-        .then((resp) => resp.json())
-        .then((data) => {
-            if (data.cod != 200) return;
-            let town = {
-                name: data.city.name,
-                lat: Math.round(data.city.coord.lat),
-                lon: Math.round(data.city.coord.lon)
-            }
-            storagedTowns.value.push(town);
-        })
-        .finally(() => {
-            isFetching.value = false;
-        })
+    async function addFavoutiteTown() {
+        let data = weatherData.value;
+        let town = {
+            name: data.city.name,
+            lat: Math.round(data.city.coord.lat),
+            lon: Math.round(data.city.coord.lon)
+        }
+        storagedTowns.value.push(town);
     }
 
     function favouriteTownButtonEvent() {
-        isInFavouriteTowns.value ? removeFafouriteTown(cityNameShow.value) : addFavoutiteTown(cityNameShow.value);
+        isInFavouriteTowns.value ? removeFafouriteTown() : addFavoutiteTown();
     }
 
     watch(
@@ -115,8 +109,19 @@
                     </div>
                 </div>
                 <button class="weather-main__favourite-town-button" :class="{'in-favourite-towns': !isInFavouriteTowns}" @click="favouriteTownButtonEvent()">
-                    <span class="icon">
+                    <span class="icon" v-if="!isInFavouriteTowns && !isFetching">
                         <HeartIcon />
+                    </span>
+                    <span class="icon" v-else-if="isInFavouriteTowns && !isFetching">
+                        <RemoveIcon />
+                    </span>
+                    <span class="icon" v-else>
+                        <span class="animation">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </span>
                     </span>
                     <span class="text">
                         {{ isInFavouriteTowns ? "Удалить из избранных" : "Добавить в избранные" }}
@@ -346,5 +351,20 @@
         opacity: 1;
         background: rgb(255 255 255 / 15%);
         box-shadow: 0 1px 6px #00000013;
+    }
+    .animation {
+        top: -3px;
+        left: -4px;
+        width: 100%;
+        height: 100%;
+    }
+    .animation span {
+        width: 100%;
+        height: 100%;
+        margin: 3px;
+        border: 3px solid #fff;
+    }
+    body.night-mode .animation span {
+        border-color: #c9c9c9 transparent transparent transparent;
     }
 </style>
