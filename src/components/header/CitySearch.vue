@@ -24,6 +24,7 @@
     let towns = ref([]);
     let isFocused = ref(false);
     let isFindTowns = ref(false);
+    let isValue = ref(false);
 
     let searchInput = ref(null);
 
@@ -41,6 +42,7 @@
     function searchStoregedTowns(value) {
         let resultTowns = [];
         if (value) {
+            isValue.value = true;
             for (let element of storagedTowns.value) {
                 value = value.toLowerCase();
                 element = element.name.toLowerCase();
@@ -57,6 +59,7 @@
             towns.value = resultTowns;
             resultTowns.length > 0 ? isFindTowns.value = true : isFindTowns.value = false;
         } else {
+            isValue.value = false;
             isFindTowns.value = false;
             setTimeout(() => {
                 towns.value = [];
@@ -80,7 +83,7 @@
 
 <template>
     <search class="search">
-        <div class="search-content" :class="{active: isFocused}">
+        <div class="search-content" :class="{ active: isFocused }">
             <button class="search-button" tabindex="-1" @click="cityName = searchInput.value" aria-label="Поиск">
                 <SearchIcon></SearchIcon>
             </button>
@@ -96,6 +99,15 @@
             @blur="isFocused=false"
             ref="searchInput"
             id="searchInput">
+            <button class="clear-button"
+            @click="() => {
+                searchInput.value = '';
+                isValue = false;
+            }"
+            :class="{ active: isValue }" 
+            aria-label="Отчистить ввод">
+                <CloseIcon />
+            </button>
         </div>
         <div class="search-towns" :class="{ active: isFocused && isFindTowns && settings.showFavouriteTowns}">
             <h3 class="search-towns__label">Избранные города</h3>
@@ -136,7 +148,7 @@
     .search-content {
         position: relative;
         display: grid;
-        grid-template-columns: 45px 1fr;
+        grid-template-columns: 45px 1fr 45px;
         align-items: center;
         height: 50px;
         outline: #00000000 solid;
@@ -164,7 +176,8 @@
         background-image: var(--search-icon-path);
         transition: .2s ease;
     }
-    .search-button svg {
+    .search-button>svg,
+    .clear-button>svg {
         position: absolute;
         top: 7px;
         left: 7px;
@@ -306,5 +319,29 @@
         stroke: var(--text-color-1);
         fill: var(--text-color-1);
         transform: translate(-50%, -50%);
+    }
+    .clear-button {
+        position: relative;
+        width: 35px;
+        height: 35px;
+        margin: 0 10px 0 0;
+        background: none;
+        border: 1px solid #ffffff00;
+        border-radius: 100%;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+    .clear-button>svg {
+        top: 1px;
+        left: 1px;
+        width: 32px;
+        height: 32px;
+        stroke: var(--text-color-1);
+    }
+    .clear-button.active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: all;
     }
 </style>
