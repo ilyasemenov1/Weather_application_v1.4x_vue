@@ -17,7 +17,7 @@
     import { burgerMenuDataStore } from "@/stores/burgerMenu.js";
 
     const store = mainData();
-    const { weatherData, isShowWeatherInfo, isShowLoader, isShowSearchErr, isGeolocationErr, cityName, cityNameShow, isUpdateForecast } = storeToRefs(store); 
+    const { weatherData, isShowWeatherInfo, isShowLoader, isShowSearchErr, isGeolocationErr, cityName, cityNameShow, isUpdateForecast, isOnline, isNetworkErr } = storeToRefs(store); 
 
     const menuStore = burgerMenuDataStore();
     let { isMenuOpen } = storeToRefs(menuStore);
@@ -69,10 +69,19 @@
     }
 
     async function updateWeather() {
-        isShowLoader.value = true;
         isShowWeatherInfo.value = false;
         isShowSearchErr.value = false;
         isGeolocationErr.value = false;
+        isNetworkErr.value = false;
+
+        isOnline.value = await checkOnlineStatus();
+
+        if (!isOnline.value) {
+            isNetworkErr.value = true;
+            return;
+        }
+        
+        isShowLoader.value = true;
 
         if (cityName.value == "") {
             getUserLocation();
@@ -142,6 +151,15 @@
         });
     }
 
+    async function checkOnlineStatus() {
+        try {
+            const online = await fetch("/3pxImg.jpg");
+            return online.status >= 200 && online.status < 300;
+        } catch (err) {
+            return false; 
+        }
+    }
+
     watch(
         cityName,
         () => {
@@ -175,9 +193,34 @@
     );
 
     onMounted(() => {
-        getUserLocation();
-        scrollToAnchor();
+        checkOnlineStatus()
+        .then((res) => {
+            isOnline.value = res;
+            scrollToAnchor();
+
+            if (!isOnline.value) {
+                isNetworkErr.value = true;
+                return;
+            }
+
+            getUserLocation();
+        });
+
+
     });
+
+    watch(isOnline,
+    () => {
+        if (!isOnline.value) {
+            let intervalID = setInterval(async () => {
+                isOnline.value = await checkOnlineStatus();
+                if (isOnline.value) {
+                    clearInterval(intervalID);
+                    updateWeather();
+                }
+            }, 3000);
+        }
+    })
 
 </script>
 
