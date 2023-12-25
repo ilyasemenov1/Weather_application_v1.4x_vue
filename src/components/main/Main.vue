@@ -25,6 +25,9 @@
 
     const token = 'pk.5458a1a49de64870a499080d6af514dc';
 
+    // Global bool;
+    let isValidResponse = false;
+
     function success(pos) {
         const crd = pos.coords;
 
@@ -64,11 +67,14 @@
                 }
 
                 cityName.value = place;
+                isValidResponse = true;
             }
         }, false);
     }
 
     async function updateWeatherValidated() {
+        isValidResponse = false;
+
         isShowWeatherInfo.value = false;
         isShowSearchErr.value = false;
         isGeolocationErr.value = false;
@@ -203,7 +209,7 @@
     watch(
         cityName,
         () => {
-            updateWeather();
+            isValidResponse ? updateWeatherValidated() : updateWeather();
         }
     );
     
@@ -240,6 +246,7 @@
 
             if (!isOnline.value) {
                 isNetworkErr.value = true;
+                isShowLoader.value = false;
                 return;
             }
 
@@ -252,6 +259,7 @@
     watch(isOnline,
     () => {
         if (!isOnline.value) {
+            isShowLoader.value = false;
             let intervalID = setInterval(async () => {
                 isOnline.value = await checkOnlineStatus();
                 if (isOnline.value) {
