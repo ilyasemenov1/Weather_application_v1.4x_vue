@@ -15,8 +15,9 @@
     "cyrillic-to-translit-js": "^3.2.1",
     "lvovich": "^2.0.0",
     "pinia": "^2.1.7",
+    "pwa": "^1.9.7",
     "swiper": "^11.0.4",
-    "vue": "^3.3.4",
+    "vue": "^3.3.13",
     "vuex": "^4.1.0"
   },
   "devDependencies": {
