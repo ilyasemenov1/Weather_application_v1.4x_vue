@@ -2,15 +2,11 @@
     import errorSectionRoot from "./errorSectionRoot.vue";
     import NoConnectionIcon from "../../icons/NoConnectionIcon.vue";
 
-    import { ref } from "vue";
-
     import { mainData } from '@/stores/mainData.js';
     import { storeToRefs } from 'pinia';
 
     let store = mainData();
     let { isNetworkErr } = storeToRefs(store);
-
-    let searchInput = ref(document.getElementById("searchInput"));
 
 </script>
 <template>
@@ -23,15 +19,6 @@
             </div>
             <h2 class="error-notification__text">Нет подключения к интернету</h2>
         </template>
-        <template #button>
-            <button class="error-notification__button"
-            @click="searchInput.focus()">        
-                <div class="icon">
-
-                </div>
-                <span class="text">Перейти к поиску</span>
-            </button>
-        </template>
     </errorSectionRoot>
 </template>
 
@@ -42,12 +29,12 @@
     }
     .error-notification__icon span {
         position: relative;
-        width: 70px;
-        height: 70px;
+        width: 105px;
+        height: 105px;
     }
     .error-notification__icon span svg {
         position: absolute;
-        left: 0;
+        left: -11px;
         top: 0;
         width: 100%;
         height: 100%;
@@ -55,7 +42,7 @@
     }
     .error-notification__text {
         margin: 0;
-        font-size: 27px;
+        font-size: 25px;
     }
     .content {
         display: flex;

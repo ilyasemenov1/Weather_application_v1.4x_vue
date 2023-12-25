@@ -5,6 +5,7 @@
     import Loading from "./Loading.vue";
     import GeolocationErr from './errorSections/GeolocationErr.vue';
     import SearchErr from './errorSections/SearchErr.vue';
+    import NetworkErr from "./errorSections/NetworkErr.vue";
     import WeatherDetails from './weatherSections/WeatherDetails.vue';
     import ShortFourDaysForecast from './weatherSections/ShortFourDaysForecast.vue';
     import FullFourDaysForecast from './weatherSections/FullFourDaysForecast.vue';
@@ -218,9 +219,9 @@
                     clearInterval(intervalID);
                     updateWeather();
                 }
-            }, 3000);
+            }, 2000);
         }
-    })
+    });
 
 </script>
 
@@ -244,6 +245,7 @@
     <Loading />
     <GeolocationErr />
     <SearchErr />
+    <NetworkErr />
 </template>
 <style scoped>
     .main {
