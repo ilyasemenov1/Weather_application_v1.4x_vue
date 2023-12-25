@@ -13,7 +13,7 @@
     import { onMounted, watch } from 'vue';
     import { storeToRefs } from 'pinia'
     
-    import { getWeather } from "../../assets/js/weatherInfo.js";
+    import { getWeather, getWeatherNow } from "../../assets/js/weatherInfo.js";
     import { mainData } from '../../stores/mainData.js';
     import { burgerMenuDataStore } from "@/stores/burgerMenu.js";
 
@@ -64,9 +64,47 @@
                 }
 
                 cityName.value = place;
-                isUpdateForecast.value = false;
             }
         }, false);
+    }
+
+    async function updateWeatherValidated() {
+        isShowWeatherInfo.value = false;
+        isShowSearchErr.value = false;
+        isGeolocationErr.value = false;
+        isNetworkErr.value = false;
+
+        if (!isOnline.value) {
+            isNetworkErr.value = true;
+            return;
+        }
+        
+        isShowLoader.value = true;
+
+        if (cityName.value == "") {
+            getUserLocation();
+            return;
+        }
+
+        getWeather(cityName.value)
+        .then((resp) => resp.json())
+        .then((data) => {
+            if (data.cod != "200") {
+                isShowSearchErr.value = true;
+                isShowLoader.value = false;
+                return;
+            }
+
+            cityNameShow.value = data.city.name;
+            weatherData.value = data;
+
+            isShowWeatherInfo.value = true;
+            isShowLoader.value = false;
+
+            setTempAtr();
+            setSpeedAtr();
+            setPressureAtr();
+        });
     }
 
     async function updateWeather() {
@@ -74,6 +112,7 @@
         isShowSearchErr.value = false;
         isGeolocationErr.value = false;
         isNetworkErr.value = false;
+        isShowLoader.value = true;
 
         isOnline.value = await checkOnlineStatus();
 
@@ -82,7 +121,6 @@
             return;
         }
         
-        isShowLoader.value = true;
 
         if (cityName.value == "") {
             getUserLocation();
@@ -154,8 +192,9 @@
 
     async function checkOnlineStatus() {
         try {
-            const online = await fetch("/3pxImg.jpg");
-            return online.status >= 200 && online.status < 300;
+            //TODO: Remove openweathermap fetch
+            const res = await getWeatherNow("уфа");
+            return res.status == "200";
         } catch (err) {
             return false; 
         }
@@ -217,7 +256,7 @@
                 isOnline.value = await checkOnlineStatus();
                 if (isOnline.value) {
                     clearInterval(intervalID);
-                    updateWeather();
+                    updateWeatherValidated();
                 }
             }, 2000);
         }
