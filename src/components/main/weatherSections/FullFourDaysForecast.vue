@@ -2,6 +2,7 @@
     import { ref } from "vue";
 
     import { mainData } from '@/stores/mainData.js';
+    import { settingsStore } from '@/stores/settings.js';
     import { storeToRefs } from 'pinia';
 
     import { 
@@ -16,6 +17,9 @@
     const store = mainData();
     const { weatherData } = storeToRefs(store);
 
+    const settingsSt = settingsStore();
+    const { settings } = storeToRefs(settingsSt);
+
     function getDataByIndex(indexLevel1, indexLevel2) {
         try {
             return weatherData.value.list.slice((indexLevel1 - 1) * 8, indexLevel1 * 8).slice((indexLevel2 - 1) * 2, indexLevel2 * 2);
@@ -28,14 +32,14 @@
         const data = getDataByIndex(indexLevel1, indexLevel2);
         if (!data) return 0;
         const resultData = data.map(e => e.main.temp);
-        return transformTempToSettingUnit(average(resultData));
+        return transformTempToSettingUnit(average(resultData), settings.value);
     }
 
     function setWind(indexLevel1, indexLevel2) {
         const data = getDataByIndex(indexLevel1, indexLevel2);
         if (!data) return 0;
         const resultData = data.map(e => e.wind.speed);
-        return transformSpeedToSettingUnit(average(resultData));
+        return transformSpeedToSettingUnit(average(resultData), settings.value);
     }
 
     function setHumidity(indexLevel1, indexLevel2) {
@@ -49,7 +53,7 @@
         const data = getDataByIndex(indexLevel1, indexLevel2);
         if (!data) return 0;
         const resultData = data.map(e => e.main.pressure);
-        return transformPressureToSettingUnit(average(resultData));
+        return transformPressureToSettingUnit(average(resultData), settings.value);
     }
 
     function setStatus(indexLevel1, indexLevel2) {

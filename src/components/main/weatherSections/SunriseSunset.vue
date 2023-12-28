@@ -5,12 +5,16 @@
     import SunsetIcon from "../../../components/icons/SunsetIcon.vue";
 
     import { mainData } from '@/stores/mainData.js';
+    import { settingsStore } from '@/stores/settings.js';
     import { storeToRefs } from 'pinia';
 
     import { dtConventer } from "@/assets/js/appFunctions.js";
 
     const store = mainData();
     const { weatherData } = storeToRefs(store); 
+
+    const settingsSt = settingsStore();
+    const { settings } = storeToRefs(settingsSt);
 
     let sunrise = ref("");
     let sunset = ref("");
@@ -19,8 +23,8 @@
         weatherData,
         () => {
             const data = weatherData.value.city;
-            sunrise.value = dtConventer(data.sunrise, false);
-            sunset.value = dtConventer(data.sunset, false);
+            sunrise.value = dtConventer(data.sunrise, false, settings.value);
+            sunset.value = dtConventer(data.sunset, false, settings.value);
         }
     )
 

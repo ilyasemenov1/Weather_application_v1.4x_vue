@@ -26,8 +26,7 @@ export const conventDtTxt = (dt) => {
     return `${time[0]}:${time[1]}`;
 }
 
-export const transformPressureToSettingUnit = (pressure) => {
-    const settings = JSON.parse(localStorage.getItem("settings"));
+export const transformPressureToSettingUnit = (pressure, settings) => {
     const unit = settings["units"]["pressure"];
 
     switch (unit) {
@@ -40,8 +39,7 @@ export const transformPressureToSettingUnit = (pressure) => {
     }
 }
 
-export const transformSpeedToSettingUnit = (speed) => {
-    const settings = JSON.parse(localStorage.getItem("settings"));
+export const transformSpeedToSettingUnit = (speed, settings) => {
     const unit = settings["units"]["speed"];
 
     switch (unit) {
@@ -54,9 +52,8 @@ export const transformSpeedToSettingUnit = (speed) => {
     }
 }
 
-export const transformTempToSettingUnit = (temp_k) => {
+export const transformTempToSettingUnit = (temp_k, settings) => {
     let temp = 0;
-    const settings = JSON.parse(localStorage.getItem("settings"));
     const unit = settings["units"]["temp"];
 
     const delta = 273.15;
@@ -100,9 +97,7 @@ export const arrayMax = (arr) => {
     });
 }
 
-export const dtConventer = (dt, isUtc) => {
-
-    const settings = JSON.parse(localStorage.getItem("settings"));
+export const dtConventer = (dt, isUtc, settings) => {
 
     let options = {
         hour12: false,

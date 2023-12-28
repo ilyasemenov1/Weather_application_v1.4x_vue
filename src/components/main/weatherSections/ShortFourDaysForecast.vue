@@ -7,6 +7,7 @@
     import 'swiper/css';
 
     import { mainData } from '@/stores/mainData.js';
+    import { settingsStore } from '@/stores/settings.js';
     import { storeToRefs } from 'pinia';
 
     import {
@@ -20,6 +21,9 @@
 
     const store = mainData();
     const { weatherData } = storeToRefs(store); 
+
+    const settingsSt = settingsStore();
+    const { settings } = storeToRefs(settingsSt);
 
     const swiperOptions = ref({
         breakpoints: {
@@ -76,13 +80,13 @@
     const setMinMaxTemp = (index) => {
         if (!weatherData.value.list) return 0;
         const arr = weatherData.value.list.slice((index-1)*8, index*8).map((e) => e.main.temp);
-        return `${transformTempToSettingUnit(arrayMax(arr))} / ${transformTempToSettingUnit(arrayMin(arr))}`;
+        return `${transformTempToSettingUnit(arrayMax(arr), settings.value)} / ${transformTempToSettingUnit(arrayMin(arr), settings.value)}`;
     }
 
     const setSpeed = (index) => {
         if (!weatherData.value.list) return 0;
         const arr = weatherData.value.list.slice((index-1)*8, index*8).map((e) => e.wind.speed);
-        return transformSpeedToSettingUnit(average(arr));
+        return transformSpeedToSettingUnit(average(arr), settings.value);
     }
 
     const setHumidity = (index) => {

@@ -16,12 +16,17 @@
     import { getWeather, getWeatherNow } from "../../assets/js/weatherInfo.js";
     import { mainData } from '../../stores/mainData.js';
     import { burgerMenuDataStore } from "@/stores/burgerMenu.js";
+    import { settingsStore } from '@/stores/settings.js';
+
 
     const store = mainData();
     const { weatherData, isShowWeatherInfo, isShowLoader, isShowSearchErr, isGeolocationErr, cityName, cityNameShow, isUpdateForecast, isOnline, isNetworkErr } = storeToRefs(store); 
 
     const menuStore = burgerMenuDataStore();
     let { isMenuOpen } = storeToRefs(menuStore);
+
+    const settingsSt = settingsStore();
+    const { settings } = storeToRefs(settingsSt);
 
     const token = 'pk.5458a1a49de64870a499080d6af514dc';
 
@@ -156,31 +161,28 @@
 
     function setTempAtr() {
         const elements = document.querySelectorAll(".weather-main__temp-block, .day-card__temp, .day-info-block-day-time__temp, .slider-block__temp, .weather-main__self-temp-block");
-        const settings = JSON.parse(localStorage.getItem("settings"));
 
         elements.forEach(element => {
             element.classList.remove("c", "k", "f");
-            element.classList.add(settings["units"]["temp"]);
+            element.classList.add(settings.value["units"]["temp"]);
         });
     }
 
     function setSpeedAtr() {
         const elements = document.querySelectorAll(".weather-main__wind-block, .day-card__wind-block, .day-info-block-day-time__wind");
-        const settings = JSON.parse(localStorage.getItem("settings"));
 
         elements.forEach(element => {
             element.classList.remove("mps", "kmph", "milph");
-            element.classList.add(settings["units"]["speed"]);
+            element.classList.add(settings.value["units"]["speed"]);
         });
     }
 
     function setPressureAtr() {
         const elements = document.querySelectorAll(".weather-main__pressure-block, .day-info-block-day-time__pressure");
-        const settings = JSON.parse(localStorage.getItem("settings"));
 
         elements.forEach(element => {
             element.classList.remove("mm-rt", "hpa");
-            element.classList.add(settings["units"]["pressure"]);
+            element.classList.add(settings.value["units"]["pressure"]);
         });
     }
 
@@ -205,6 +207,14 @@
             return false; 
         }
     }
+
+    watch(settings.value,
+        () => {
+            setTempAtr();
+            setSpeedAtr();
+            setPressureAtr();
+        }
+    )
 
     watch(
         cityName,

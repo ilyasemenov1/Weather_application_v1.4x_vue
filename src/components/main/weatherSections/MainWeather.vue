@@ -7,10 +7,9 @@
     import MainWeatherContentRoot from './MainWeatherContentRoot.vue';
     import { ref, watch } from "vue";
 
-    import { getWeatherNow } from '../../../assets/js/weatherInfo.js';
-
     import { mainData } from '@/stores/mainData.js';
     import { favouriteTownsStore } from '@/stores/favouriteTowns.js';
+    import { settingsStore } from '@/stores/settings.js';
     import { storeToRefs } from 'pinia';
 
     import { transformPressureToSettingUnit, transformSpeedToSettingUnit, transformTempToSettingUnit, constructDate } from "@/assets/js/appFunctions.js";
@@ -20,6 +19,9 @@
 
     const favouriteTowns = favouriteTownsStore();
     const { storagedTowns } = storeToRefs(favouriteTowns);
+
+    const settingsSt = settingsStore();
+    const { settings } = storeToRefs(settingsSt);
 
     let time = ref(0);
     let temp = ref(0);
@@ -67,27 +69,27 @@
         isInFavouriteTowns.value ? removeFafouriteTown() : addFavoutiteTown();
     }
 
-    watch(
-        weatherData,
-        () => {
-            let main = weatherData.value.list[0].main;
+    function UpdateWaetherData() {
+        let main = weatherData.value.list[0].main;
 
-            time.value = constructDate();
-            temp.value = transformTempToSettingUnit(main.temp);
-            tempFeelsLike.value = transformTempToSettingUnit(main.feels_like);
-            status.value = weatherData.value.list[0].weather[0].description;
-            iconSrc = new URL(`/src/assets/icons/weatherIcons/${weatherData.value.list[0].weather[0].icon}.svg`, import.meta.url);
+        time.value = constructDate();
+        temp.value = transformTempToSettingUnit(main.temp, settings.value);
+        tempFeelsLike.value = transformTempToSettingUnit(main.feels_like, settings.value);
+        status.value = weatherData.value.list[0].weather[0].description;
+        iconSrc = new URL(`/src/assets/icons/weatherIcons/${weatherData.value.list[0].weather[0].icon}.svg`, import.meta.url);
 
-            wind.value = transformSpeedToSettingUnit(weatherData.value.list[0].wind.speed);
-            humidity.value = main.humidity;
-            pressure.value = transformPressureToSettingUnit(main.pressure);
+        wind.value = transformSpeedToSettingUnit(weatherData.value.list[0].wind.speed, settings.value);
+        humidity.value = main.humidity;
+        pressure.value = transformPressureToSettingUnit(main.pressure, settings.value);
 
-            cityNameShow.value.toLowerCase().match(/^в[с\з\ч\щ\к\м\л\ж\т\м\г\д\н\п\р\х]/) ? predict.value = "во" : predict.value = "в";
-            cityNameShow.value.toLowerCase().match(/[a-z]|^[0-9]/) ? predict.value = "в городе" : void(0);
+        cityNameShow.value.toLowerCase().match(/^в[с\з\ч\щ\к\м\л\ж\т\м\г\д\н\п\р\х]/) ? predict.value = "во" : predict.value = "в";
+        cityNameShow.value.toLowerCase().match(/[a-z]|^[0-9]/) ? predict.value = "в городе" : void(0);
 
-            isInFavouriteTowns.value = !isUnicTown(cityNameShow.value);
-        }
-    )
+        isInFavouriteTowns.value = !isUnicTown(cityNameShow.value);
+    }
+
+    watch(weatherData, UpdateWaetherData);
+    watch(settings.value, UpdateWaetherData);
 
     watch(
         storagedTowns.value,
