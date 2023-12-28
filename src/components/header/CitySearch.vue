@@ -107,6 +107,7 @@
             @input="event => searchStoregedTowns(event.target.value)" 
             @keyup.enter="(event) => {
                 cityName = event.target.value;
+                event.target.blur();
                 searchStoregedTowns(cityName);
                 searchValueInit = '';
                 focusTownByArrow();
