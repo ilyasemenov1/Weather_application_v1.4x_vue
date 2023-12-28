@@ -203,6 +203,10 @@
         }
     }
 
+    function changeArialabel() {
+        
+    }
+
     onMounted(() => {
         pageScrolled(100);
         window.addEventListener("scroll", () => {
@@ -229,6 +233,8 @@
             }
         }
     )
+
+    
 </script>
 
 <template>
@@ -236,7 +242,8 @@
     ref="burger" 
     @click="changeMenuState()" 
     :class="{ active: isMenuOpen, arrow: isMenuArrowMode, scrolled: isBurgerScrolled }"
-    :style="{ top: `{${burgerMenuButtonPositionY}px`, left: `${burgerMenuButtonPositionX}px`, transform: `translate(${burgerMenuButtonTransformX}px, ${burgerMenuButtonTransformY}px)` }">
+    :style="{ top: `{${burgerMenuButtonPositionY}px`, left: `${burgerMenuButtonPositionX}px`, transform: `translate(${burgerMenuButtonTransformX}px, ${burgerMenuButtonTransformY}px)` }"
+    :aria-label="!isMenuOpen ? 'Открыть меню' : (!isMenuArrowMode && isMenuOpen) ? 'Закрыть меню' : 'Закрыть раздел'">
         <span class="burger"></span>
     </button>
     <div class="main-menu" 

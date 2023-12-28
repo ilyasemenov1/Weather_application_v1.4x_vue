@@ -103,7 +103,7 @@
         font-weight: 600;
     }
     .weather-ditails__label {
-        color: var(--text-color-7);
+        color: var(--text-color-1);
         font-size: 16px;
         text-align: center;
     }
