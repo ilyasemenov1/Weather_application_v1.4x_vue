@@ -51,6 +51,7 @@
     watch(
         weatherData,
         () => {
+            iconsArr.value = [];
             weatherDataArr.value = weatherData.value.list;
             for (let i = 0; i < [...weatherDataArr.value].length; i++) {
                 weatherDataArr.value[i].index = i;
