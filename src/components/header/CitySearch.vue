@@ -28,6 +28,8 @@
 
     let searchInput = ref(null);
 
+    let townFocusIndex = ref(0);
+
     
     window.addEventListener("keydown", (event) => {
         if ([191, 111].includes(event.keyCode)) {
@@ -41,20 +43,22 @@
     });
     
     function searchStoregedTowns(value) {
+        let сounter = 0;
         let resultTowns = [];
         if (value) {
             isValue.value = true;
-            for (let element of storagedTowns.value) {
+            for (let j = 0; j < storagedTowns.value.length; j++) {
                 value = value.toLowerCase();
-                element = element.name.toLowerCase();
+                let element = storagedTowns.value[j].name.toLowerCase();
                 if (element.includes(value)) { 
+                    сounter++;
                     let townTextArr = element.split(value);
                     let town = ""
                     for (let i = 0; i < townTextArr.length; i++) {
                         town += `<b>${townTextArr[i]}</b>`;
                         if (i != townTextArr.length-1) town += value;
                     }
-                    resultTowns.push({townHTML: town, town: element});
+                    resultTowns.push({townHTML: town, town: element, number: сounter});
                  }
             }
             towns.value = resultTowns;
@@ -77,6 +81,13 @@
         }
     }
 
+    function focusTownByArrow(clallback) {
+        if (!(isFocused.value && isFindTowns.value && settings.value.showFavouriteTowns)) return;
+        event.preventDefault();
+        console.log(townFocusIndex.value);
+        clallback();
+    }
+
     onMounted(() => {
         searchInput.value;
     });
@@ -93,11 +104,33 @@
             @keyup.enter="(event) => cityName = event.target.value" 
             @keyup.esc="(event) => event.target.blur()"
             @keyup.shift.delete="(event) => event.target.value = ''"
+            @keydown.down="(event) => focusTownByArrow(() => {
+                if (townFocusIndex == towns.length) return;
+                townFocusIndex++;
+                let town = $refs[`town-${townFocusIndex}`][0];
+                town.classList.add('selected');
+                searchInput.value = town.value;
+            }, event)"
+            @keydown.up="(event) => focusTownByArrow(() => {
+                if (townFocusIndex == 0) return;
+                if (townFocusIndex == 1) {
+                    townFocusIndex--;
+                    searchInput.focus();
+                    return;
+                }
+                townFocusIndex--;
+                let town = $refs[`town-${townFocusIndex}`][0];
+                town.classList.add('selected');
+                searchInput.value = town.value;
+            }, event)"
             @focus="(event) => {
                 searchStoregedTowns(event.target.value);
                 isFocused=true;
             }" 
-            @blur="isFocused=false"
+            @blur="() => {
+                isFocused = false;
+                townFocusIndex = 0;
+                }"
             ref="searchInput"
             id="searchInput">
             <button class="clear-button"
@@ -116,6 +149,7 @@
             <div class="search-towns__content">
                 <div class="search-town__town-conteiner" v-for="town in towns" >
                     <button class="search-town__town-button"
+                    :ref="`town-${town.number}`"
                     @mousedown="() => {
                         cityName = town.town;
                         searchInput.value = town.town;
@@ -124,7 +158,8 @@
                         cityName = town.town;
                         searchInput.value = town.town;
                     }" 
-                    v-html="town.townHTML"></button>
+                    v-html="town.townHTML"
+                    :value="town.town"></button>
                     <button class="search-town__town-delete-button"
                     @mousedown="removeFafouriteTown(town.town)"
                     @click="removeFafouriteTown(town.town)">
