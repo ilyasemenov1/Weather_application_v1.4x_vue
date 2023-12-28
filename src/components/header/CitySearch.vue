@@ -27,7 +27,8 @@
     let isValue = ref(false);
 
     let searchInput = ref(null);
-
+    
+    let searchValueInit = ref("");
     let townFocusIndex = ref(0);
 
     
@@ -81,10 +82,13 @@
         }
     }
 
-    function focusTownByArrow(clallback) {
-        if (!(isFocused.value && isFindTowns.value && settings.value.showFavouriteTowns)) return;
+    function focusTownByArrow(clallback, event) {
+        const towns = document.querySelectorAll(".search-town__town-conteiner");
+        towns.forEach(element => {
+            element.classList.remove("selected");
+        });
         event.preventDefault();
-        console.log(townFocusIndex.value);
+        if (!(isFocused.value && isFindTowns.value && settings.value.showFavouriteTowns)) return;
         clallback();
     }
 
@@ -101,36 +105,45 @@
             </button>
             <input type="search" autocomplete="off" placeholder="Введите название города" 
             @input="event => searchStoregedTowns(event.target.value)" 
-            @keyup.enter="(event) => cityName = event.target.value" 
+            @keyup.enter="(event) => {
+                cityName = event.target.value;
+                searchStoregedTowns(cityName);
+                searchValueInit = '';
+                focusTownByArrow();
+                townFocusIndex = 0;
+            }" 
             @keyup.esc="(event) => event.target.blur()"
             @keyup.shift.delete="(event) => event.target.value = ''"
             @keydown.down="(event) => focusTownByArrow(() => {
                 if (townFocusIndex == towns.length) return;
+                if (townFocusIndex == 0) searchValueInit = searchInput.value;
                 townFocusIndex++;
                 let town = $refs[`town-${townFocusIndex}`][0];
-                town.classList.add('selected');
+                town.parentElement.classList.add('selected');
                 searchInput.value = town.value;
             }, event)"
             @keydown.up="(event) => focusTownByArrow(() => {
                 if (townFocusIndex == 0) return;
                 if (townFocusIndex == 1) {
                     townFocusIndex--;
-                    searchInput.focus();
+                    searchInput.value = searchValueInit;
                     return;
                 }
                 townFocusIndex--;
                 let town = $refs[`town-${townFocusIndex}`][0];
-                town.classList.add('selected');
+                town.parentElement.classList.add('selected');
                 searchInput.value = town.value;
             }, event)"
             @focus="(event) => {
                 searchStoregedTowns(event.target.value);
                 isFocused=true;
+                townFocusIndex = 0;
             }" 
             @blur="() => {
                 isFocused = false;
                 townFocusIndex = 0;
-                }"
+                focusTownByArrow();
+            }"
             ref="searchInput"
             id="searchInput">
             <button class="clear-button"
@@ -293,7 +306,7 @@
         padding: 0 15px;
         background: var(--bg-color-1);
     }
-    .search-towns .search-town__town-button {
+    .search-town__town-button {
         position: relative;
         margin: 0;
         padding: 10px 0;
@@ -306,7 +319,7 @@
         background: none;
         transition: .2s ease;
     }
-    .search-towns .search-town__town-button::before {
+    .search-town__town-button::before {
         position: absolute;
         top: 0;
         left: 0;
@@ -319,16 +332,17 @@
         transform: translateX(-100%);
         transition: .2s ease;
     }
-    .search-towns .search-town__town-button::first-letter {
+    .search-town__town-button::first-letter {
         text-transform: uppercase;
     }
-    .search-towns .search-town__town-conteiner:hover,
-    .search-towns .search-town__town-conteiner:focus,
-    .search-town__town-conteiner:has(button:focus) {
+    .search-town__town-conteiner:hover,
+    .search-town__town-conteiner:focus,
+    .search-town__town-conteiner:has(button:focus),
+    .search-town__town-conteiner.selected {
         cursor: pointer;
         background: var(--bg-color-14);
     }
-    .search-towns .search-town__town-button:focus {
+    .search-town__town-button:focus {
         outline: none !important;
     }
     .search-town__town-delete-button {
