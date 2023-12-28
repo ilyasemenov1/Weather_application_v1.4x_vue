@@ -103,6 +103,7 @@
             @click="() => {
                 searchInput.value = '';
                 isValue = false;
+                searchInput.focus();
             }"
             :class="{ active: isValue }" 
             aria-label="Отчистить ввод">
