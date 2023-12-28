@@ -159,7 +159,7 @@
             }"
             :class="{ active: isValue }" 
             aria-label="Отчистить ввод"
-            tabindex="1">
+            tabindex="-1">
                 <CloseIcon />
             </button>
         </div>
