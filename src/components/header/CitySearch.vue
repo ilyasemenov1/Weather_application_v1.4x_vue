@@ -87,9 +87,9 @@
         towns.forEach(element => {
             element.classList.remove("selected");
         });
-        event.preventDefault();
+        if (event) event.preventDefault();
         if (!(isFocused.value && isFindTowns.value && settings.value.showFavouriteTowns)) return;
-        clallback();
+        if (clallback) clallback();
     }
 
     onMounted(() => {
@@ -115,7 +115,11 @@
             @keyup.esc="(event) => event.target.blur()"
             @keyup.shift.delete="(event) => event.target.value = ''"
             @keydown.down="(event) => focusTownByArrow(() => {
-                if (townFocusIndex == towns.length) return;
+                if (townFocusIndex == towns.length) {
+                    let town = $refs[`town-${townFocusIndex}`][0];
+                    town.parentElement.classList.add('selected');
+                    return;
+                }
                 if (townFocusIndex == 0) searchValueInit = searchInput.value;
                 townFocusIndex++;
                 let town = $refs[`town-${townFocusIndex}`][0];
@@ -136,7 +140,7 @@
             }, event)"
             @focus="(event) => {
                 searchStoregedTowns(event.target.value);
-                isFocused=true;
+                isFocused = true;
                 townFocusIndex = 0;
             }" 
             @blur="() => {
@@ -153,7 +157,8 @@
                 searchInput.focus();
             }"
             :class="{ active: isValue }" 
-            aria-label="Отчистить ввод">
+            aria-label="Отчистить ввод"
+            tabindex="1">
                 <CloseIcon />
             </button>
         </div>
@@ -251,9 +256,13 @@
     button:hover,
     button:focus {
         cursor: pointer;
+    }
+    .search-town__town-button~button:hover,
+    .search-town__town-button~button:focus-visible,
+    .search-content>button:hover,
+    .search-content>button:focus-visible {
         background-color: var(--bg-color-12);
         border: 1px solid var(--border-color-1);
-    
     }
     .search-towns {
         display: flex;
@@ -299,6 +308,7 @@
         color: var(--text-color-1);
     }
     .search-town__town-conteiner {
+        position: relative;
         display: grid;
         grid-template-columns: 1fr 30px;
         align-items: center;
@@ -319,7 +329,7 @@
         background: none;
         transition: .2s ease;
     }
-    .search-town__town-button::before {
+    .search-town__town-conteiner::before {
         position: absolute;
         top: 0;
         left: 0;
@@ -341,6 +351,11 @@
     .search-town__town-conteiner.selected {
         cursor: pointer;
         background: var(--bg-color-14);
+    }
+    .search-town__town-conteiner.selected::before,
+    .search-town__town-conteiner:has(button:focus)::before {
+        opacity: 1;
+        transform: translateX(0);
     }
     .search-town__town-button:focus {
         outline: none !important;
