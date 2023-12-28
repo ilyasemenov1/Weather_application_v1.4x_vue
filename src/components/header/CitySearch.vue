@@ -31,6 +31,7 @@
     
     window.addEventListener("keydown", (event) => {
         if ([191, 111].includes(event.keyCode)) {
+            event.preventDefault();
             setTimeout(() => {
                 isMenuOpen.value = false;
                 isMenuArrowMode.value = false;
@@ -57,7 +58,7 @@
                  }
             }
             towns.value = resultTowns;
-            resultTowns.length > 0 ? isFindTowns.value = true : isFindTowns.value = false;
+            isFindTowns.value = resultTowns.length > 0;
         } else {
             isValue.value = false;
             isFindTowns.value = false;
@@ -110,7 +111,7 @@
                 <CloseIcon />
             </button>
         </div>
-        <div class="search-towns" :class="{ active: isFocused && isFindTowns && settings.showFavouriteTowns}">
+        <div class="search-towns" :class="{ active: isFocused && isFindTowns && settings.showFavouriteTowns }">
             <h3 class="search-towns__label">Избранные города</h3>
             <div class="search-towns__content">
                 <div class="search-town__town-conteiner" v-for="town in towns" >
@@ -125,7 +126,8 @@
                     }" 
                     v-html="town.townHTML"></button>
                     <button class="search-town__town-delete-button"
-                    @mousedown="removeFafouriteTown(town.town)">
+                    @mousedown="removeFafouriteTown(town.town)"
+                    @click="removeFafouriteTown(town.town)">
                         <CloseIcon />
                     </button>
                 </div>
