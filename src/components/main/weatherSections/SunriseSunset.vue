@@ -19,14 +19,14 @@
     let sunrise = ref("");
     let sunset = ref("");
 
-    watch(
-        weatherData,
-        () => {
-            const data = weatherData.value.city;
-            sunrise.value = dtConventer(data.sunrise, false, settings.value);
-            sunset.value = dtConventer(data.sunset, false, settings.value);
-        }
-    )
+    function updateData() {
+        const data = weatherData.value.city;
+        sunrise.value = dtConventer(data.sunrise, false, settings.value);
+        sunset.value = dtConventer(data.sunset, false, settings.value);
+    }
+
+    watch(weatherData, updateData);
+    watch(settings.value, updateData);
 
 </script>
 <template>
