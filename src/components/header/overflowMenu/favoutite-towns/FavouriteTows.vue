@@ -1,82 +1,80 @@
 <script setup>
-    import rootLevel2MenuComponent from '../rootLevel2MenuComponent.vue';
-    import NoTownsIcon from '../../../icons/NoTownsIcon.vue';
-    import LocationIcon from '../../../icons/LocationIcon.vue';
+import rootLevel2MenuComponent from '../rootLevel2MenuComponent.vue'
+import NoTownsIcon from '../../../icons/NoTownsIcon.vue'
+import LocationIcon from '../../../icons/LocationIcon.vue'
 
-    import { getWeatherNow } from '../../../../assets/js/weatherInfo.js';
+import { getWeatherNow } from '../../../../assets/js/weatherInfo.js'
 
-    import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch } from 'vue'
 
-    import { favouriteTownsStore } from "@/stores/favouriteTowns.js";
-    import { mainData } from '@/stores/mainData.js';
-    import { burgerMenuDataStore } from "@/stores/burgerMenu.js";
-    import { storeToRefs } from 'pinia'
+import { favouriteTownsStore } from '@/stores/favouriteTowns.js'
+import { mainData } from '@/stores/mainData.js'
+import { burgerMenuDataStore } from '@/stores/burgerMenu.js'
+import { storeToRefs } from 'pinia'
 
-    const store = favouriteTownsStore();
-    const { storagedTowns } = storeToRefs(store); 
+const store = favouriteTownsStore()
+const { storagedTowns } = storeToRefs(store)
 
-    const storeMainData = mainData();
-    const { cityName } = storeToRefs(storeMainData); 
+const storeMainData = mainData()
+const { cityName } = storeToRefs(storeMainData)
 
-    const menuStore = burgerMenuDataStore();
-    let { isMenuOpen, isMenuArrowMode } = storeToRefs(menuStore);
+const menuStore = burgerMenuDataStore()
+let { isMenuOpen, isMenuArrowMode } = storeToRefs(menuStore)
 
-    // FavouriteTownsWatcher
-    watch(
-        storagedTowns.value,
-        () => {
-            localStorage.setItem("favourite-towns", JSON.stringify(storagedTowns.value));
-            isShowNoTownsNotify.value = storagedTowns.value.length === 0;
-        }
-    )
+// FavouriteTownsWatcher
+watch(storagedTowns.value, () => {
+  localStorage.setItem('favourite-towns', JSON.stringify(storagedTowns.value))
+  isShowNoTownsNotify.value = storagedTowns.value.length === 0
+})
 
+let isShowNoTownsNotify = ref(storagedTowns.value.length === 0)
+let isUnicTown = ref(true)
+let isinputValue = ref(false)
+let isFocused = ref(false)
+let inputValue = ref('')
+let isSearch = ref(true)
+let isFetching = ref(false)
+let delay = ref(0)
+let isMobile = ref(
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+)
 
-    let isShowNoTownsNotify = ref(storagedTowns.value.length === 0);
-    let isUnicTown = ref(true);
-    let isinputValue = ref(false);
-    let isFocused = ref(false);
-    let inputValue = ref("");
-    let isSearch = ref(true);
-    let isFetching = ref(false);
-    let delay = ref(0);
-    let isMobile = ref(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+let input = ref(null)
 
-    let input = ref(null);
-
-    function isShowTown() {
-        let isUnic = true;
-        for (let town of storagedTowns.value) {
-            if (town.name.toLowerCase() === inputValue.value.toLocaleLowerCase()) {
-                isUnic = false;
-                break;
-            }
-        }
-
-        isUnicTown.value = isUnic;
-        inputValue.value == "" ? isinputValue.value = false : isinputValue.value = true;
+function isShowTown() {
+  let isUnic = true
+  for (let town of storagedTowns.value) {
+    if (town.name.toLowerCase() === inputValue.value.toLocaleLowerCase()) {
+      isUnic = false
+      break
     }
+  }
 
-    function createInfoMenu(cityName, element) {
-        removeInfoMenu();
+  isUnicTown.value = isUnic
+  inputValue.value == '' ? (isinputValue.value = false) : (isinputValue.value = true)
+}
 
-        const parentParentElement = element.parentElement.parentElement;
-        const parentElement = element.parentElement;
+function createInfoMenu(cityName, element) {
+  removeInfoMenu()
 
-        const margin = 12;
-        const pagePadding = 15;
+  const parentParentElement = element.parentElement.parentElement
+  const parentElement = element.parentElement
 
-        const rectElement = element.getBoundingClientRect();
-        const rectParentElement = parentElement.getBoundingClientRect();
-        const rectParentParentElement = parentParentElement.getBoundingClientRect();
-        let scrollTop = parentParentElement.scrollTop;
+  const margin = 12
+  const pagePadding = 15
 
-        const menuLeft = rectElement.left - rectParentElement.left;
-        const conteinerHeight = rectParentParentElement.height;
-        const menuTop = rectElement.top - rectParentElement.top + rectElement.height + margin - 3;
+  const rectElement = element.getBoundingClientRect()
+  const rectParentElement = parentElement.getBoundingClientRect()
+  const rectParentParentElement = parentParentElement.getBoundingClientRect()
+  let scrollTop = parentParentElement.scrollTop
 
-        const infoMenu = document.createElement("div");
-        infoMenu.className = "info-menu";
-        infoMenu.innerHTML = `
+  const menuLeft = rectElement.left - rectParentElement.left
+  const conteinerHeight = rectParentParentElement.height
+  const menuTop = rectElement.top - rectParentElement.top + rectElement.height + margin - 3
+
+  const infoMenu = document.createElement('div')
+  infoMenu.className = 'info-menu'
+  infoMenu.innerHTML = `
         <button class="info-menu__button" id="info-del-button">
             <div class="info-menu__icon">
                 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -111,431 +109,448 @@
             </button>
         `
 
-        parentElement.append(infoMenu);
+  parentElement.append(infoMenu)
 
-        const infoMenuHeight = infoMenu.clientHeight;
-        const menuBottom = rectElement.top - rectParentElement.top - margin + 2 - infoMenuHeight;
+  const infoMenuHeight = infoMenu.clientHeight
+  const menuBottom = rectElement.top - rectParentElement.top - margin + 2 - infoMenuHeight
 
+  if (scrollTop + conteinerHeight - 70 - (menuTop + infoMenuHeight) >= pagePadding) {
+    infoMenu.style = `top: ${menuTop}px; left: ${menuLeft}px`
+    infoMenu.classList.add('top')
+  } else if (menuBottom > 0) {
+    infoMenu.style = `top: ${menuBottom}px; left: ${menuLeft}px`
+    infoMenu.classList.add('bottom')
+  } else {
+    infoMenu.remove()
+  }
 
-        if (scrollTop + conteinerHeight - 70 - (menuTop + infoMenuHeight) >= pagePadding) {
-            infoMenu.style = `top: ${menuTop}px; left: ${menuLeft}px`;
-            infoMenu.classList.add("top");
-        } else if (menuBottom > 0) {
-            infoMenu.style = `top: ${menuBottom}px; left: ${menuLeft}px`;
-            infoMenu.classList.add("bottom");
-        } else {
-            infoMenu.remove();
-        }
+  infoMenu.addEventListener('mousedown', (event) => {
+    let target = event.target
 
-        infoMenu.addEventListener("mousedown", (event) => {
-            let target = event.target;
-
-            if (target.id == "info-del-button") {
-                removeFafouriteTown(cityName.name);
-            } else if (target.id == "info-search-button") {
-                isSearch.value = true;
-                searchEvent(cityName.name);
-            }
-
-            removeInfoMenu();
-        });
-
-        parentParentElement.addEventListener("scroll", () => {
-            scrollTop = parentParentElement.scrollTop;
-        })
+    if (target.id == 'info-del-button') {
+      removeFafouriteTown(cityName.name)
+    } else if (target.id == 'info-search-button') {
+      isSearch.value = true
+      searchEvent(cityName.name)
     }
 
-    function touchEvent(cityName, event) {
-        let element = event.target;
-        isSearch.value = true;
-        delay.value = setTimeout(() => {
-            createInfoMenu(cityName, element);
-            isSearch.value = false;
-        }, 250);
+    removeInfoMenu()
+  })
+
+  parentParentElement.addEventListener('scroll', () => {
+    scrollTop = parentParentElement.scrollTop
+  })
+}
+
+function touchEvent(cityName, event) {
+  let element = event.target
+  isSearch.value = true
+  delay.value = setTimeout(() => {
+    createInfoMenu(cityName, element)
+    isSearch.value = false
+  }, 250)
+}
+
+function searchEvent(town) {
+  if (!isSearch.value) return
+  clearTimeout(delay.value)
+  cityName.value = town
+  isMenuOpen.value = false
+  isMenuArrowMode.value = false
+}
+
+function removeInfoMenu() {
+  let elements = document.querySelectorAll('.info-menu')
+
+  if (!isNaN(elements)) {
+    return
+  }
+
+  elements.forEach((element) => {
+    isSearch.value = true
+    if (element.classList.contains('top')) {
+      element.classList.add('remove-top')
+    } else {
+      element.classList.add('remove-bottom')
     }
+    setTimeout(() => {
+      element.remove()
+    }, 200)
+  })
+}
 
-    function searchEvent(town) {
-        if (!isSearch.value) return;
-        clearTimeout(delay.value);
-        cityName.value = town;
-        isMenuOpen.value = false;
-        isMenuArrowMode.value = false;
+function removeFafouriteTown(name) {
+  for (let i = 0; i < storagedTowns.value.length; i++) {
+    if (storagedTowns.value[i].name.toLowerCase() === name.toLowerCase()) {
+      storagedTowns.value.splice(i, 1)
     }
+  }
 
-    function removeInfoMenu() {
-        let elements = document.querySelectorAll(".info-menu");
+  isShowNoTownsNotify.value = storagedTowns.value.length === 0
+}
 
-        if (!isNaN(elements)) {
-            return;
-        }
+async function addFavoutiteTown() {
+  isFetching.value = true
+  getWeatherNow(inputValue.value)
+    .then((resp) => resp.json())
+    .then((data) => {
+      if (data.cod != 200) return
+      let town = {
+        name: data.city.name,
+        lat: Math.round(data.city.coord.lat),
+        lon: Math.round(data.city.coord.lon)
+      }
+      storagedTowns.value.push(town)
 
-        elements.forEach(element => {
-            isSearch.value = true;
-            if (element.classList.contains("top")) {
-                element.classList.add("remove-top");
-            } else {
-                element.classList.add("remove-bottom");
-            }
-            setTimeout(() => {
-                element.remove();
-            }, 200);
-        });
-    }
+      isShowNoTownsNotify.value = storagedTowns.value.length === 0
+      isShowTown()
+    })
+    .finally(() => {
+      isFetching.value = false
+    })
+}
 
-    function removeFafouriteTown(name) {
-        for (let i = 0; i < storagedTowns.value.length; i++) {
-            if (storagedTowns.value[i].name.toLowerCase() === name.toLowerCase()) {
-                storagedTowns.value.splice(i, 1);
-            };
-        }
-
-        isShowNoTownsNotify.value = storagedTowns.value.length === 0;
-    }
-
-    async function addFavoutiteTown() {
-        isFetching.value = true;
-        getWeatherNow(inputValue.value)
-        .then((resp) => resp.json())
-        .then((data) => {
-            if (data.cod != 200) return;
-            let town = {
-                name: data.city.name,
-                lat: Math.round(data.city.coord.lat),
-                lon: Math.round(data.city.coord.lon)
-            }
-            storagedTowns.value.push(town);
-
-            isShowNoTownsNotify.value = storagedTowns.value.length === 0;
-            isShowTown();
-        })
-        .finally(() => {
-            isFetching.value = false;
-        })
-    }
-
-    onMounted(() => {
-        input.value;
-    });
+onMounted(() => {
+  input.value
+})
 </script>
 
 <template>
-    <rootLevel2MenuComponent id="favourite-towns">
-        <template #labelText>Избранные города</template>
-        <template #content class="favourite-towns-content">
-            <div class="add-town" :class="{ active: isUnicTown && isinputValue && isFocused }">
-                <input type="text" placeholder="Введите название города" class="add-town__input" 
-                v-model="inputValue" 
-                @input="isShowTown" 
-                @focus="() => {
-                    isFocused = true;
-                    isShowTown();
-                    }" 
-                @blur="isFocused = false" 
-                @keypress.enter="addFavoutiteTown" 
-                ref="input">
-                <button class="add-town__button" 
-                @focus="isFocused = true" 
-                @blur="isFocused = false" 
-                @click="addFavoutiteTown" 
-                :class="{ loading: isFetching }">
-                    <span class="plus-s-1"></span>
-                    <span class="plus-s-2"></span>
-                    <span class="plus-s-3"></span>
-                    <span class="plus-s-4"></span>
-                </button>
+  <rootLevel2MenuComponent id="favourite-towns">
+    <template #labelText>Избранные города</template>
+    <template #content class="favourite-towns-content">
+      <div class="add-town" :class="{ active: isUnicTown && isinputValue && isFocused }">
+        <input
+          type="text"
+          placeholder="Введите название города"
+          class="add-town__input"
+          v-model="inputValue"
+          @input="isShowTown"
+          @focus="
+            () => {
+              isFocused = true
+              isShowTown()
+            }
+          "
+          @blur="isFocused = false"
+          @keypress.enter="addFavoutiteTown"
+          ref="input"
+        />
+        <button
+          class="add-town__button"
+          @focus="isFocused = true"
+          @blur="isFocused = false"
+          @click="addFavoutiteTown"
+          :class="{ loading: isFetching }"
+        >
+          <span class="plus-s-1"></span>
+          <span class="plus-s-2"></span>
+          <span class="plus-s-3"></span>
+          <span class="plus-s-4"></span>
+        </button>
+      </div>
+      <div class="favourite-towns-no-towns" :class="{ active: isShowNoTownsNotify }">
+        <span class="favourite-towns-no-towns__label">
+          <div class="favourite-towns-no-towns__icon">
+            <NoTownsIcon />
+          </div>
+          <span>У вас нет избранных городов</span>
+        </span>
+        <button class="favourite-towns__add-button" @click="input.focus()">Добавить город</button>
+      </div>
+      <div class="favourite-towns">
+        <button
+          class="favorite-town"
+          v-for="town in storagedTowns"
+          @mousedown="
+            (event) => {
+              if (!isMobile) touchEvent(town, event)
+            }
+          "
+          @focus="
+            (event) => {
+              if (isMobile) touchEvent(town, event)
+            }
+          "
+          @blur="removeInfoMenu"
+          @click="searchEvent(town.name)"
+        >
+          <h3 class="favorite-town__name">{{ town.name }}</h3>
+          <div class="favorite-town__coords">
+            <div class="favorite-town__coords-icon">
+              <LocationIcon />
             </div>
-            <div class="favourite-towns-no-towns" :class="{ active: isShowNoTownsNotify }">
-                <span class="favourite-towns-no-towns__label">
-                    <div class="favourite-towns-no-towns__icon">
-                        <NoTownsIcon />
-                    </div>
-                    <span>У вас нет избранных городов</span>
-                </span>
-                <button class="favourite-towns__add-button" @click="input.focus()">Добавить город</button>
-            </div>
-            <div class="favourite-towns">
-                <button class="favorite-town" 
-                v-for="town in storagedTowns" 
-                @mousedown="(event) => { if (!isMobile) touchEvent(town, event) }" 
-                @focus="(event) => { if (isMobile) touchEvent(town, event) }" 
-                @blur="removeInfoMenu"
-                @click="searchEvent(town.name)"> 
-                    <h3 class="favorite-town__name">{{ town.name }}</h3>
-                    <div class="favorite-town__coords">
-                        <div class="favorite-town__coords-icon">
-                            <LocationIcon />
-                        </div>
-                        <span>{{ town.lat }}° / {{ town.lon }}°</span>
-                    </div>
-                </button>
-            </div>
-        </template>
-    </rootLevel2MenuComponent>
+            <span>{{ town.lat }}° / {{ town.lon }}°</span>
+          </div>
+        </button>
+      </div>
+    </template>
+  </rootLevel2MenuComponent>
 </template>
 
 <style scoped>
-    .favourite-towns-content {
-        display: grid;
-        grid-template-rows: 45px 1fr;
-        gap: 25px;
-        height: 100%;
-    }
-    .favourite-towns-no-towns {
-        position: absolute;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        width: 100%;
-        height: calc(100% - 70px);
-        padding: 10px;
-        transition: .2s ease;
-        opacity: 0;
-        transform: translateX(-50px);
-        visibility: hidden;
-        pointer-events: none;
-    }
-    .favourite-towns-content {
-        position: relative;
-        top: calc(50% - 35px);
-        transform: translateY(-50%);
-    }
-    .favourite-towns-no-towns.active {
-        position: relative;
-        left: 0;
-        opacity: 1;
-        transform: translateX(0);
-        visibility: visible;
-        pointer-events: inherit;
-    }
-    .favourite-towns-no-towns__label {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 5px;
-        position: relative;
-        font-family: "Sourse Sans Pro", sans-serif;
-        font-size: 24px;
-        font-weight: 700;
-        color: var(--text-color-1);
-    }
-    .favourite-towns-no-towns__icon {
-        position: relative;
-        width: 70px;
-        height: 70px;
-    }
-    .favourite-towns-no-towns__icon svg {
-        position: absolute;
-        width: inherit;
-        height: inherit;
-        fill: var(--text-color-1);
-    }
-    .favourite-towns__add-button {
-        position: relative;
-        width: max-content;
-        padding: 8px 10px 8px 34px;
-        border: none;
-        border-radius: 15px;
-        font-family: "Sourse Sans Pro", sans-serif;
-        font-size: 16px;
-        font-weight: 600;
-        box-shadow: 0px 0px 6px #0000001c;
-        color: var(--text-color-1);
-        background: var(--bg-color-3);
-        transition: .2s ease;
-    }
-    .favourite-towns__add-button::after {
-        position: absolute;
-        content: "+";
-        left: 8px;
-        top: calc(50% - 10px);
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        font-size: 18px;
-        font-weight: 600;
-        line-height: 20px;
-        background: var(--bg-color-10);
-    }
-    .favourite-towns__add-button:hover,
-    .favourite-towns__add-button:focus {
-        cursor: pointer;
-        box-shadow: 0px 1px 12px #0000001f;
-        transform: translateY(-3px);
-    }
-    .add-town {
-        position: relative;
-        width: 100%;
-        margin: 10px 0 0 0;
-    }
-    .add-town__input {
-        min-height: 45px;
-        width: 100%;
-        padding: 8px 10px;
-        border: none;
-        border-radius: 15px;
-        outline: #00000000 solid; 
-        font-family: "Sourse Sans Pro", sans-serif;
-        font-weight: 500;
-        font-size: 17px;
-        box-shadow: 0px 0px 6px #0000001c;  
-        background: var(--bg-color-3);
-        color: var(--text-color-1);
-        transition: .2s ease;
-        box-sizing: border-box;
-    }
-    .add-town__input:focus-visible {
-        box-shadow: 0px 0px 12px #0000001f;
-        background: var(--bg-color-15);
-        outline: var(--bg-color-16) solid;
-    }
-    .add-town__input:hover {
-        box-shadow: 0px 0px 12px #0000001f;
-    }
-    .add-town__button {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 45px;
-        height: 45px;
-        border: none;
-        border-radius: 15px;
-        background: var(--bg-color-3);
-        box-shadow: 0px 0px 6px #0000001c;
-        transform: translateX(100%);
-        transition: .2s ease;
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
-    }
-    .add-town__button:hover {
-        cursor: pointer;
-        background: var(--bg-color-15);
-    }
-    .add-town.active  .add-town__input,
-    .add-town:has(.add-town__button:focus-visible) .add-town__input {
-        width: calc(100% - 60px);
-    }
-    .add-town.active .add-town__button,
-    .add-town__button:focus-visible {
-        transform: translateX(0%);  
-        visibility: visible;
-        pointer-events: all;
-        opacity: 1;
-    }
-    .add-town__button span {
-        position: absolute;
-        top: calc(50% - 12px);
-        left: calc(50% - 2px);
-        content: "";
-        width: 4px;
-        height: 25px;
-        border-radius: 10px;
-        background: var(--bg-color-13);
-        transition: .2s ease;
-    }
-    .add-town__button .plus-s-1 {
-        transform: rotate(90deg);
-    }
-    .add-town__button.loading span {
-        top: calc(50% - 3px);
-        width: 7px;
-        height: 7px;
-        animation-timing-function: cubic-bezier(0, 1, 1, 0);
-    }
-    .add-town__button.loading span:nth-child(1) {
-        left: 8px;
-        animation: lds-ellipsis1 0.6s infinite;
-    }
-    .add-town__button.loading span:nth-child(2) {
-        left: 8px;
-        animation: lds-ellipsis2 0.6s infinite;
-    }
-    .add-town__button.loading span:nth-child(3) {
-        left: 20px;
-        animation: lds-ellipsis2 0.6s infinite;
-    }
-    .add-town__button.loading span:nth-child(4) {
-        left: 32px;
-        animation: lds-ellipsis3 0.6s infinite;
-    }
-    .favourite-towns {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        margin: 15px 0 0 0;
-        @media (max-width: 768px) {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: min-content min-content;
-        }
-        @media (max-width: 640px) {
-            display: flex;
-        }
-    }
-    .favorite-town {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        padding: 10px;
-        border: none;
-        border-radius: 20px;
-        font-family: "Sourse Sans Pro";
-        font-weight: 600;
-        text-align: left;
-        box-shadow: 0px 0px 6px #0000001c;
-        background: var(--bg-color-3);
-        color: var(--text-color-1);
-        transition: .2s ease;
-        animation: favorite-town-add .2S ease forwards;
-        overflow: hidden;
-    }
-    @keyframes favorite-town-add {
-        0% {
-            opacity: 0;
-            transform: translateY(15px);
-        }
-        100% {
-            opacity: 1;
-            transform: translateY(0px);
-        }
-    }
-    .favorite-town__name {
-        font-size: 20px;
-        font-weight: 700;
-        pointer-events: none;
-        margin: 0;
-    }
-    .favorite-town__coords {
-        position: relative;
-        display: flex;
-        gap: 3px;
-        font-size: 16px;
-        pointer-events: none;
-    }
-    .favorite-town__coords-icon {
-        position: relative;
-        width: 20px;
-        height: 20px;
-    }
-    .favorite-town__coords-icon svg {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: inherit;
-        height: inherit;
-        fill: var(--text-color-1);
-    }
-    .favorite-town:hover,
-    .favorite-town:focus {
-        cursor: pointer;
-        box-shadow: 0px 1px 12px #0000001f;
-        transform: translateY(-3px);
-    }
-    .favorite-town__name::first-letter {
-        text-transform: uppercase;
-    }
+.favourite-towns-content {
+  display: grid;
+  grid-template-rows: 45px 1fr;
+  gap: 25px;
+  height: 100%;
+}
+.favourite-towns-no-towns {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: calc(100% - 70px);
+  padding: 10px;
+  transition: 0.2s ease;
+  opacity: 0;
+  transform: translateX(-50px);
+  visibility: hidden;
+  pointer-events: none;
+}
+.favourite-towns-content {
+  position: relative;
+  top: calc(50% - 35px);
+  transform: translateY(-50%);
+}
+.favourite-towns-no-towns.active {
+  position: relative;
+  left: 0;
+  opacity: 1;
+  transform: translateX(0);
+  visibility: visible;
+  pointer-events: inherit;
+}
+.favourite-towns-no-towns__label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  position: relative;
+  font-family: 'Sourse Sans Pro', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-color-1);
+}
+.favourite-towns-no-towns__icon {
+  position: relative;
+  width: 70px;
+  height: 70px;
+}
+.favourite-towns-no-towns__icon svg {
+  position: absolute;
+  width: inherit;
+  height: inherit;
+  fill: var(--text-color-1);
+}
+.favourite-towns__add-button {
+  position: relative;
+  width: max-content;
+  padding: 8px 10px 8px 34px;
+  border: none;
+  border-radius: 15px;
+  font-family: 'Sourse Sans Pro', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0px 0px 6px #0000001c;
+  color: var(--text-color-1);
+  background: var(--bg-color-3);
+  transition: 0.2s ease;
+}
+.favourite-towns__add-button::after {
+  position: absolute;
+  content: '+';
+  left: 8px;
+  top: calc(50% - 10px);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 20px;
+  background: var(--bg-color-10);
+}
+.favourite-towns__add-button:hover,
+.favourite-towns__add-button:focus {
+  cursor: pointer;
+  box-shadow: 0px 1px 12px #0000001f;
+  transform: translateY(-3px);
+}
+.add-town {
+  position: relative;
+  width: 100%;
+  margin: 10px 0 0 0;
+}
+.add-town__input {
+  min-height: 45px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 15px;
+  outline: #00000000 solid;
+  font-family: 'Sourse Sans Pro', sans-serif;
+  font-weight: 500;
+  font-size: 17px;
+  box-shadow: 0px 0px 6px #0000001c;
+  background: var(--bg-color-3);
+  color: var(--text-color-1);
+  transition: 0.2s ease;
+  box-sizing: border-box;
+}
+.add-town__input:focus-visible {
+  box-shadow: 0px 0px 12px #0000001f;
+  background: var(--bg-color-15);
+  outline: var(--bg-color-16) solid;
+}
+.add-town__input:hover {
+  box-shadow: 0px 0px 12px #0000001f;
+}
+.add-town__button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 15px;
+  background: var(--bg-color-3);
+  box-shadow: 0px 0px 6px #0000001c;
+  transform: translateX(100%);
+  transition: 0.2s ease;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.add-town__button:hover {
+  cursor: pointer;
+  background: var(--bg-color-15);
+}
+.add-town.active .add-town__input,
+.add-town:has(.add-town__button:focus-visible) .add-town__input {
+  width: calc(100% - 60px);
+}
+.add-town.active .add-town__button,
+.add-town__button:focus-visible {
+  transform: translateX(0%);
+  visibility: visible;
+  pointer-events: all;
+  opacity: 1;
+}
+.add-town__button span {
+  position: absolute;
+  top: calc(50% - 12px);
+  left: calc(50% - 2px);
+  content: '';
+  width: 4px;
+  height: 25px;
+  border-radius: 10px;
+  background: var(--bg-color-13);
+  transition: 0.2s ease;
+}
+.add-town__button .plus-s-1 {
+  transform: rotate(90deg);
+}
+.add-town__button.loading span {
+  top: calc(50% - 3px);
+  width: 7px;
+  height: 7px;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.add-town__button.loading span:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.add-town__button.loading span:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.add-town__button.loading span:nth-child(3) {
+  left: 20px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.add-town__button.loading span:nth-child(4) {
+  left: 32px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+.favourite-towns {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 15px 0 0 0;
+  @media (max-width: 768px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: min-content min-content;
+  }
+  @media (max-width: 640px) {
+    display: flex;
+  }
+}
+.favorite-town {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  font-family: 'Sourse Sans Pro';
+  font-weight: 600;
+  text-align: left;
+  box-shadow: 0px 0px 6px #0000001c;
+  background: var(--bg-color-3);
+  color: var(--text-color-1);
+  transition: 0.2s ease;
+  animation: favorite-town-add 0.2s ease forwards;
+  overflow: hidden;
+}
+@keyframes favorite-town-add {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+.favorite-town__name {
+  font-size: 20px;
+  font-weight: 700;
+  pointer-events: none;
+  margin: 0;
+}
+.favorite-town__coords {
+  position: relative;
+  display: flex;
+  gap: 3px;
+  font-size: 16px;
+  pointer-events: none;
+}
+.favorite-town__coords-icon {
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+.favorite-town__coords-icon svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: inherit;
+  height: inherit;
+  fill: var(--text-color-1);
+}
+.favorite-town:hover,
+.favorite-town:focus {
+  cursor: pointer;
+  box-shadow: 0px 1px 12px #0000001f;
+  transform: translateY(-3px);
+}
+.favorite-town__name::first-letter {
+  text-transform: uppercase;
+}
 </style>
