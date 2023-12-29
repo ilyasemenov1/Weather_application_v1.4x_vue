@@ -14,6 +14,11 @@ let { isMenuArrowMode } = storeToRefs(menuStore)
 
 const path = 'nightMode'
 
+const appThemeMeta = document.querySelector('meta[name="theme-color"]')
+
+const nightModeColor = '#3d3d3f'
+const lightModeColor = '#ffffff'
+
 let selectMode = ref(getSettingsValue(settings.value, path))
 let markerWidth = ref(0)
 let markerLeft = ref(0)
@@ -41,12 +46,14 @@ function setPageTheme() {
   switch (selectMode.value) {
     case 'active':
       document.body.classList.add('night-mode')
+      appThemeMeta.setAttribute("content", nightModeColor)
       break
     case 'auto':
       getAutoTheme()
       break
     case 'disactive':
       document.body.classList.remove('night-mode')
+      appThemeMeta.setAttribute("content", lightModeColor)
       break
     default:
       getAutoTheme()
@@ -56,8 +63,10 @@ function setPageTheme() {
 function getAutoTheme() {
   if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     document.body.classList.add('night-mode')
+    appThemeMeta.setAttribute("content", nightModeColor)
   } else {
     document.body.classList.remove('night-mode')
+    appThemeMeta.setAttribute("content", lightModeColor)
   }
 }
 
