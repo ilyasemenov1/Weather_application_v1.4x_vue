@@ -11,15 +11,15 @@ import LogoIcon from '../../../icons/LogoIcon.vue'
         <div class="app-logo__icon">
           <LogoIcon />
         </div>
-        <div class="app-logo__text">Погода v1.4.3.1</div>
+        <div class="app-logo__text">Погода v1.4.4</div>
       </div>
       <h2>Что нового?</h2>
       <ul>
         <li>
-          Приложение переписано на
-          <a class="inline" href="https://vuejs.org/" target="_blank">Vue.js framework</a>
+          Добавлена поддержка 
+          <a class="inline" href="https://doka.guide/tools/web-app-types/#progressive-web-applications-pwa" target="_blank">PWA</a>
         </li>
-        <li>Исправлены мелкие ошибки</li>
+        <li>Исправлены некоторые проблемы с доступностью (такие как контрастность текста и атрибуты интерактивных элементов для скринридеров)</li>
       </ul>
       <h2>Другие ветки приложения:</h2>
       <ul>
