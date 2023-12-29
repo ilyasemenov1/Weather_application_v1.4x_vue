@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "vite build",
+    "build-cli": "vue-cli-service build",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "dev": "vite",
     "format": "prettier --write src/",
@@ -18,8 +19,7 @@
     "pwa": "^1.9.7",
     "register-service-worker": "^1.7.2",
     "swiper": "^11.0.4",
-    "vue": "^3.3.13",
-    "vuex": "^4.1.0"
+    "vue": "^3.3.13"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.3.3",
