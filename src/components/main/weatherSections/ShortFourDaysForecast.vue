@@ -25,6 +25,9 @@
     const settingsSt = settingsStore();
     const { settings } = storeToRefs(settingsSt);
 
+    let dataCard = ref(null);
+    let dataCardStatus = ref(null);
+
     const swiperOptions = ref({
         breakpoints: {
             280: {
@@ -110,6 +113,21 @@
         })
         return mode(upperCaseArr);
     }
+
+    watch(weatherData,
+        () => {
+            setTimeout(() => {
+                const dataCards = dataCard.value;
+                const DataStatusCards = dataCardStatus.value;
+                const arrLenght = 4;
+                for (let i = 0; i < arrLenght; i++) {
+                    DataStatusCards[i].offsetHeight > 30 ? dataCards[i].classList.add("wrap") : dataCards[i].classList.remove("wrap");
+                    console.log(DataStatusCards[i].offsetHeight);
+                }
+            }, 20);
+        }
+    )
+
 </script>
 <template>
     <section class="four-day-forecast-short js-scroll">
@@ -133,13 +151,13 @@
                         </div>
                         <img class="day-card__weather-icon" :src="setIconSrc(i)" alt="Иконка статуса погоды">
                         <div class="day-card__data">
-                            <span class="day-card__status">{{ setStatus(i) }}</span>
+                            <span class="day-card__status" ref="dataCardStatus">{{ setStatus(i) }}</span>
                             <div class="day-card__main-info">
                                 <span class="day-card__temp-block">
                                     <span class="day-card__temp">{{ setMinMaxTemp(i) }}</span>
                                 </span>
                             </div>
-                            <div class="day-card__second-block">
+                            <div class="day-card__second-block" ref="dataCard">
                                 <span class="day-card__wind">
                                     <span class="day-card__wind-block">{{ setSpeed(i) }}</span>
                                 </span>
