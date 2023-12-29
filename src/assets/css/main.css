@@ -4,106 +4,106 @@
 @import './animations.css';
 
 body {
-  min-height: 100vh;
-  margin: 0;
-  background: var(--bg-color-2);
-  overflow-x: hidden;
+	min-height: 100vh;
+	margin: 0;
+	background: var(--bg-color-2);
+	overflow-x: hidden;
 }
 #app {
-  display: grid;
-  grid-template-rows: 1fr min-content;
-  justify-items: center;
+	display: grid;
+	grid-template-rows: 1fr min-content;
+	justify-items: center;
 }
 a,
 button {
-  display: block;
-  outline: #00000000 solid;
+	display: block;
+	outline: #00000000 solid;
 }
 a:focus-visible,
 button:focus-visible {
-  outline: var(--bg-color-16) solid;
+	outline: var(--bg-color-16) solid;
 }
 .level2-menu__content h2 {
-  margin: 8px 0;
-  font-size: 22px;
-  color: var(--text-color-1);
+	margin: 8px 0;
+	font-size: 22px;
+	color: var(--text-color-1);
 }
 .level2-menu__content li {
-  font-size: 18px;
-  font-weight: 500;
-  color: var(--text-color-1);
+	font-size: 18px;
+	font-weight: 500;
+	color: var(--text-color-1);
 }
 .level2-menu__content ul {
-  margin: 5px 0;
+	margin: 5px 0;
 }
 .level2-menu__content a.inline {
-  display: inline;
-  color: var(--text-color-1);
-  text-decoration-color: var(--text-decoration-color-1);
-  transition: 0.2s ease;
+	display: inline;
+	color: var(--text-color-1);
+	text-decoration-color: var(--text-decoration-color-1);
+	transition: 0.2s ease;
 }
 .level2-menu__content a.inline:hover,
 .level2-menu__content a.inline:focus-visible {
-  background: var(--bg-color-12);
-  text-decoration-color: var(--text-decoration-color-2);
+	background: var(--bg-color-12);
+	text-decoration-color: var(--text-decoration-color-2);
 }
 .search-towns button b {
-  font-weight: 700;
+	font-weight: 700;
 }
 .loading-animation {
-  width: 90px;
-  height: 90px;
-  border-radius: 20px;
-  box-shadow: rgb(0 0 0 / 10%) 0px 2px 8px;
-  background: var(--bg-color-1);
+	width: 90px;
+	height: 90px;
+	border-radius: 20px;
+	box-shadow: rgb(0 0 0 / 10%) 0px 2px 8px;
+	background: var(--bg-color-1);
 }
 .loading-animation .animation {
-  top: 5px;
-  left: 5px;
+	top: 5px;
+	left: 5px;
 }
 .animation {
-  display: inline-block;
-  position: relative;
-  width: 30px;
-  height: 30px;
+	display: inline-block;
+	position: relative;
+	width: 30px;
+	height: 30px;
 }
 .animation span {
-  box-sizing: border-box;
-  display: block;
-  position: absolute;
-  width: 64px;
-  height: 64px;
-  margin: 8px;
-  border: 8px solid #fff;
-  border-radius: 50%;
-  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: #6b6b6b transparent transparent transparent;
+	box-sizing: border-box;
+	display: block;
+	position: absolute;
+	width: 64px;
+	height: 64px;
+	margin: 8px;
+	border: 8px solid #fff;
+	border-radius: 50%;
+	animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+	border-color: #6b6b6b transparent transparent transparent;
 }
 body.night-mode .animation span {
-  border-color: #a5a5a5 transparent transparent transparent;
+	border-color: #a5a5a5 transparent transparent transparent;
 }
 .animation span:nth-child(1) {
-  animation-delay: -0.45s;
+	animation-delay: -0.45s;
 }
 .animation span:nth-child(2) {
-  animation-delay: -0.3s;
+	animation-delay: -0.3s;
 }
 .animation span:nth-child(3) {
-  animation-delay: -0.15s;
+	animation-delay: -0.15s;
 }
 @keyframes lds-ring {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
 }
 @keyframes modal-background-add {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
 }
