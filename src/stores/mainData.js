@@ -10,8 +10,8 @@ export const mainData = defineStore('main-data', () => {
 	let isNetworkErr = ref(false)
 	let isOnline = ref(true)
 	let isUpdateForecast = ref(true)
-	let cityName = ref('a')
-	let cityNameShow = ref('a')
+	let cityName = ref('')
+	let cityNameShow = ref('')
 
 	return {
 		weatherData,
