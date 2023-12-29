@@ -14,12 +14,12 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}']
       },
-      includeAssets: ['logo.svg', './img/icons/favicon-32x32.png'],
+      includeAssets: ['logo.svg', './img/icons/icon-512x512.png'],
       manifest: {
         name: 'Погода',
         short_name: 'Погода',
         description: 'Приложение погоды, способное отображать прогноз в любой точке мира!',
-        theme_color: '#4a4c4e',
+        theme_color: '#3d3d3f',
         lang: "ru",
         icons: [
           {
@@ -27,8 +27,8 @@ export default defineConfig({
             sizes: 'any'
           },
           {
-            src: './img/icons/favicon-32x32.png',
-            sizes: '32x32',
+            src: './img/icons/icon-512x512.png',
+            sizes: '512x512',
             type: 'image/png'
           }
         ]
