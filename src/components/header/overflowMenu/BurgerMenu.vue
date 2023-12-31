@@ -20,7 +20,7 @@ const menuStore = burgerMenuDataStore()
 let { isMenuOpen, isMenuArrowMode } = storeToRefs(menuStore)
 
 const store = mainData()
-const { weatherData, isShowSearchErr, isGeolocationErr, isNetworkErr } = storeToRefs(store)
+const { weatherData, isShowLoader } = storeToRefs(store)
 
 let header = document.querySelector('.header')
 let headerContent = document.querySelector('.header-content')
@@ -101,7 +101,7 @@ function changeMenuState() {
 	}
 }
 
-function setMenuPosition(burgerElement) {
+function setMenuPosition(burgerElement, left) {
 	headerWidth = header.clientWidth
 	headerHeight = header.clientHeight
 	headerContentwidth = headerContent.clientWidth
@@ -109,8 +109,10 @@ function setMenuPosition(burgerElement) {
 	headerLeft = header.clientLeft
 	headerTop = header.clientTop
 
+	const transformByX = left ? left : 0 
+
 	burgerMenuButtonPositionX.value =
-		headerWidth - padding - burgerWidth - headerLeft - (headerWidth - headerContentwidth) / 2
+		headerWidth - padding - burgerWidth - headerLeft - (headerWidth - headerContentwidth) / 2 + transformByX
 	burgerMenuButtonPositionY.value = headerHeight - burgerElement.clientHeight + headerTop
 }
 
@@ -244,9 +246,16 @@ function updateScrollbarPosition() {
 		const { isVerticalScrollbarF, verticalScrollbarWidthF } = detectVericalScrollbar();
 		isVerticalScrollbar.value = isVerticalScrollbarF
 		verticalScrollbarWidth.value = verticalScrollbarWidthF
-		setMenuPosition(burger.value);
+		setMenuPosition(burger.value)
 	}, 25)
 } 
+
+function disableScrollBarGap() {
+	const { verticalScrollbarWidthF } = detectVericalScrollbar()
+	isVerticalScrollbar.value = false
+	verticalScrollbarWidth.value = 0
+	setMenuPosition(burger.value, verticalScrollbarWidthF)
+}
 
 onMounted(() => {
 	pageScrolled(100)
@@ -271,10 +280,9 @@ watch(isMenuOpen, () => {
 	}
 })
 
-
-watch(isShowSearchErr, updateScrollbarPosition)
-watch(isGeolocationErr, updateScrollbarPosition)
-watch(isNetworkErr, updateScrollbarPosition)
+watch(isShowLoader, () => {
+	if (isShowLoader.value) disableScrollBarGap()
+})
 watch(weatherData,updateScrollbarPosition)
 </script>
 
