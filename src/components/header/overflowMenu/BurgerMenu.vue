@@ -20,7 +20,7 @@ const menuStore = burgerMenuDataStore()
 let { isMenuOpen, isMenuArrowMode } = storeToRefs(menuStore)
 
 const store = mainData()
-const { weatherData } = storeToRefs(store)
+const { weatherData, isShowSearchErr, isGeolocationErr } = storeToRefs(store)
 
 let header = document.querySelector('.header')
 let headerContent = document.querySelector('.header-content')
@@ -110,7 +110,7 @@ function setMenuPosition(burgerElement) {
 	headerTop = header.clientTop
 
 	burgerMenuButtonPositionX.value =
-		headerWidth - padding - burgerWidth - headerLeft - (headerWidth - headerContentwidth) / 2 - verticalScrollbarWidth.value
+		headerWidth - padding - burgerWidth - headerLeft - (headerWidth - headerContentwidth) / 2
 	burgerMenuButtonPositionY.value = headerHeight - burgerElement.clientHeight + headerTop
 }
 
@@ -264,9 +264,12 @@ watch(isMenuOpen, () => {
 
 watch(weatherData,
 	() => {
-		const { isVerticalScrollbarF, verticalScrollbarWidthF } = detectVericalScrollbar();
-		isVerticalScrollbar.value = isVerticalScrollbarF
-		verticalScrollbarWidth.value = verticalScrollbarWidthF
+		setTimeout(() => {
+			const { isVerticalScrollbarF, verticalScrollbarWidthF } = detectVericalScrollbar();
+			isVerticalScrollbar.value = isVerticalScrollbarF
+			verticalScrollbarWidth.value = verticalScrollbarWidthF
+			setMenuPosition(burger.value);
+		}, 20)
 	}
 )
 </script>
