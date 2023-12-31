@@ -55,7 +55,7 @@ let headerTop = 0
 function setOpenMenuTransform() {
 	if (window.innerWidth > 768) {
 		burgerMenuButtonTransformX.value =
-			-menu.clientWidth + 65 + (headerWidth - headerContentwidth) / 2 + verticalScrollbarWidth.value;
+			-menu.clientWidth + 65 + (headerWidth - headerContentwidth) / 2 + verticalScrollbarWidth.value
 		burgerMenuButtonTransformY.value = 0
 	} else {
 		burgerMenuButtonTransformX.value = 0
@@ -71,14 +71,15 @@ function setArrowModeMenuPositon() {
 			burgerWidth +
 			headerLeft +
 			(headerWidth - headerContentwidth) / 2 +
-			15 + verticalScrollbarWidth.value;
+			15 +
+			verticalScrollbarWidth.value
 	} else {
 		burgerMenuButtonTransformX.value = -modalMenuWidth + padding + burgerWidth + 15
 	}
 }
 
 function changeMenuState() {
-	const { isVerticalScrollbarF, verticalScrollbarWidthF } = detectVericalScrollbar();
+	const { isVerticalScrollbarF, verticalScrollbarWidthF } = detectVericalScrollbar()
 	isVerticalScrollbar.value = isVerticalScrollbarF
 	verticalScrollbarWidth.value = verticalScrollbarWidthF
 	if (isMenuArrowMode.value) {
@@ -109,10 +110,15 @@ function setMenuPosition(burgerElement, left) {
 	headerLeft = header.clientLeft
 	headerTop = header.clientTop
 
-	const transformByX = left ? left : 0 
+	const transformByX = left ? left : 0
 
 	burgerMenuButtonPositionX.value =
-		headerWidth - padding - burgerWidth - headerLeft - (headerWidth - headerContentwidth) / 2 + transformByX
+		headerWidth -
+		padding -
+		burgerWidth -
+		headerLeft -
+		(headerWidth - headerContentwidth) / 2 +
+		transformByX
 	burgerMenuButtonPositionY.value = headerHeight - burgerElement.clientHeight + headerTop
 }
 
@@ -235,7 +241,7 @@ function pageScrolled(scroll) {
 }
 
 function detectVericalScrollbar() {
-	const root = document.compatMode =='BackCompat' ? document.body : document.documentElement
+	const root = document.compatMode == 'BackCompat' ? document.body : document.documentElement
 	const isVerticalScrollbarF = root.scrollHeight > root.clientHeight
 	const verticalScrollbarWidthF = window.innerWidth - document.documentElement.clientWidth
 	return { isVerticalScrollbarF, verticalScrollbarWidthF }
@@ -243,12 +249,12 @@ function detectVericalScrollbar() {
 
 function updateScrollbarPosition() {
 	setTimeout(() => {
-		const { isVerticalScrollbarF, verticalScrollbarWidthF } = detectVericalScrollbar();
+		const { isVerticalScrollbarF, verticalScrollbarWidthF } = detectVericalScrollbar()
 		isVerticalScrollbar.value = isVerticalScrollbarF
 		verticalScrollbarWidth.value = verticalScrollbarWidthF
 		setMenuPosition(burger.value)
 	}, 25)
-} 
+}
 
 function disableScrollBarGap() {
 	const { verticalScrollbarWidthF } = detectVericalScrollbar()
@@ -283,7 +289,7 @@ watch(isMenuOpen, () => {
 watch(isShowLoader, () => {
 	if (isShowLoader.value) disableScrollBarGap()
 })
-watch(weatherData,updateScrollbarPosition)
+watch(weatherData, updateScrollbarPosition)
 </script>
 
 <template>
