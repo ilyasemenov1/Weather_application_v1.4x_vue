@@ -7,6 +7,7 @@ import HeartIcon from '../../icons/HeartIcon.vue'
 import InfoIcon from '../../icons/InfoIcon.vue'
 
 import { settingsStore } from '@/stores/settings.js'
+import { mainData } from '@/stores/mainData.js'
 import { burgerMenuDataStore } from '@/stores/burgerMenu.js'
 import { storeToRefs } from 'pinia'
 
@@ -17,6 +18,9 @@ const { settings } = storeToRefs(storeSettings)
 
 const menuStore = burgerMenuDataStore()
 let { isMenuOpen, isMenuArrowMode } = storeToRefs(menuStore)
+
+const store = mainData()
+const { weatherData } = storeToRefs(store)
 
 let header = document.querySelector('.header')
 let headerContent = document.querySelector('.header-content')
@@ -37,6 +41,9 @@ let burgerMenuButtonPositionY = ref(0)
 let burgerMenuButtonTransformX = ref(0)
 let burgerMenuButtonTransformY = ref(0)
 
+let isVerticalScrollbar = ref(false)
+let verticalScrollbarWidth = ref(0)
+
 // !Mutable (once) in setMenuPosition()!
 let headerWidth = 0
 let headerHeight = 0
@@ -48,7 +55,7 @@ let headerTop = 0
 function setOpenMenuTransform() {
 	if (window.innerWidth > 768) {
 		burgerMenuButtonTransformX.value =
-			-menu.clientWidth + 65 + (headerWidth - headerContentwidth) / 2
+			-menu.clientWidth + 65 + (headerWidth - headerContentwidth) / 2 + verticalScrollbarWidth.value;
 		burgerMenuButtonTransformY.value = 0
 	} else {
 		burgerMenuButtonTransformX.value = 0
@@ -64,13 +71,16 @@ function setArrowModeMenuPositon() {
 			burgerWidth +
 			headerLeft +
 			(headerWidth - headerContentwidth) / 2 +
-			15
+			15 + verticalScrollbarWidth.value;
 	} else {
 		burgerMenuButtonTransformX.value = -modalMenuWidth + padding + burgerWidth + 15
 	}
 }
 
 function changeMenuState() {
+	const { isVerticalScrollbarF, verticalScrollbarWidthF } = detectVericalScrollbar();
+	isVerticalScrollbar.value = isVerticalScrollbarF
+	verticalScrollbarWidth.value = verticalScrollbarWidthF
 	if (isMenuArrowMode.value) {
 		// From arrow to open mode
 		isMenuArrowMode.value = false
@@ -100,7 +110,7 @@ function setMenuPosition(burgerElement) {
 	headerTop = header.clientTop
 
 	burgerMenuButtonPositionX.value =
-		headerWidth - padding - burgerWidth - headerLeft - (headerWidth - headerContentwidth) / 2
+		headerWidth - padding - burgerWidth - headerLeft - (headerWidth - headerContentwidth) / 2 - verticalScrollbarWidth.value
 	burgerMenuButtonPositionY.value = headerHeight - burgerElement.clientHeight + headerTop
 }
 
@@ -222,7 +232,12 @@ function pageScrolled(scroll) {
 	}
 }
 
-function changeArialabel() {}
+function detectVericalScrollbar() {
+	const root = document.compatMode =='BackCompat' ? document.body : document.documentElement
+	const isVerticalScrollbarF = root.scrollHeight > root.clientHeight
+	const verticalScrollbarWidthF = window.innerWidth - document.documentElement.clientWidth
+	return { isVerticalScrollbarF, verticalScrollbarWidthF }
+}
 
 onMounted(() => {
 	pageScrolled(100)
@@ -246,6 +261,14 @@ watch(isMenuOpen, () => {
 		burger.value.style.top = '15px'
 	}
 })
+
+watch(weatherData,
+	() => {
+		const { isVerticalScrollbarF, verticalScrollbarWidthF } = detectVericalScrollbar();
+		isVerticalScrollbar.value = isVerticalScrollbarF
+		verticalScrollbarWidth.value = verticalScrollbarWidthF
+	}
+)
 </script>
 
 <template>
