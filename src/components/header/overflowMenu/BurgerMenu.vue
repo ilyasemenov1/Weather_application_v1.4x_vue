@@ -20,7 +20,7 @@ const menuStore = burgerMenuDataStore()
 let { isMenuOpen, isMenuArrowMode } = storeToRefs(menuStore)
 
 const store = mainData()
-const { weatherData, isShowSearchErr, isGeolocationErr } = storeToRefs(store)
+const { weatherData, isShowSearchErr, isGeolocationErr, isNetworkErr } = storeToRefs(store)
 
 let header = document.querySelector('.header')
 let headerContent = document.querySelector('.header-content')
@@ -239,6 +239,15 @@ function detectVericalScrollbar() {
 	return { isVerticalScrollbarF, verticalScrollbarWidthF }
 }
 
+function updateScrollbarPosition() {
+	setTimeout(() => {
+		const { isVerticalScrollbarF, verticalScrollbarWidthF } = detectVericalScrollbar();
+		isVerticalScrollbar.value = isVerticalScrollbarF
+		verticalScrollbarWidth.value = verticalScrollbarWidthF
+		setMenuPosition(burger.value);
+	}, 25)
+} 
+
 onMounted(() => {
 	pageScrolled(100)
 	window.addEventListener('scroll', () => {
@@ -262,16 +271,11 @@ watch(isMenuOpen, () => {
 	}
 })
 
-watch(weatherData,
-	() => {
-		setTimeout(() => {
-			const { isVerticalScrollbarF, verticalScrollbarWidthF } = detectVericalScrollbar();
-			isVerticalScrollbar.value = isVerticalScrollbarF
-			verticalScrollbarWidth.value = verticalScrollbarWidthF
-			setMenuPosition(burger.value);
-		}, 20)
-	}
-)
+
+watch(isShowSearchErr, updateScrollbarPosition)
+watch(isGeolocationErr, updateScrollbarPosition)
+watch(isNetworkErr, updateScrollbarPosition)
+watch(weatherData,updateScrollbarPosition)
 </script>
 
 <template>
