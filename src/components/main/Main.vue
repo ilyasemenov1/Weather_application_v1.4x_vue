@@ -13,7 +13,11 @@ import FullFourDaysForecast from './weatherSections/FullFourDaysForecast.vue'
 import { onMounted, watch, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 
-import { getWeather, getWeatherNow, transferTimeFromSettingsToMs } from '../../assets/js/weatherInfo.js'
+import {
+	getWeather,
+	getWeatherNow,
+	transferTimeFromSettingsToMs
+} from '../../assets/js/weatherInfo.js'
 import { mainData } from '../../stores/mainData.js'
 import { burgerMenuDataStore } from '@/stores/burgerMenu.js'
 import { settingsStore } from '@/stores/settings.js'
