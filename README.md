@@ -28,7 +28,7 @@ The weather application that can generate weather forecast in any world point!
 
 1. Added [PWA](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) support
 2. Improved app accessibility
-3. Fixes minor bugs
+3. Fixed minor bugs
 
 ## To run app:
 
