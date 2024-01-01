@@ -29,7 +29,7 @@ const { weatherData } = storeToRefs(store)
 const settingsSt = settingsStore()
 const { settings } = storeToRefs(settingsSt)
 
-let hourlyForecastMode = ref('humidity')
+let hourlyForecastMode = ref('temp')
 let timeFormat = ref(settings.value.timeFormat)
 
 const blockHeight = 56
@@ -198,7 +198,7 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 							:style="{ 
 								height: `${hourlyForecastMode === 'temp' ? forecastElement.tempMapped : forecastElement.humidityMapped}px`
 							}"
-							style="--indicator-fill: #57a6b18c">
+							>
 
 							</span>
 							<span class="slider-block__value-block">
@@ -408,17 +408,16 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	content: '°C';
 }
 .slider-block__value-indicator {
-	position: absolute;
-	left: -1px;
+	position: relative;
+	left: 0;
 	font-family: 'Sourse Sans Pro', sans-serif;
 	font-size: 14px;
 	font-weight: 600;
 	color: var(--text-color-2);
 	opacity: .9;
-	transform: translateY(-23px);
+	transform: translateY(58px);
 }
 .slider-block__value-indicator.humidity {
-	left: 11px;
 	font-size: 13px;
 }
 .weather-main__staus-icon {
@@ -440,6 +439,12 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	background-repeat: no-repeat;
 	background-position: center;
 }
+.indicator.temp {
+	--indicator-fill: #55b0ccb9;
+}
+.indicator.humidity {
+	--indicator-fill: #db9003d2;
+}
 .indicator {
 	position: absolute;
 	left: 7px;
@@ -448,6 +453,7 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	min-height: 5px;
 	border-radius: 12px;
 	background: var(--indicator-fill);
+	box-shadow: 0 1px 4px #00000017;
 	transform: translateY(-21px);
 }
 .indicator.not-filled {
