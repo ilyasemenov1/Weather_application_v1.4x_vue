@@ -18,7 +18,9 @@ import {
 	transformTempToSettingUnit,
 	constructDate,
 	conventDtTxt,
-	dtConventer
+	dtConventer,
+	arrayMin,
+	arrayMax
 } from '@/assets/js/appFunctions.js'
 
 const store = mainData()
@@ -27,7 +29,10 @@ const { weatherData } = storeToRefs(store)
 const settingsSt = settingsStore()
 const { settings } = storeToRefs(settingsSt)
 
+let hourlyForecastMode = ref('humidity')
 let timeFormat = ref(settings.value.timeFormat)
+
+const blockHeight = 56
 
 watch(settings.value, () => {
 	timeFormat.value = settings.value.timeFormat
@@ -53,6 +58,17 @@ function newDayDate(index) {
 watch(weatherData, () => {
 	iconsArr.value = []
 	weatherDataArr.value = weatherData.value.list
+	let tempArr = []
+	let tempMin = 0
+	let tempMax = 0
+	let tempDelta = 0
+
+	let humidityArr = []
+	let humidityMin = 0
+	let humidityMax = 0
+	let humidityDelta = 0
+
+	let windArr = []
 	for (let i = 0; i < [...weatherDataArr.value].length; i++) {
 		weatherDataArr.value[i].index = i
 		iconsArr.value.push(
@@ -65,6 +81,22 @@ watch(weatherData, () => {
 			gapToNewDate.value = i
 			isGapedDate = true
 		}
+		tempArr.push(transformTempToSettingUnit(weatherDataArr.value[i].main.temp, settings.value))
+		humidityArr.push(weatherDataArr.value[i].main.humidity)
+	}
+
+	tempMin = arrayMin(tempArr)
+	tempMax = arrayMax(tempArr)
+	tempDelta = tempMax - tempMin
+
+	humidityMin = arrayMin(humidityArr)
+	humidityMax = arrayMax(humidityArr)
+	humidityDelta = humidityMax - humidityMin
+
+
+	for (let i = 0; i < tempArr.length; i++) {
+		weatherDataArr.value[i].tempMapped = blockHeight * (Math.abs(tempArr[i] - tempMin)) / tempDelta
+		weatherDataArr.value[i].humidityMapped = blockHeight * (Math.abs(humidityArr[i] - humidityMin)) / humidityDelta
 	}
 })
 
@@ -108,7 +140,7 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 						}"
 						:mousewheel="true"
 					>
-						<swiper-slide
+						<swiper-slide v-if="hourlyForecastMode === 'default'"
 							v-for="forecastElement in weatherDataArr"
 							class="slider-block"
 							:class="{
@@ -131,6 +163,55 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 							<span class="slider-block__temp-block">
 								<span class="slider-block__temp">{{
 									transformTempToSettingUnit(forecastElement.main.temp, settings)
+								}}</span>
+							</span>
+							<span
+								class="slider-date"
+								v-show="
+									conventDtTxt(forecastElement.dt_txt) == '00:00' && forecastElement.index != 0
+								"
+								>{{ newDayDate((forecastElement.index - gapToNewDate) / 8 + 1) }}</span
+							>
+						</swiper-slide>
+						<swiper-slide v-else-if="hourlyForecastMode === 'temp' || hourlyForecastMode === 'humidity'"
+							v-for="forecastElement in weatherDataArr"
+							
+							class="slider-block"
+							:class="{
+								'new-day':
+									conventDtTxt(forecastElement.dt_txt) == '00:00' && forecastElement.index != 0
+							}"
+						>
+							<span class="slider-block__time graph" :class="{ h12: timeFormat === '12h' }"
+								>{{
+									forecastElement.index == 0
+										? constructDate()
+										: dtConventer(forecastElement.dt, true, settings)
+								}}
+							</span>
+							<span class="indicator" 
+							:class="{
+								'not-filled': hourlyForecastMode === 'temp' ? forecastElement.tempMapped < 5 : forecastElement.humidityMapped < 5,
+								'temp': hourlyForecastMode === 'temp',
+								'humidity': hourlyForecastMode === 'humidity'
+							}"
+							:style="{ 
+								height: `${hourlyForecastMode === 'temp' ? forecastElement.tempMapped : forecastElement.humidityMapped}px`
+							}"
+							style="--indicator-fill: #57a6b18c">
+
+							</span>
+							<span class="slider-block__value-block">
+								<span class="slider-block__value-indicator"
+								:style="{
+									bottom: hourlyForecastMode === 'temp' ? forecastElement.tempMapped > 5 ? `${forecastElement.tempMapped}px` : '5px' : forecastElement.humidityMapped > 5 ? `${forecastElement.humidityMapped}px` : '5px'
+								}"
+								:class="{
+									'temp': hourlyForecastMode === 'temp',
+									'humidity': hourlyForecastMode === 'humidity'
+								}"
+								>{{
+									hourlyForecastMode === 'temp' ? transformTempToSettingUnit(forecastElement.main.temp, settings) : `${forecastElement.main.humidity}%`
 								}}</span>
 							</span>
 							<span
@@ -289,6 +370,7 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	font-size: 16px;
 	font-weight: 600;
 	text-align: center;
+	text-wrap: nowrap;
 	color: var(--text-color-3);
 }
 .slider-block__time.h12 {
@@ -296,7 +378,20 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	top: 5px;
 	font-size: 12px;
 }
-.slider-block__temp-block {
+.slider-block__time.graph {
+	position: absolute ;
+	left: 9px;
+	bottom: 0;
+	font-size: 14px;
+}
+.slider-block__time.h12.graph {
+	top: auto;
+	left: 6px;
+	bottom: 1px;
+	font-size: 11px;
+}
+.slider-block__temp-block,
+.slider-block__value-block {
 	display: flex;
 	justify-content: center;
 }
@@ -311,6 +406,20 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 .slider-block__temp::after {
 	position: absolute;
 	content: '°C';
+}
+.slider-block__value-indicator {
+	position: absolute;
+	left: -1px;
+	font-family: 'Sourse Sans Pro', sans-serif;
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--text-color-2);
+	opacity: .9;
+	transform: translateY(-23px);
+}
+.slider-block__value-indicator.humidity {
+	left: 11px;
+	font-size: 13px;
 }
 .weather-main__staus-icon {
 	position: absolute;
@@ -330,5 +439,19 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	height: 50px;
 	background-repeat: no-repeat;
 	background-position: center;
+}
+.indicator {
+	position: absolute;
+	left: 7px;
+	bottom: 0;
+	width: 36px;
+	min-height: 5px;
+	border-radius: 12px;
+	background: var(--indicator-fill);
+	transform: translateY(-21px);
+}
+.indicator.not-filled {
+	background: none;
+	border: 2px solid var(--indicator-fill);
 }
 </style>
