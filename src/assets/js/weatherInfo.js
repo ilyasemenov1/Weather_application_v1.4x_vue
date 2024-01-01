@@ -24,16 +24,6 @@ function error() {
 	console.log('error')
 }
 
-function getUserLocation() {
-	const options = {
-		enableHighAccuracy: true,
-		timeout: 5000,
-		maximumAge: 0
-	}
-
-	navigator.geolocation.getCurrentPosition(success, error, options)
-}
-
 function getCity(lat, lng) {
 	var xhr = new XMLHttpRequest()
 

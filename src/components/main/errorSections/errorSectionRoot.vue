@@ -21,6 +21,7 @@
 	z-index: 6;
 	overflow-x: hidden;
 	overflow-y: visible;
+	transition: .3s ease;
 	animation: info-block-add 0.3s ease forwards;
 }
 .error-notification::-webkit-scrollbar {
