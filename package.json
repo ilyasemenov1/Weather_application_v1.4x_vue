@@ -9,8 +9,8 @@
     "dev": "vite",
     "format": "prettier --write src/",
     "preview": "vite preview",
-    "deploy": "rsync -avzh ./dist a0770170@si1ogdev.ru:/home/a0770170/domains/si1ogdev.ru/public_html/weather-app",
-    "deploy-s2": "rsync -avzh ./dist a0770170@si1ogdev.ru:/home/a0770170/domains/si1ogdev.ru/public_html/weather-app-vue"
+    "deploy": "rsync -avz . a0770170@si1ogdev.ru:/home/a0770170/domains/si1ogdev.ru/public_html/weather-app",
+    "deploy-s2": "rsync -avz . a0770170@si1ogdev.ru:/home/a0770170/domains/si1ogdev.ru/public_html/weather-app-vue"
   },
   "dependencies": {
     "@vueuse/components": "^10.5.0",
