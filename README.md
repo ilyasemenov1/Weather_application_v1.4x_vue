@@ -1,5 +1,5 @@
 
-# Weather application v1.4.3.1
+# Weather application v1.4.4
 
 The weather application that can generate weather forecast in any world point!
 
@@ -22,12 +22,13 @@ The weather application that can generate weather forecast in any world point!
 
 ## App
 
- - [App link](https://weather-app-vue.si1ogdev.ru/)
+ - [App link](https://weather-app.si1ogdev.ru/)
 
-## Changes from weather app v1.4.2.2
+## Changes from weather app v1.4.3.1
 
-1. App rewriten to [Vue.js](https://vuejs.org/)
-1. Fixed minor bugs
+1. Added [PWA](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) support
+2. Improved app accessibility
+3. Fixes minor bugs
 
 ## To run app:
 
