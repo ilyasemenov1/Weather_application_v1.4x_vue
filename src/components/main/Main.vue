@@ -10,10 +10,10 @@ import WeatherDetails from './weatherSections/WeatherDetails.vue'
 import ShortFourDaysForecast from './weatherSections/ShortFourDaysForecast.vue'
 import FullFourDaysForecast from './weatherSections/FullFourDaysForecast.vue'
 
-import { onMounted, watch } from 'vue'
+import { onMounted, watch, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 
-import { getWeather, getWeatherNow } from '../../assets/js/weatherInfo.js'
+import { getWeather, getWeatherNow, transferTimeFromSettingsToMs } from '../../assets/js/weatherInfo.js'
 import { mainData } from '../../stores/mainData.js'
 import { burgerMenuDataStore } from '@/stores/burgerMenu.js'
 import { settingsStore } from '@/stores/settings.js'
@@ -40,8 +40,11 @@ const { settings } = storeToRefs(settingsSt)
 
 const token = 'pk.5458a1a49de64870a499080d6af514dc'
 
-// Global bool;
+// Global
 let isValidResponse = false
+let intervalID = 0
+
+let defaultDataUpdate = ref(settings.value.dataUpdate)
 
 function success(pos) {
 	const crd = pos.coords
@@ -98,45 +101,30 @@ async function getCity(lat, lng) {
 async function updateWeatherValidated() {
 	isValidResponse = false
 
+	clearInterval(intervalID)
+
 	isShowWeatherInfo.value = false
 	isShowSearchErr.value = false
 	isGeolocationErr.value = false
 	isNetworkErr.value = false
+	isShowLoader.value = true
+
+	isOnline.value = await checkOnlineStatus()
 
 	if (!isOnline.value) {
 		isNetworkErr.value = true
 		return
 	}
 
-	isShowLoader.value = true
-
-	if (cityName.value == '') {
-		getUserLocation()
-		return
-	}
-
-	getWeather(cityName.value)
-		.then((resp) => resp.json())
-		.then((data) => {
-			if (data.cod != '200') {
-				isShowSearchErr.value = true
-				isShowLoader.value = false
-				return
-			}
-
-			cityNameShow.value = data.city.name
-			weatherData.value = data
-
-			isShowWeatherInfo.value = true
-			isShowLoader.value = false
-
-			setTempAtr()
-			setSpeedAtr()
-			setPressureAtr()
-		})
+	updateWeatherData(cityName.value)
+	intervalID = setInterval(() => {
+		updateWeatherData(cityName.value)
+	}, transferTimeFromSettingsToMs(settings.value.dataUpdate))
 }
 
 async function updateWeather() {
+	clearInterval(intervalID)
+
 	isShowWeatherInfo.value = false
 	isShowSearchErr.value = false
 	isGeolocationErr.value = false
@@ -155,7 +143,15 @@ async function updateWeather() {
 		return
 	}
 
-	getWeather(cityName.value)
+	updateWeatherData(cityName.value)
+
+	intervalID = setInterval(() => {
+		updateWeatherData(cityName.value)
+	}, transferTimeFromSettingsToMs(settings.value.dataUpdate))
+}
+
+async function updateWeatherData(place) {
+	getWeather(place)
 		.then((resp) => resp.json())
 		.then((data) => {
 			if (data.cod != '200') {
@@ -235,11 +231,14 @@ watch(settings.value, () => {
 	setTempAtr()
 	setSpeedAtr()
 	setPressureAtr()
+	defaultDataUpdate.value = settings.value.dataUpdate
 })
 
 watch(cityName, () => {
 	isValidResponse ? updateWeatherValidated() : updateWeather()
 })
+
+watch(defaultDataUpdate, updateWeather)
 
 watch(isMenuOpen, () => {
 	const interactiveElements = document.querySelectorAll(
