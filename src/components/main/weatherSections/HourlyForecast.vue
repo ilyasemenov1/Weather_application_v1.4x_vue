@@ -2,6 +2,7 @@
 import MainWeatherContentRoot from './MainWeatherContentRoot.vue'
 import RightArrowIcon from '../../icons/RightArrowIcon.vue'
 import LeftArrowIcon from '../../icons/LeftArrowIcon.vue'
+import SettingsIcon from '../../icons/SettingsIcon.vue'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation, Keyboard, Mousewheel } from 'swiper/modules'
@@ -29,7 +30,21 @@ const { weatherData } = storeToRefs(store)
 const settingsSt = settingsStore()
 const { settings } = storeToRefs(settingsSt)
 
-let hourlyForecastMode = ref('temp')
+let hourlyForecastMode = ref('default')
+
+let localStorageMode = localStorage.getItem('hourly-forecast-option');
+
+if (localStorageMode) {
+	hourlyForecastMode.value = localStorageMode
+} else {
+	localStorage.setItem('hourly-forecast-option', hourlyForecastMode.value)
+}
+
+let selectOptions = ref([
+	{ index: "default", text: "Сводка" },
+	{ index: "temp", text: "Температура" },
+	{ index: "humidity", text: "Влажность" },
+])
 let timeFormat = ref(settings.value.timeFormat)
 
 const blockHeight = 56
@@ -100,6 +115,11 @@ watch(weatherData, () => {
 	}
 })
 
+watch(hourlyForecastMode, () => {
+	console.log(hourlyForecastMode)
+	localStorage.setItem('hourly-forecast-option', hourlyForecastMode.value)
+})
+
 let prev = ref(null)
 let next = ref(null)
 
@@ -109,7 +129,16 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 <template>
 	<MainWeatherContentRoot>
 		<template #firstTextContent>
-			<h2 class="hourly-forecast__label">Почасовой прогноз</h2>
+			<div class="hourly-forecast__first-content">
+				<h2 class="hourly-forecast__label">Почасовой прогноз</h2>
+				<button class="hourly-forecast__settings-button">
+					<SettingsIcon />
+				</button>
+				<div class="forecast-select" v-for="option in selectOptions">
+					<input type="radio" :id="option.index" :value="option.index" v-model="hourlyForecastMode" />
+					<label :for="option.index">{{ option.text }}</label>
+				</div>
+			</div>
 		</template>
 		<template #content>
 			<div class="hourly-forecast__slider">
@@ -459,5 +488,27 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 .indicator.not-filled {
 	background: none;
 	border: 2px solid var(--indicator-fill);
+}
+.hourly-forecast__first-content {
+	position: relative;
+}
+.hourly-forecast__settings-button {
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 28px;
+	height: 28px;
+	border: none;
+	border-radius: 50%;
+	background: var(--bg-color-6);
+}
+.hourly-forecast__settings-button>svg {
+	position: absolute;
+	left: 4px;
+	top: 4px;
+	width: calc(100% - 8px);
+	height: calc(100% - 8px);
+	fill: #ffffff;
+	opacity: .7;
 }
 </style>
