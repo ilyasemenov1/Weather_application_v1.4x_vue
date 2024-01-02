@@ -584,13 +584,13 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	width: 36px;
 	min-height: 5px;
 	border-radius: 12px;
+	border: 2px solid var(--indicator-fill);
 	background: var(--indicator-fill);
 	box-shadow: 0 1px 4px #00000017;
 	transform: translateY(-21px);
 }
 .indicator.not-filled {
 	background: none;
-	border: 2px solid var(--indicator-fill);
 }
 .hourly-forecast__first-content {
 	position: relative;
