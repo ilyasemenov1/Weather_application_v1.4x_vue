@@ -204,7 +204,7 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 								>{{ newDayDate((forecastElement.index - gapToNewDate) / 8 + 1) }}</span
 							>
 						</swiper-slide>
-						<swiper-slide v-else-if="hourlyForecastMode === 'tempD' || hourlyForecastMode === 'humidityD'"
+						<swiper-slide v-else-if="hourlyForecastMode === 'tempD'"
 							v-for="forecastElement in weatherDataArr"
 							
 							class="slider-block"
@@ -220,29 +220,66 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 										: dtConventer(forecastElement.dt, true, settings)
 								}}
 							</span>
-							<span class="indicator" 
+							<span class="indicator temp" 
 							:class="{
-								'not-filled': hourlyForecastMode === 'tempD' ? forecastElement.tempMapped < 5 : forecastElement.humidityMapped < 5,
-								'temp': hourlyForecastMode === 'tempD',
-								'humidity': hourlyForecastMode === 'humidityD'
+								'not-filled': forecastElement.tempMapped < 5
 							}"
 							:style="{ 
-								height: `${hourlyForecastMode === 'tempD' ? forecastElement.tempMapped : forecastElement.humidityMapped}px`
+								height: `${forecastElement.tempMapped}px`
 							}"
 							>
 
 							</span>
 							<span class="slider-block__value-block">
-								<span class="slider-block__value-indicator"
+								<span class="slider-block__value-indicator temp"
 								:style="{
-									bottom: hourlyForecastMode === 'tempD' ? forecastElement.tempMapped > 5 ? `${forecastElement.tempMapped}px` : '5px' : forecastElement.humidityMapped > 5 ? `${forecastElement.humidityMapped}px` : '5px'
-								}"
-								:class="{
-									'temp': hourlyForecastMode === 'tempD',
-									'humidity': hourlyForecastMode === 'humidity'
+									bottom: forecastElement.tempMapped > 5 ? `${forecastElement.tempMapped}px` : '5px'
 								}"
 								>{{
-									hourlyForecastMode === 'tempD' ? transformTempToSettingUnit(forecastElement.main.temp, settings) : `${forecastElement.main.humidity}%`
+									transformTempToSettingUnit(forecastElement.main.temp, settings)
+								}}</span>
+							</span>
+							<span
+								class="slider-date"
+								v-show="
+									conventDtTxt(forecastElement.dt_txt) == '00:00' && forecastElement.index != 0
+								"
+								>{{ newDayDate((forecastElement.index - gapToNewDate) / 8 + 1) }}</span
+							>
+						</swiper-slide>
+						<swiper-slide v-else-if="hourlyForecastMode === 'humidityD'"
+							v-for="forecastElement in weatherDataArr"
+							
+							class="slider-block"
+							:class="{
+								'new-day':
+									conventDtTxt(forecastElement.dt_txt) == '00:00' && forecastElement.index != 0
+							}"
+						>
+							<span class="slider-block__time graph" :class="{ h12: timeFormat === '12h' }"
+								>{{
+									forecastElement.index == 0
+										? constructDate()
+										: dtConventer(forecastElement.dt, true, settings)
+								}}
+							</span>
+							<span class="indicator humidity" 
+							:class="{
+								'not-filled': forecastElement.humidityMapped < 5
+							}"
+							:style="{ 
+								height: `${forecastElement.humidityMapped}px`
+							}"
+							>
+
+							</span>
+							<span class="slider-block__value-block">
+								<span class="slider-block__value-indicator humidity"
+								:style="{
+									bottom: forecastElement.humidityMapped > 5 ? `${forecastElement.humidityMapped}px` : '5px'
+								}"
+								>{{
+									`${forecastElement.main.humidity}%`
 								}}</span>
 							</span>
 							<span
