@@ -44,6 +44,7 @@ let selectOptions = ref([
 	{ index: "defaultD", text: "Сводка" },
 	{ index: "tempD", text: "Температура" },
 	{ index: "humidityD", text: "Влажность" },
+	{ index: "precipitationD", text: "Вероятность осадков" },
 ])
 let timeFormat = ref(settings.value.timeFormat)
 
@@ -83,6 +84,11 @@ watch(weatherData, () => {
 	let humidityMax = 0
 	let humidityDelta = 0
 
+	let precipitationArr = []
+	let precipitationMin = 0
+	let precipitationMax = 0
+	let precipitationDelta = 0
+
 	let windArr = []
 	for (let i = 0; i < [...weatherDataArr.value].length; i++) {
 		weatherDataArr.value[i].index = i
@@ -98,6 +104,7 @@ watch(weatherData, () => {
 		}
 		tempArr.push(transformTempToSettingUnit(weatherDataArr.value[i].main.temp, settings.value))
 		humidityArr.push(weatherDataArr.value[i].main.humidity)
+		precipitationArr.push(weatherDataArr.value[i].pop)
 	}
 
 	tempMin = arrayMin(tempArr)
@@ -108,12 +115,18 @@ watch(weatherData, () => {
 	humidityMax = arrayMax(humidityArr)
 	humidityDelta = humidityMax - humidityMin
 
+	precipitationMin = arrayMin(precipitationArr)
+	precipitationMax = arrayMax(precipitationArr)
+	precipitationDelta = precipitationMax - precipitationMin
 
 	for (let i = 0; i < tempArr.length; i++) {
-		weatherDataArr.value[i].tempMapped = blockHeight * (Math.abs(tempArr[i] - tempMin)) / tempDelta
-		weatherDataArr.value[i].humidityMapped = blockHeight * (Math.abs(humidityArr[i] - humidityMin)) / humidityDelta
+		weatherDataArr.value[i].tempMapped = countGraph(i, tempArr, tempMin, tempDelta)
+		weatherDataArr.value[i].humidityMapped = countGraph(i, humidityArr, humidityMin, humidityDelta)
+		weatherDataArr.value[i].precipitationMapped = countGraph(i, precipitationArr, precipitationMin, precipitationDelta)
 	}
 })
+
+const countGraph = (i, arr, arrMin, delta) => blockHeight * (Math.abs(arr[i] - arrMin)) / delta
 
 watch(hourlyForecastMode, () => {
 	console.log(hourlyForecastMode)
@@ -280,6 +293,49 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 								}"
 								>{{
 									`${forecastElement.main.humidity}%`
+								}}</span>
+							</span>
+							<span
+								class="slider-date"
+								v-show="
+									conventDtTxt(forecastElement.dt_txt) == '00:00' && forecastElement.index != 0
+								"
+								>{{ newDayDate((forecastElement.index - gapToNewDate) / 8 + 1) }}</span
+							>
+						</swiper-slide>
+						<swiper-slide v-else-if="hourlyForecastMode === 'precipitationD'"
+							v-for="forecastElement in weatherDataArr"
+							
+							class="slider-block"
+							:class="{
+								'new-day':
+									conventDtTxt(forecastElement.dt_txt) == '00:00' && forecastElement.index != 0
+							}"
+						>
+							<span class="slider-block__time graph" :class="{ h12: timeFormat === '12h' }"
+								>{{
+									forecastElement.index == 0
+										? constructDate()
+										: dtConventer(forecastElement.dt, true, settings)
+								}}
+							</span>
+							<span class="indicator precipitation" 
+							:class="{
+								'not-filled': forecastElement.precipitationMapped < 5
+							}"
+							:style="{ 
+								height: `${forecastElement.precipitationMapped}px`
+							}"
+							>
+
+							</span>
+							<span class="slider-block__value-block">
+								<span class="slider-block__value-indicator precipitation"
+								:style="{
+									bottom: forecastElement.precipitationMapped > 5 ? `${forecastElement.precipitationMapped}px` : '5px'
+								}"
+								>{{
+									`${forecastElement.pop * 100}%`
 								}}</span>
 							</span>
 							<span
@@ -507,10 +563,12 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	background-repeat: no-repeat;
 	background-position: center;
 }
-.indicator.humidity {
+.indicator.humidity,
+.indicator.precipitation {
 	--indicator-fill: #5bc7e8b9;
 }
-.hight-mode .indicator.humidity {
+.hight-mode .indicator.humidity,
+.hight-mode .indicator.precipitation {
 	--indicator-fill: #55b0ccb9;
 }
 .indicator.temp {

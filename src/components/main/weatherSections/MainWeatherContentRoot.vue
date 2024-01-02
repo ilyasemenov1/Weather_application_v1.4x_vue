@@ -17,7 +17,7 @@
 	padding: 12px;
 	border-radius: 15px;
 	box-shadow: 0px 5px 14px #00000018;
-	overflow: hidden;
+	overflow: visible;
 	background: var(--gradient-1);
 }
 .weather-content-block.hourly-forecast {
