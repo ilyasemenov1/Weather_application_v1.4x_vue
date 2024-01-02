@@ -41,9 +41,9 @@ if (localStorageMode) {
 }
 
 let selectOptions = ref([
-	{ index: "default", text: "Сводка" },
-	{ index: "temp", text: "Температура" },
-	{ index: "humidity", text: "Влажность" },
+	{ index: "defaultD", text: "Сводка" },
+	{ index: "tempD", text: "Температура" },
+	{ index: "humidityD", text: "Влажность" },
 ])
 let timeFormat = ref(settings.value.timeFormat)
 
@@ -134,9 +134,11 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 				<button class="hourly-forecast__settings-button">
 					<SettingsIcon />
 				</button>
-				<div class="forecast-select" v-for="option in selectOptions">
-					<input type="radio" :id="option.index" :value="option.index" v-model="hourlyForecastMode" />
-					<label :for="option.index">{{ option.text }}</label>
+				<div class="forecast-select">
+					<label class="forecast-select-option" :class="{ active: option.index === hourlyForecastMode }" :for="option.index" v-for="option in selectOptions">
+						<input type="radio" :id="option.index" :value="option.index" v-model="hourlyForecastMode" />
+						<span>{{ option.text }}</span>
+					</label>
 				</div>
 			</div>
 		</template>
@@ -169,7 +171,7 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 						}"
 						:mousewheel="true"
 					>
-						<swiper-slide v-if="hourlyForecastMode === 'default'"
+						<swiper-slide v-if="hourlyForecastMode === 'defaultD'"
 							v-for="forecastElement in weatherDataArr"
 							class="slider-block"
 							:class="{
@@ -189,11 +191,11 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 								:src="iconsArr[forecastElement.index]"
 								alt="Иконка статуса погоды"
 							/>
-							<span class="slider-block__temp-block">
-								<span class="slider-block__temp">{{
+							<div class="slider-block__temp-block">
+								<div class="slider-block__temp">{{
 									transformTempToSettingUnit(forecastElement.main.temp, settings)
-								}}</span>
-							</span>
+								}}</div>
+							</div>
 							<span
 								class="slider-date"
 								v-show="
@@ -202,7 +204,7 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 								>{{ newDayDate((forecastElement.index - gapToNewDate) / 8 + 1) }}</span
 							>
 						</swiper-slide>
-						<swiper-slide v-else-if="hourlyForecastMode === 'temp' || hourlyForecastMode === 'humidity'"
+						<swiper-slide v-else-if="hourlyForecastMode === 'tempD' || hourlyForecastMode === 'humidityD'"
 							v-for="forecastElement in weatherDataArr"
 							
 							class="slider-block"
@@ -220,12 +222,12 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 							</span>
 							<span class="indicator" 
 							:class="{
-								'not-filled': hourlyForecastMode === 'temp' ? forecastElement.tempMapped < 5 : forecastElement.humidityMapped < 5,
-								'temp': hourlyForecastMode === 'temp',
-								'humidity': hourlyForecastMode === 'humidity'
+								'not-filled': hourlyForecastMode === 'tempD' ? forecastElement.tempMapped < 5 : forecastElement.humidityMapped < 5,
+								'temp': hourlyForecastMode === 'tempD',
+								'humidity': hourlyForecastMode === 'humidityD'
 							}"
 							:style="{ 
-								height: `${hourlyForecastMode === 'temp' ? forecastElement.tempMapped : forecastElement.humidityMapped}px`
+								height: `${hourlyForecastMode === 'tempD' ? forecastElement.tempMapped : forecastElement.humidityMapped}px`
 							}"
 							>
 
@@ -233,14 +235,14 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 							<span class="slider-block__value-block">
 								<span class="slider-block__value-indicator"
 								:style="{
-									bottom: hourlyForecastMode === 'temp' ? forecastElement.tempMapped > 5 ? `${forecastElement.tempMapped}px` : '5px' : forecastElement.humidityMapped > 5 ? `${forecastElement.humidityMapped}px` : '5px'
+									bottom: hourlyForecastMode === 'tempD' ? forecastElement.tempMapped > 5 ? `${forecastElement.tempMapped}px` : '5px' : forecastElement.humidityMapped > 5 ? `${forecastElement.humidityMapped}px` : '5px'
 								}"
 								:class="{
-									'temp': hourlyForecastMode === 'temp',
+									'temp': hourlyForecastMode === 'tempD',
 									'humidity': hourlyForecastMode === 'humidity'
 								}"
 								>{{
-									hourlyForecastMode === 'temp' ? transformTempToSettingUnit(forecastElement.main.temp, settings) : `${forecastElement.main.humidity}%`
+									hourlyForecastMode === 'tempD' ? transformTempToSettingUnit(forecastElement.main.temp, settings) : `${forecastElement.main.humidity}%`
 								}}</span>
 							</span>
 							<span
@@ -468,10 +470,10 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	background-repeat: no-repeat;
 	background-position: center;
 }
-.indicator.temp {
+.indicator.humidity {
 	--indicator-fill: #55b0ccb9;
 }
-.indicator.humidity {
+.indicator.temp {
 	--indicator-fill: #db9003d2;
 }
 .indicator {
@@ -501,6 +503,7 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	border: none;
 	border-radius: 50%;
 	background: var(--bg-color-6);
+	opacity: .8;
 }
 .hourly-forecast__settings-button>svg {
 	position: absolute;
@@ -509,6 +512,53 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	width: calc(100% - 8px);
 	height: calc(100% - 8px);
 	fill: #ffffff;
-	opacity: .7;
+	opacity: .8;
+}
+.hourly-forecast__settings-button:hover,
+.hourly-forecast__settings-button:focus-visible {
+	cursor: pointer;
+	opacity: 1;
+}
+.forecast-select {
+	position: absolute;
+	right: 0;
+	display: flex;
+	flex-direction: column;
+	padding: 10px 5px;
+	border-radius: 15px;
+	backdrop-filter: blur(15px);
+	background: var(--bg-color-6);
+	box-shadow: 0 2px 10px #0000001e;
+	pointer-events: none;
+	visibility: hidden;
+	transform: translateY(-10px) scale(.8);
+	opacity: 0;
+	z-index: 2;
+}
+.hourly-forecast__settings-button:hover ~ .forecast-select,
+.hourly-forecast__settings-button:focus ~ .forecast-select,
+.forecast-select:hover,
+.forecast-select:has(input:focus) {
+	transform: translateY(0) scale(1);
+	opacity: 1;
+	pointer-events: all;
+	visibility: visible;
+}
+.forecast-select-option {
+	display: block;
+	padding: 5px 10px;
+	border-radius: 10px;
+	transition: .2s ease;
+}
+.forecast-select-option:hover,
+.forecast-select-option.active,
+.forecast-select-option:has(input:focus) {
+	cursor: pointer;
+	background: var(--bg-color-6);
+}
+.forecast-select-option>input {
+	position: absolute;
+	pointer-events: none;
+	opacity: 0;
 }
 </style>
