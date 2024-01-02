@@ -526,7 +526,7 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	flex-direction: column;
 	padding: 10px 5px;
 	border-radius: 15px;
-	backdrop-filter: blur(15px);
+	backdrop-filter: blur(10px);
 	background: var(--bg-color-6);
 	box-shadow: 0 2px 10px #0000001e;
 	pointer-events: none;
@@ -548,6 +548,7 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	display: block;
 	padding: 5px 10px;
 	border-radius: 10px;
+	font-size: 16px;
 	transition: .2s ease;
 }
 .forecast-select-option:hover,
