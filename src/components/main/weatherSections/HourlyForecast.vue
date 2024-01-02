@@ -30,7 +30,7 @@ const { weatherData } = storeToRefs(store)
 const settingsSt = settingsStore()
 const { settings } = storeToRefs(settingsSt)
 
-let hourlyForecastMode = ref('default')
+let hourlyForecastMode = ref('defaultD')
 
 let localStorageMode = localStorage.getItem('hourly-forecast-option');
 
