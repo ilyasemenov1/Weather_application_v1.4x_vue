@@ -471,9 +471,15 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	background-position: center;
 }
 .indicator.humidity {
+	--indicator-fill: #5bc7e8b9;
+}
+.hight-mode .indicator.humidity {
 	--indicator-fill: #55b0ccb9;
 }
 .indicator.temp {
+	--indicator-fill: #ffa600d2;
+}
+.hight-mode .indicator.temp {
 	--indicator-fill: #db9003d2;
 }
 .indicator {
@@ -498,8 +504,8 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	position: absolute;
 	right: 0;
 	top: 0;
-	width: 28px;
-	height: 28px;
+	width: 30px;
+	height: 30px;
 	border: none;
 	border-radius: 50%;
 	background: var(--bg-color-6);
@@ -526,8 +532,7 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	flex-direction: column;
 	padding: 10px 5px;
 	border-radius: 15px;
-	backdrop-filter: blur(10px);
-	background: var(--bg-color-6);
+	background: var(--bg-color-1);
 	box-shadow: 0 2px 10px #0000001e;
 	pointer-events: none;
 	visibility: hidden;
@@ -549,13 +554,14 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	padding: 5px 10px;
 	border-radius: 10px;
 	font-size: 16px;
+	color: var(--text-color-1);
 	transition: .2s ease;
 }
 .forecast-select-option:hover,
 .forecast-select-option.active,
 .forecast-select-option:has(input:focus) {
 	cursor: pointer;
-	background: var(--bg-color-6);
+	background: var(--bg-color-12);
 }
 .forecast-select-option>input {
 	position: absolute;
