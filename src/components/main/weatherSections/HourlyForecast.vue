@@ -17,6 +17,7 @@ import { storeToRefs } from 'pinia'
 
 import {
 	transformTempToSettingUnit,
+	transformPressureToSettingUnit,
 	constructDate,
 	conventDtTxt,
 	dtConventer,
@@ -90,6 +91,11 @@ watch(weatherData, () => {
 	let precipitationMax = 0
 	let precipitationDelta = 0
 
+	let pressureArr = []
+	let pressureMin = 0
+	let pressureMax = 0
+	let pressureDelta = 0
+
 	let windArr = []
 	for (let i = 0; i < [...weatherDataArr.value].length; i++) {
 		weatherDataArr.value[i].index = i
@@ -106,6 +112,7 @@ watch(weatherData, () => {
 		tempArr.push(transformTempToSettingUnit(weatherDataArr.value[i].main.temp, settings.value))
 		humidityArr.push(weatherDataArr.value[i].main.humidity)
 		precipitationArr.push(weatherDataArr.value[i].pop)
+		pressureArr.push(weatherDataArr.value[i].main.pressure)
 	}
 
 	tempMin = arrayMin(tempArr)
@@ -120,6 +127,10 @@ watch(weatherData, () => {
 	precipitationMax = arrayMax(precipitationArr)
 	precipitationDelta = precipitationMax - precipitationMin
 
+	pressureMin = arrayMin(pressureArr)
+	pressureMax = arrayMax(pressureArr)
+	pressureDelta = pressureMax - pressureMin
+
 	for (let i = 0; i < tempArr.length; i++) {
 		weatherDataArr.value[i].tempMapped = countGraph(i, tempArr, tempMin, tempDelta)
 		weatherDataArr.value[i].humidityMapped = countGraph(i, humidityArr, humidityMin, humidityDelta)
@@ -129,6 +140,7 @@ watch(weatherData, () => {
 			precipitationMin,
 			precipitationDelta
 		)
+		weatherDataArr.value[i].pressureMapped = countGraph(i, pressureArr, pressureMin, pressureDelta)
 	}
 })
 
@@ -150,7 +162,7 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 		<template #firstTextContent>
 			<div class="hourly-forecast__first-content">
 				<h2 class="hourly-forecast__label">Почасовой прогноз</h2>
-				<button class="hourly-forecast__settings-button">
+				<button class="hourly-forecast__settings-button" aria-label="Изменить настройти отображения почасового прогноза">
 					<SettingsIcon />
 				</button>
 				<div class="forecast-select">
@@ -387,25 +399,25 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 								}}
 							</span>
 							<span
-								class="indicator precipitation"
+								class="indicator pressure"
 								:class="{
-									'not-filled': forecastElement.precipitationMapped < 5
+									'not-filled': forecastElement.pressureMapped < 5
 								}"
 								:style="{
-									height: `${forecastElement.precipitationMapped}px`
+									height: `${forecastElement.pressureMapped}px`
 								}"
 							>
 							</span>
 							<span class="slider-block__value-block">
 								<span
-									class="slider-block__value-indicator precipitation"
+									class="slider-block__value-indicator pressure"
 									:style="{
 										bottom:
-											forecastElement.precipitationMapped > 5
-												? `${forecastElement.precipitationMapped}px`
+											forecastElement.pressureMapped > 5
+												? `${forecastElement.pressureMapped}px`
 												: '5px'
 									}"
-									>{{ `${forecastElement.pop * 100}%` }}</span
+									>{{ transformPressureToSettingUnit(forecastElement.main.pressure, settings) }}</span
 								>
 							</span>
 							<span
@@ -436,13 +448,13 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 :root {
 	--water-indicator-color: #5bc7e8b9;
 	--temp-indicator-color: #ffa600d2;
-	--pressure-indicator-color: #da2214d2;
+	--pressure-indicator-color: #ee4c40d2;
 }
 
 .night-mode {
 	--water-indicator-color: #55b0ccb9;
 	--temp-indicator-color: #db9003d2;
-	--pressure-indicator-color: #da2214d2;
+	--pressure-indicator-color: #cf392ed2;
 }
 
 .hourly-forecast__label {
@@ -651,6 +663,9 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 }
 .indicator.temp {
 	--indicator-fill: var(--temp-indicator-color);
+}
+.indicator.pressure {
+	--indicator-fill: var(--pressure-indicator-color);
 }
 .indicator {
 	position: absolute;
