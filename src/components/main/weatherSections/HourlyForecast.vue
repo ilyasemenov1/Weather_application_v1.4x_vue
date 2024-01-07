@@ -648,6 +648,7 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	display: block;
 	padding: 5px 10px;
 	border-radius: 10px;
+	outline: transparent solid;
 	font-size: 16px;
 	color: var(--text-color-1);
 	transition: .2s ease;
@@ -657,6 +658,9 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 .forecast-select-option:has(input:focus) {
 	cursor: pointer;
 	background: var(--bg-color-12);
+}
+.forecast-select-option:has(input:focus) {
+	outline: var(--bg-color-16) solid;
 }
 .forecast-select-option>input {
 	position: absolute;
