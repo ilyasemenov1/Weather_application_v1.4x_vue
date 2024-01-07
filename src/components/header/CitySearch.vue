@@ -28,6 +28,8 @@ let isValue = ref(false)
 
 let searchInput = ref(null)
 
+const isChromium = ref(!!window.chrome)
+
 let searchValueInit = ref('')
 let townFocusIndex = ref(0)
 
@@ -98,7 +100,7 @@ onMounted(() => {
 
 <template>
 	<search class="search">
-		<div class="search-content" :class="{ active: isFocused, 'remove-shortcut-marker': isValue }">
+		<div class="search-content" :class="{ active: isFocused }">
 			<button
 				class="search-button"
 				tabindex="-1"
@@ -186,6 +188,9 @@ onMounted(() => {
 			>
 				<CloseIcon />
 			</button>
+			<div class="shortcut-marker" :class="{ removed: isValue, 'search-focused': isFocused, 'chromium': isChromium }">
+				<span>{{ isFocused ? 'Esc' : '/' }}</span>
+			</div>
 		</div>
 		<div
 			class="search-towns"
@@ -254,39 +259,48 @@ onMounted(() => {
 	box-shadow: 0px 1px 4px #00000034;
 	outline: var(--bg-color-16) solid;
 }
-.search-content::after {
+.shortcut-marker {
 	position: absolute;
 	right: 12px;
 	top: calc(50% - 14px);
-	display: inline-flex;
+	display: flex;
 	justify-content: center;
 	align-items: center;
 	width: 30px;
 	height: 30px;
-	content: '/';
 	border-radius: 8px;
 	border: 1px var(--bg-color-9) solid;
-	color: var(--text-color-1);
-	font-size: 18px;
-	font-family: 'Source Sans Pro', sans-serif;
-	font-weight: 700;
 	transition: opacity .2s ease;
 	pointer-events: none;
 	box-sizing: border-box;
 	z-index: 10;
-}
-@media (max-width: 1024px) {
-	.search-content::after {
+	@media (max-width: 1024px) {
 		display: none;
 	}
 }
-.search-content.active::after {
-	content: 'Esc';
-	font-size: 8px;
-	line-height: 20px;
+.shortcut-marker > span {
+	position: relative;
+	color: var(--text-color-1);
+	font-size: 18px;
+	font-family: 'Source Sans Pro', sans-serif;
+	font-weight: 700;
+	transition: 0ms;
 }
-.search-content.remove-shortcut-marker::after {
+.shortcut-marker.search-focused > span {
+	font-size: 9px;
+}
+.shortcut-marker.removed {
 	opacity: 0;
+}
+.shortcut-marker.chromium > span {
+	font-weight: 500;
+	transform: rotate(5deg);
+	font-size: 20px;
+}
+.shortcut-marker.chromium.search-focused > span {
+	font-weight: 600;
+	transform: rotate(0deg);
+	font-size: 9px;
 }
 .search-button {
 	position: relative;
