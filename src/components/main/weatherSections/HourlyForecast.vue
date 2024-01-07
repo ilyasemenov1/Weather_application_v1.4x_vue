@@ -147,7 +147,6 @@ watch(weatherData, () => {
 const countGraph = (i, arr, arrMin, delta) => (blockHeight * Math.abs(arr[i] - arrMin)) / delta
 
 watch(hourlyForecastMode, () => {
-	console.log(hourlyForecastMode)
 	localStorage.setItem('hourly-forecast-option', hourlyForecastMode.value)
 })
 
