@@ -254,6 +254,30 @@ onMounted(() => {
 	box-shadow: 0px 1px 4px #00000034;
 	outline: var(--bg-color-16) solid;
 }
+.search-content::after {
+	position: absolute;
+	right: 12px;
+	top: calc(50% - 14px);
+	content: '/';
+	padding: 2px 9px;
+	border-radius: 8px;
+	border: 1px var(--bg-color-9) solid;
+	color: var(--text-color-1);
+	font-size: 18px;
+	font-family: 'Source Sans Pro', sans-serif;
+	font-weight: 700;
+	transition: .2s ease;
+	pointer-events: none;
+	z-index: 10;
+}
+@media (max-width: 1024px) {
+	.search-content::after {
+		display: none;
+	}
+}
+.search-content.active::after {
+	opacity: 0;
+}
 .search-button {
 	position: relative;
 	width: 35px;
