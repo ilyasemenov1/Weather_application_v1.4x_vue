@@ -98,7 +98,7 @@ onMounted(() => {
 
 <template>
 	<search class="search">
-		<div class="search-content" :class="{ active: isFocused }">
+		<div class="search-content" :class="{ active: isFocused, 'remove-shortcut-marker': isValue }">
 			<button
 				class="search-button"
 				tabindex="-1"
@@ -258,16 +258,21 @@ onMounted(() => {
 	position: absolute;
 	right: 12px;
 	top: calc(50% - 14px);
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	width: 30px;
+	height: 30px;
 	content: '/';
-	padding: 2px 9px;
 	border-radius: 8px;
 	border: 1px var(--bg-color-9) solid;
 	color: var(--text-color-1);
 	font-size: 18px;
 	font-family: 'Source Sans Pro', sans-serif;
 	font-weight: 700;
-	transition: .2s ease;
+	transition: opacity .2s ease;
 	pointer-events: none;
+	box-sizing: border-box;
 	z-index: 10;
 }
 @media (max-width: 1024px) {
@@ -276,6 +281,11 @@ onMounted(() => {
 	}
 }
 .search-content.active::after {
+	content: 'Esc';
+	font-size: 8px;
+	line-height: 20px;
+}
+.search-content.remove-shortcut-marker::after {
 	opacity: 0;
 }
 .search-button {
