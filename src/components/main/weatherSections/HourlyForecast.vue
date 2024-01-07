@@ -32,7 +32,7 @@ const { settings } = storeToRefs(settingsSt)
 
 let hourlyForecastMode = ref('defaultD')
 
-let localStorageMode = localStorage.getItem('hourly-forecast-option');
+let localStorageMode = localStorage.getItem('hourly-forecast-option')
 
 if (localStorageMode) {
 	hourlyForecastMode.value = localStorageMode
@@ -40,11 +40,12 @@ if (localStorageMode) {
 	localStorage.setItem('hourly-forecast-option', hourlyForecastMode.value)
 }
 
-let selectOptions = ref([
-	{ index: "defaultD", text: "Сводка" },
-	{ index: "tempD", text: "Температура" },
-	{ index: "humidityD", text: "Влажность" },
-	{ index: "precipitationD", text: "Вероятность осадков" },
+const selectOptions = ref([
+	{ index: 'defaultD', text: 'Сводка' },
+	{ index: 'tempD', text: 'Температура' },
+	{ index: 'humidityD', text: 'Влажность' },
+	{ index: 'pressureD', text: 'Давление' },
+	{ index: 'precipitationD', text: 'Вероятность осадков' }
 ])
 let timeFormat = ref(settings.value.timeFormat)
 
@@ -122,11 +123,16 @@ watch(weatherData, () => {
 	for (let i = 0; i < tempArr.length; i++) {
 		weatherDataArr.value[i].tempMapped = countGraph(i, tempArr, tempMin, tempDelta)
 		weatherDataArr.value[i].humidityMapped = countGraph(i, humidityArr, humidityMin, humidityDelta)
-		weatherDataArr.value[i].precipitationMapped = countGraph(i, precipitationArr, precipitationMin, precipitationDelta)
+		weatherDataArr.value[i].precipitationMapped = countGraph(
+			i,
+			precipitationArr,
+			precipitationMin,
+			precipitationDelta
+		)
 	}
 })
 
-const countGraph = (i, arr, arrMin, delta) => blockHeight * (Math.abs(arr[i] - arrMin)) / delta
+const countGraph = (i, arr, arrMin, delta) => (blockHeight * Math.abs(arr[i] - arrMin)) / delta
 
 watch(hourlyForecastMode, () => {
 	console.log(hourlyForecastMode)
@@ -148,8 +154,18 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 					<SettingsIcon />
 				</button>
 				<div class="forecast-select">
-					<label class="forecast-select-option" :class="{ active: option.index === hourlyForecastMode }" :for="option.index" v-for="option in selectOptions">
-						<input type="radio" :id="option.index" :value="option.index" v-model="hourlyForecastMode" />
+					<label
+						class="forecast-select-option"
+						:class="{ active: option.index === hourlyForecastMode }"
+						:for="option.index"
+						v-for="option in selectOptions"
+					>
+						<input
+							type="radio"
+							:id="option.index"
+							:value="option.index"
+							v-model="hourlyForecastMode"
+						/>
 						<span>{{ option.text }}</span>
 					</label>
 				</div>
@@ -184,7 +200,8 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 						}"
 						:mousewheel="true"
 					>
-						<swiper-slide v-if="hourlyForecastMode === 'defaultD'"
+						<swiper-slide
+							v-if="hourlyForecastMode === 'defaultD'"
 							v-for="forecastElement in weatherDataArr"
 							class="slider-block"
 							:class="{
@@ -205,9 +222,9 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 								alt="Иконка статуса погоды"
 							/>
 							<div class="slider-block__temp-block">
-								<div class="slider-block__temp">{{
-									transformTempToSettingUnit(forecastElement.main.temp, settings)
-								}}</div>
+								<div class="slider-block__temp">
+									{{ transformTempToSettingUnit(forecastElement.main.temp, settings) }}
+								</div>
 							</div>
 							<span
 								class="slider-date"
@@ -217,9 +234,9 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 								>{{ newDayDate((forecastElement.index - gapToNewDate) / 8 + 1) }}</span
 							>
 						</swiper-slide>
-						<swiper-slide v-else-if="hourlyForecastMode === 'tempD'"
+						<swiper-slide
+							v-else-if="hourlyForecastMode === 'tempD'"
 							v-for="forecastElement in weatherDataArr"
-							
 							class="slider-block"
 							:class="{
 								'new-day':
@@ -233,24 +250,25 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 										: dtConventer(forecastElement.dt, true, settings)
 								}}
 							</span>
-							<span class="indicator temp" 
-							:class="{
-								'not-filled': forecastElement.tempMapped < 5
-							}"
-							:style="{ 
-								height: `${forecastElement.tempMapped}px`
-							}"
+							<span
+								class="indicator temp"
+								:class="{
+									'not-filled': forecastElement.tempMapped < 5
+								}"
+								:style="{
+									height: `${forecastElement.tempMapped}px`
+								}"
 							>
-
 							</span>
 							<span class="slider-block__value-block">
-								<span class="slider-block__value-indicator temp"
-								:style="{
-									bottom: forecastElement.tempMapped > 5 ? `${forecastElement.tempMapped}px` : '5px'
-								}"
-								>{{
-									transformTempToSettingUnit(forecastElement.main.temp, settings)
-								}}</span>
+								<span
+									class="slider-block__value-indicator temp"
+									:style="{
+										bottom:
+											forecastElement.tempMapped > 5 ? `${forecastElement.tempMapped}px` : '5px'
+									}"
+									>{{ transformTempToSettingUnit(forecastElement.main.temp, settings) }}</span
+								>
 							</span>
 							<span
 								class="slider-date"
@@ -260,9 +278,9 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 								>{{ newDayDate((forecastElement.index - gapToNewDate) / 8 + 1) }}</span
 							>
 						</swiper-slide>
-						<swiper-slide v-else-if="hourlyForecastMode === 'humidityD'"
+						<swiper-slide
+							v-else-if="hourlyForecastMode === 'humidityD'"
 							v-for="forecastElement in weatherDataArr"
-							
 							class="slider-block"
 							:class="{
 								'new-day':
@@ -276,24 +294,27 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 										: dtConventer(forecastElement.dt, true, settings)
 								}}
 							</span>
-							<span class="indicator humidity" 
-							:class="{
-								'not-filled': forecastElement.humidityMapped < 5
-							}"
-							:style="{ 
-								height: `${forecastElement.humidityMapped}px`
-							}"
+							<span
+								class="indicator humidity"
+								:class="{
+									'not-filled': forecastElement.humidityMapped < 5
+								}"
+								:style="{
+									height: `${forecastElement.humidityMapped}px`
+								}"
 							>
-
 							</span>
 							<span class="slider-block__value-block">
-								<span class="slider-block__value-indicator humidity"
-								:style="{
-									bottom: forecastElement.humidityMapped > 5 ? `${forecastElement.humidityMapped}px` : '5px'
-								}"
-								>{{
-									`${forecastElement.main.humidity}%`
-								}}</span>
+								<span
+									class="slider-block__value-indicator humidity"
+									:style="{
+										bottom:
+											forecastElement.humidityMapped > 5
+												? `${forecastElement.humidityMapped}px`
+												: '5px'
+									}"
+									>{{ `${forecastElement.main.humidity}%` }}</span
+								>
 							</span>
 							<span
 								class="slider-date"
@@ -303,9 +324,9 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 								>{{ newDayDate((forecastElement.index - gapToNewDate) / 8 + 1) }}</span
 							>
 						</swiper-slide>
-						<swiper-slide v-else-if="hourlyForecastMode === 'precipitationD'"
+						<swiper-slide
+							v-else-if="hourlyForecastMode === 'precipitationD'"
 							v-for="forecastElement in weatherDataArr"
-							
 							class="slider-block"
 							:class="{
 								'new-day':
@@ -319,24 +340,73 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 										: dtConventer(forecastElement.dt, true, settings)
 								}}
 							</span>
-							<span class="indicator precipitation" 
-							:class="{
-								'not-filled': forecastElement.precipitationMapped < 5
-							}"
-							:style="{ 
-								height: `${forecastElement.precipitationMapped}px`
-							}"
+							<span
+								class="indicator precipitation"
+								:class="{
+									'not-filled': forecastElement.precipitationMapped < 5
+								}"
+								:style="{
+									height: `${forecastElement.precipitationMapped}px`
+								}"
 							>
-
 							</span>
 							<span class="slider-block__value-block">
-								<span class="slider-block__value-indicator precipitation"
-								:style="{
-									bottom: forecastElement.precipitationMapped > 5 ? `${forecastElement.precipitationMapped}px` : '5px'
-								}"
+								<span
+									class="slider-block__value-indicator precipitation"
+									:style="{
+										bottom:
+											forecastElement.precipitationMapped > 5
+												? `${forecastElement.precipitationMapped}px`
+												: '5px'
+									}"
+									>{{ `${forecastElement.pop * 100}%` }}</span
+								>
+							</span>
+							<span
+								class="slider-date"
+								v-show="
+									conventDtTxt(forecastElement.dt_txt) == '00:00' && forecastElement.index != 0
+								"
+								>{{ newDayDate((forecastElement.index - gapToNewDate) / 8 + 1) }}</span
+							>
+						</swiper-slide>
+						<swiper-slide
+							v-else-if="hourlyForecastMode === 'pressureD'"
+							v-for="forecastElement in weatherDataArr"
+							class="slider-block"
+							:class="{
+								'new-day':
+									conventDtTxt(forecastElement.dt_txt) == '00:00' && forecastElement.index != 0
+							}"
+						>
+							<span class="slider-block__time graph" :class="{ h12: timeFormat === '12h' }"
 								>{{
-									`${forecastElement.pop * 100}%`
-								}}</span>
+									forecastElement.index == 0
+										? constructDate()
+										: dtConventer(forecastElement.dt, true, settings)
+								}}
+							</span>
+							<span
+								class="indicator precipitation"
+								:class="{
+									'not-filled': forecastElement.precipitationMapped < 5
+								}"
+								:style="{
+									height: `${forecastElement.precipitationMapped}px`
+								}"
+							>
+							</span>
+							<span class="slider-block__value-block">
+								<span
+									class="slider-block__value-indicator precipitation"
+									:style="{
+										bottom:
+											forecastElement.precipitationMapped > 5
+												? `${forecastElement.precipitationMapped}px`
+												: '5px'
+									}"
+									>{{ `${forecastElement.pop * 100}%` }}</span
+								>
 							</span>
 							<span
 								class="slider-date"
@@ -362,7 +432,19 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 		</template>
 	</MainWeatherContentRoot>
 </template>
-<style scoped>
+<style>
+:root {
+	--water-indicator-color: #5bc7e8b9;
+	--temp-indicator-color: #ffa600d2;
+	--pressure-indicator-color: #da2214d2;
+}
+
+.night-mode {
+	--water-indicator-color: #55b0ccb9;
+	--temp-indicator-color: #db9003d2;
+	--pressure-indicator-color: #da2214d2;
+}
+
 .hourly-forecast__label {
 	padding: 0;
 	margin: 0;
@@ -503,7 +585,7 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	font-size: 12px;
 }
 .slider-block__time.graph {
-	position: absolute ;
+	position: absolute;
 	left: 9px;
 	bottom: 0;
 	font-size: 14px;
@@ -538,7 +620,7 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	font-size: 14px;
 	font-weight: 600;
 	color: var(--text-color-2);
-	opacity: .9;
+	opacity: 0.9;
 	transform: translateY(58px);
 }
 .slider-block__value-indicator.humidity {
@@ -565,17 +647,10 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 }
 .indicator.humidity,
 .indicator.precipitation {
-	--indicator-fill: #5bc7e8b9;
-}
-.hight-mode .indicator.humidity,
-.hight-mode .indicator.precipitation {
-	--indicator-fill: #55b0ccb9;
+	--indicator-fill: var(--water-indicator-color);
 }
 .indicator.temp {
-	--indicator-fill: #ffa600d2;
-}
-.hight-mode .indicator.temp {
-	--indicator-fill: #db9003d2;
+	--indicator-fill: var(--temp-indicator-color);
 }
 .indicator {
 	position: absolute;
@@ -604,16 +679,16 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	border: none;
 	border-radius: 50%;
 	background: var(--bg-color-6);
-	opacity: .8;
+	opacity: 0.8;
 }
-.hourly-forecast__settings-button>svg {
+.hourly-forecast__settings-button > svg {
 	position: absolute;
 	left: 4px;
 	top: 4px;
 	width: calc(100% - 8px);
 	height: calc(100% - 8px);
 	fill: #ffffff;
-	opacity: .8;
+	opacity: 0.8;
 }
 .hourly-forecast__settings-button:hover,
 .hourly-forecast__settings-button:focus-visible {
@@ -631,7 +706,7 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	box-shadow: 0 2px 10px #0000001e;
 	pointer-events: none;
 	visibility: hidden;
-	transform: translateY(-10px) scale(.8);
+	transform: translateY(-10px) scale(0.8);
 	opacity: 0;
 	z-index: 2;
 }
@@ -651,7 +726,7 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 	outline: transparent solid;
 	font-size: 16px;
 	color: var(--text-color-1);
-	transition: .2s ease;
+	transition: 0.2s ease;
 }
 .forecast-select-option:hover,
 .forecast-select-option.active,
@@ -662,7 +737,7 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 .forecast-select-option:has(input:focus) {
 	outline: var(--bg-color-16) solid;
 }
-.forecast-select-option>input {
+.forecast-select-option > input {
 	position: absolute;
 	pointer-events: none;
 	opacity: 0;
