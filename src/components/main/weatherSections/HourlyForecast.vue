@@ -162,7 +162,10 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 		<template #firstTextContent>
 			<div class="hourly-forecast__first-content">
 				<h2 class="hourly-forecast__label">Почасовой прогноз</h2>
-				<button class="hourly-forecast__settings-button" aria-label="Изменить настройти отображения почасового прогноза">
+				<button
+					class="hourly-forecast__settings-button"
+					aria-label="Изменить настройти отображения почасового прогноза"
+				>
 					<SettingsIcon />
 				</button>
 				<div class="forecast-select">
@@ -417,7 +420,9 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 												? `${forecastElement.pressureMapped}px`
 												: '5px'
 									}"
-									>{{ transformPressureToSettingUnit(forecastElement.main.pressure, settings) }}</span
+									>{{
+										transformPressureToSettingUnit(forecastElement.main.pressure, settings)
+									}}</span
 								>
 							</span>
 							<span
