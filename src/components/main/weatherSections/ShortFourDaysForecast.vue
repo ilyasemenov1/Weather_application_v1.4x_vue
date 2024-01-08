@@ -1,4 +1,6 @@
 <script setup>
+import SvgNoise from '../../svg/SvgNoise.vue'
+
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Mousewheel } from 'swiper/modules'
 
@@ -175,10 +177,12 @@ watch(weatherData, () => {
 				</swiper-slide>
 			</swiper>
 		</div>
+		<SvgNoise />
 	</section>
 </template>
 <style scoped>
 .four-day-forecast-short {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	grid-column-start: 1;

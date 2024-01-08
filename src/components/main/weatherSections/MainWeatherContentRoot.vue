@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+	import SvgNoise from '../../svg/SvgNoise.vue'
+</script>
 <template>
 	<div class="weather-content-block">
 		<div class="weather-content-block__text">
@@ -7,10 +9,12 @@
 		<div class="weather-content-block__content">
 			<slot name="content"></slot>
 		</div>
+		<SvgNoise />
 	</div>
 </template>
 <style scoped>
 .weather-content-block {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	row-gap: 15px;
