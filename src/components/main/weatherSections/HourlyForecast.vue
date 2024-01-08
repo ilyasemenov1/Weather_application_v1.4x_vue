@@ -5,7 +5,7 @@ import LeftArrowIcon from '../../icons/LeftArrowIcon.vue'
 import SettingsIcon from '../../icons/SettingsIcon.vue'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { Navigation, Keyboard, Mousewheel } from 'swiper/modules'
+import { Navigation, Keyboard, Mousewheel, FreeMode } from 'swiper/modules'
 
 import { ref, watch } from 'vue'
 
@@ -213,6 +213,7 @@ const modules = ref([Navigation, Keyboard, Mousewheel])
 							nextEl: next
 						}"
 						:mousewheel="true"
+						:free-mode="true"
 					>
 						<swiper-slide
 							v-if="hourlyForecastMode === 'defaultD'"
