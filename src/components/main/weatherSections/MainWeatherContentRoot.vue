@@ -1,5 +1,5 @@
 <script setup>
-	import SvgNoise from '../../svg/SvgNoise.vue'
+import SvgNoise from '../../svg/SvgNoise.vue'
 </script>
 <template>
 	<div class="weather-content-block">

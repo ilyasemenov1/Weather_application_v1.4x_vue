@@ -517,7 +517,7 @@ watch(weatherData, updateScrollbarPosition)
 	transition: 0.2s ease;
 	box-sizing: border-box;
 	@media (max-width: 768px) {
-		width: auto;
+		width: fit-content;
 		font-size: 25px;
 		text-transform: uppercase;
 		line-height: 33px;

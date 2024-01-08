@@ -188,7 +188,10 @@ onMounted(() => {
 			>
 				<CloseIcon />
 			</button>
-			<div class="shortcut-marker" :class="{ removed: isValue, 'search-focused': isFocused, 'chromium': isChromium }">
+			<div
+				class="shortcut-marker"
+				:class="{ removed: isValue, 'search-focused': isFocused, chromium: isChromium }"
+			>
 				<span>{{ isFocused ? 'Esc' : '/' }}</span>
 			</div>
 		</div>
@@ -270,7 +273,7 @@ onMounted(() => {
 	height: 30px;
 	border-radius: 8px;
 	border: 1px var(--bg-color-9) solid;
-	transition: opacity .2s ease;
+	transition: opacity 0.2s ease;
 	pointer-events: none;
 	box-sizing: border-box;
 	z-index: 10;
