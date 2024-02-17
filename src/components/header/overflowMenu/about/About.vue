@@ -6,7 +6,7 @@ import LogoIcon from '../../../icons/LogoIcon.vue'
 <template>
 	<rootLevel2MenuComponent id="about">
 		<template #labelText>О приложении</template>
-		<template #content>
+		<template #content :style="{ height: 'calc(100%-40px)' }">
 			<div class="app-logo">
 				<div class="app-logo__icon">
 					<LogoIcon />
@@ -78,6 +78,17 @@ import LogoIcon from '../../../icons/LogoIcon.vue'
 				</li>
 			</ul>
 		</template>
+		<template #footer>
+			<footer class="license">
+				<a
+					href="https://github.com/ilyasemenov1/Weather_application_v1.4x_vue/blob/master/LICENSE"
+					class="license__link inline"
+					target="_blank"
+					>MIT License</a
+				>
+				<span>©2024 Ilya Semenov</span>
+			</footer>
+		</template>
 	</rootLevel2MenuComponent>
 </template>
 <style scoped>
@@ -102,5 +113,25 @@ import LogoIcon from '../../../icons/LogoIcon.vue'
 	font-size: 24px;
 	color: var(--text-color-1);
 	font-weight: 700;
+}
+.license {
+	position: relative;
+	display: flex;
+	justify-content: space-between;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	padding: 10px 20px;
+	/* For old browsers */
+	background: var(--bg-color-1);
+	background: color-mix(in srgb, var(--bg-color-1), #ffffff17);
+	box-shadow: 0 0 10px #00000017;
+}
+.license a {
+	font-weight: 500;
+}
+.license span {
+	font-weight: 500;
+	color: var(--text-color-1);
 }
 </style>

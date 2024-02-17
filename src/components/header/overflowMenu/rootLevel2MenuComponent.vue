@@ -19,6 +19,7 @@ function contentScrollEvent(event) {
 		<main class="level2-menu__content" @scroll="(event) => contentScrollEvent(event)">
 			<slot name="content"></slot>
 		</main>
+		<slot name="footer"></slot>
 	</section>
 </template>
 
@@ -27,7 +28,7 @@ function contentScrollEvent(event) {
 	position: fixed;
 	left: calc(100% - 500px);
 	display: grid;
-	grid-template-rows: min-content calc(100% - 53px);
+	grid-template-rows: min-content 1fr min-content;
 	max-width: 500px;
 	height: 100vh;
 	width: 100%;
@@ -82,7 +83,7 @@ function contentScrollEvent(event) {
 }
 .level2-menu__content {
 	padding: 0 20px 12px 20px;
-	margin: 0 10px 25px 0;
+	margin: 0 10px 0 0;
 	overflow-y: visible;
 	overflow-x: hidden;
 }
