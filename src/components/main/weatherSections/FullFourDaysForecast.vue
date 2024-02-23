@@ -23,7 +23,7 @@ const { settings } = storeToRefs(settingsSt)
 function getDataByIndex(indexLevel1, indexLevel2) {
 	try {
 		return weatherData.value.list
-			.slice((indexLevel1 - 1) * 8, indexLevel1 * 8)
+			.slice(indexLevel1 * 8, (indexLevel1 + 1) * 8)
 			.slice((indexLevel2 - 1) * 2, indexLevel2 * 2)
 	} catch {
 		return null

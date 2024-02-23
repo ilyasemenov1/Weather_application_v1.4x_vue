@@ -84,7 +84,7 @@ const addWeekDay = (index) => {
 
 const setMinMaxTemp = (index) => {
 	if (!weatherData.value.list) return 0
-	const arr = weatherData.value.list.slice((index - 1) * 8, index * 8).map((e) => e.main.temp)
+	const arr = weatherData.value.list.slice(index * 8, (index + 1) * 8).map((e) => e.main.temp)
 	return `${transformTempToSettingUnit(
 		arrayMax(arr),
 		settings.value
@@ -93,26 +93,26 @@ const setMinMaxTemp = (index) => {
 
 const setSpeed = (index) => {
 	if (!weatherData.value.list) return 0
-	const arr = weatherData.value.list.slice((index - 1) * 8, index * 8).map((e) => e.wind.speed)
+	const arr = weatherData.value.list.slice(index * 8, (index + 1) * 8).map((e) => e.wind.speed)
 	return transformSpeedToSettingUnit(average(arr), settings.value)
 }
 
 const setHumidity = (index) => {
 	if (!weatherData.value.list) return 0
-	const arr = weatherData.value.list.slice((index - 1) * 8, index * 8).map((e) => e.main.humidity)
+	const arr = weatherData.value.list.slice(index * 8, (index + 1) * 8).map((e) => e.main.humidity)
 	return Math.round(average(arr))
 }
 
 const setIconSrc = (index) => {
 	if (!weatherData.value.list) return 0
-	const arr = weatherData.value.list.slice((index - 1) * 8, index * 8).map((e) => e.weather[0].icon)
+	const arr = weatherData.value.list.slice(index * 8, (index + 1) * 8).map((e) => e.weather[0].icon)
 	return new URL(`/src/assets/icons/weatherIcons/${mode(arr)}.svg`, import.meta.url)
 }
 
 const setStatus = (index) => {
 	if (!weatherData.value.list) return 0
 	const arr = weatherData.value.list
-		.slice((index - 1) * 8, index * 8)
+		.slice(index * 8, (index + 1) * 8)
 		.map((e) => e.weather[0].description)
 	const upperCaseArr = arr.map((e) => {
 		const firstLetter = e[0]
