@@ -478,6 +478,7 @@ body.night-mode .animation span {
 	background: var(--bg-color-1);
 	padding: 10px 15px;
 	border-radius: 12px;
+	box-shadow: 0 3px 10px #00000017;
 }
 .city-name:hover ~ .city-description,
 .city-name:focus ~ .city-description,
