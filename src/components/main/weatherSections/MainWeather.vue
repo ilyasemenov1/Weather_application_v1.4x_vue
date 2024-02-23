@@ -41,8 +41,8 @@ let humidity = ref(0)
 let pressure = ref(0)
 let country = ref(0)
 let location = ref({
-	lat: "",
-	lon: ""
+	lat: '',
+	lon: ''
 })
 let status = ref('')
 let iconSrc = new URL('/src/assets/icons/weatherIcons/02d.svg', import.meta.url)
@@ -117,10 +117,15 @@ function UpdateWaetherData() {
 	isInFavouriteTowns.value = !isUnicTown(cityNameShow.value)
 }
 
-const iso2FlagEmoji = (iso) => String.fromCodePoint(...[...iso.toUpperCase()].map(char => char.charCodeAt(0) + 127397))
+const iso2FlagEmoji = (iso) =>
+	String.fromCodePoint(...[...iso.toUpperCase()].map((char) => char.charCodeAt(0) + 127397))
 
 function calcPopupPosition() {
-	left.value = label.value.clientWidth + 12 - cityName.value.clientWidth + (cityName.value.clientWidth - description.value.clientWidth) / 2
+	left.value =
+		label.value.clientWidth +
+		12 -
+		cityName.value.clientWidth +
+		(cityName.value.clientWidth - description.value.clientWidth) / 2
 	top.value = cityName.value.clientHeight + 15
 }
 
@@ -138,18 +143,27 @@ watch(storagedTowns.value, () => {
 				<div class="weather-main__text">
 					<h2 class="weather-main__label" ref="label">
 						Погода {{ predict }}
-						<button class="city-name" ref="cityName"
-						@focus="calcPopupPosition()"
-						@mouseenter="calcPopupPosition()"
+						<button
+							class="city-name"
+							ref="cityName"
+							@focus="calcPopupPosition()"
+							@mouseenter="calcPopupPosition()"
 						>
 							{{ cityIn(cityNameShow) }}
 						</button>
-						<div class="city-description" :style="{ top: `${top}px`, left: `${left}px`}" ref="description">
+						<div
+							class="city-description"
+							:style="{ top: `${top}px`, left: `${left}px` }"
+							ref="description"
+						>
 							<div class="city-description-content">
 								<div class="city-description-content__text-item">
 									<div>{{ country }}</div>
 								</div>
-								<a class="city-description-content__text-item inline no-decoration" :href="`https://www.google.com/maps/search/?api=1&query=${location.lat}%2C${location.lon}`">
+								<a
+									class="city-description-content__text-item inline no-decoration"
+									:href="`https://www.google.com/maps/search/?api=1&query=${location.lat}%2C${location.lon}`"
+								>
 									<div class="city-description-content__icon">
 										<LocationIcon />
 									</div>
@@ -449,18 +463,18 @@ body.night-mode .animation span {
 	cursor: pointer;
 }
 .city-name::after {
-	content: "";
+	content: '';
 	position: absolute;
 	bottom: 1px;
 	left: 0;
 	width: 100%;
 	height: 1px;
-	background: repeating-linear-gradient(to left,#ffffff 0px 5px, transparent 5px 10px);
-	opacity: .2;
+	background: repeating-linear-gradient(to left, #ffffff 0px 5px, transparent 5px 10px);
+	opacity: 0.2;
 }
 .city-name:hover,
 .city-name:focus {
-	opacity: .8;
+	opacity: 0.8;
 }
 .city-description {
 	position: absolute;
@@ -469,8 +483,12 @@ body.night-mode .animation span {
 	z-index: 2;
 	pointer-events: none;
 	opacity: 0;
-	transform: translateY(-20px) scale(.7);
-	transition: left 20ms, top 20ms, opacity .2s ease, transform .2s ease;
+	transform: translateY(-20px) scale(0.7);
+	transition:
+		left 20ms,
+		top 20ms,
+		opacity 0.2s ease,
+		transform 0.2s ease;
 }
 .city-description-content {
 	display: flex;
