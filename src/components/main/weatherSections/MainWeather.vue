@@ -34,6 +34,11 @@ let tempFeelsLike = ref(0)
 let wind = ref(0)
 let humidity = ref(0)
 let pressure = ref(0)
+let country = ref(0)
+let location = ref({
+	lat: "",
+	lon: ""
+})
 let status = ref('')
 let iconSrc = new URL('/src/assets/icons/weatherIcons/02d.svg', import.meta.url)
 
@@ -95,8 +100,16 @@ function UpdateWaetherData() {
 		: (predict.value = 'в')
 	cityNameShow.value.toLowerCase().match(/[a-z]|^[0-9]/) ? (predict.value = 'в городе') : void 0
 
+	country.value = iso2FlagEmoji(weatherData.value.city.country)
+	location.value = {
+		lat: Math.round(weatherData.value.city.coord.lat),
+		lon: Math.round(weatherData.value.city.coord.lon)
+	}
+
 	isInFavouriteTowns.value = !isUnicTown(cityNameShow.value)
 }
+
+const iso2FlagEmoji = (iso) => String.fromCodePoint(...[...iso.toUpperCase()].map(char => char.charCodeAt(0) + 127397))
 
 watch(weatherData, UpdateWaetherData)
 watch(settings.value, UpdateWaetherData)
@@ -110,7 +123,22 @@ watch(storagedTowns.value, () => {
 		<template #firstTextContent>
 			<div class="weather-main__label-content">
 				<div class="weather-main__text">
-					<h2 class="weather-main__label">Погода {{ `${predict} ${cityIn(cityNameShow)}` }}</h2>
+					<h2 class="weather-main__label">
+						Погода {{ predict }}
+						<div class="city-description">
+							{{ cityIn(cityNameShow) }}
+							<div class="city-description__content">
+								<div class="city-description__text-item">
+									<div class="city-description__icon"></div>
+									<div>{{ country }}</div>
+								</div>
+								<div class="city-description__text-item">
+									<div class="city-description__icon"></div>
+									<div>{{ `${location.lat} / ${location.lon}` }}</div>
+								</div>
+							</div>
+						</div>
+					</h2>
 					<div class="weather-main__time">Данные на {{ time }}</div>
 				</div>
 				<button
@@ -389,5 +417,23 @@ body.night-mode .animation span {
 		width: 18px;
 		height: 18px;
 	}
+}
+.city-description {
+	display: inline;
+	position: relative;
+}
+.city-description__content {
+	position: absolute;
+	display: flex;
+	gap: 10px;
+	background: var(--bg-color-1);
+	padding: 10px 15px;
+	border-radius: 12px;
+	z-index: 2;
+}
+.city-description__text-item {
+	color: var(--text-color-1);
+	font-weight: 600;
+	font-size: 16px;
 }
 </style>
