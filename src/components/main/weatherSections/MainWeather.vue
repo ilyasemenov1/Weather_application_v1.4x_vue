@@ -28,6 +28,10 @@ const { storagedTowns } = storeToRefs(favouriteTowns)
 const settingsSt = settingsStore()
 const { settings } = storeToRefs(settingsSt)
 
+const label = ref(0)
+const cityName = ref(0)
+const description = ref(0)
+
 let time = ref(0)
 let temp = ref(0)
 let tempFeelsLike = ref(0)
@@ -46,6 +50,9 @@ let isInFavouriteTowns = ref(false)
 let isFetching = ref(false)
 
 let predict = ref('')
+
+let left = ref(0)
+let top = ref(0)
 
 function isUnicTown(townArg) {
 	for (let town of storagedTowns.value) {
@@ -111,6 +118,11 @@ function UpdateWaetherData() {
 
 const iso2FlagEmoji = (iso) => String.fromCodePoint(...[...iso.toUpperCase()].map(char => char.charCodeAt(0) + 127397))
 
+function calcPopupPosition() {
+	left.value = label.value.clientWidth + 12 - cityName.value.clientWidth + (cityName.value.clientWidth - description.value.clientWidth) / 2
+	top.value = cityName.value.clientHeight + 15
+}
+
 watch(weatherData, UpdateWaetherData)
 watch(settings.value, UpdateWaetherData)
 
@@ -123,19 +135,22 @@ watch(storagedTowns.value, () => {
 		<template #firstTextContent>
 			<div class="weather-main__label-content">
 				<div class="weather-main__text">
-					<h2 class="weather-main__label">
+					<h2 class="weather-main__label" ref="label">
 						Погода {{ predict }}
-						<div class="city-description">
+						<button class="city-name" ref="cityName"
+						@focus="calcPopupPosition()"
+						@mouseup="calcPopupPosition()"
+						>
 							{{ cityIn(cityNameShow) }}
-							<div class="city-description__content">
-								<div class="city-description__text-item">
-									<div class="city-description__icon"></div>
-									<div>{{ country }}</div>
-								</div>
-								<div class="city-description__text-item">
-									<div class="city-description__icon"></div>
-									<div>{{ `${location.lat} / ${location.lon}` }}</div>
-								</div>
+						</button>
+						<div class="city-description-content" :style="{ top: `${top}px`, left: `${left}px`}" ref="description">
+							<div class="city-description-content__text-item">
+								<div class="city-description-content__icon"></div>
+								<div>{{ country }}</div>
+							</div>
+							<div class="city-description-content__text-item">
+								<div class="city-description-content__icon"></div>
+								<div>{{ `${location.lat} / ${location.lon}` }}</div>
 							</div>
 						</div>
 					</h2>
@@ -418,20 +433,51 @@ body.night-mode .animation span {
 		height: 18px;
 	}
 }
-.city-description {
+.city-name {
 	display: inline;
 	position: relative;
+	padding: 0;
+	border: none;
+	background: none;
+	font-size: inherit;
+	font-weight: inherit;
+	color: inherit;
+	cursor: pointer;
 }
-.city-description__content {
+.city-name::after {
+	content: "";
 	position: absolute;
+	bottom: 1px;
+	left: 0;
+	width: 100%;
+	height: 1px;
+	background: repeating-linear-gradient(to left,#ffffff 0px 5px, transparent 5px 10px);
+	opacity: .2;
+}
+.city-name:hover,
+.city-name:focus {
+	opacity: .8;
+}
+.city-description-content {
+	position: absolute;
+	top: 0;
 	display: flex;
 	gap: 10px;
 	background: var(--bg-color-1);
 	padding: 10px 15px;
 	border-radius: 12px;
 	z-index: 2;
+	pointer-events: none;
+	opacity: 0;
+	transform: translateY(-10px) scale(.7);
 }
-.city-description__text-item {
+.city-name:hover ~ .city-description-content,
+.city-name:focus ~ .city-description-content {
+	opacity: 1;
+	transform: translateY(0) scale(1);
+	pointer-events: all;
+}
+.city-description-content__text-item {
 	color: var(--text-color-1);
 	font-weight: 600;
 	font-size: 16px;
