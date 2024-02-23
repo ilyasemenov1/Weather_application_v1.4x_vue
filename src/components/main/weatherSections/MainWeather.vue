@@ -3,6 +3,7 @@ import { cityIn } from 'lvovich'
 
 import HeartIcon from '../../icons/HeartIcon.vue'
 import RemoveIcon from '../../icons/RemoveIcon.vue'
+import LocationIcon from '../../icons/LocationIcon.vue'
 
 import MainWeatherContentRoot from './MainWeatherContentRoot.vue'
 import { ref, watch } from 'vue'
@@ -109,8 +110,8 @@ function UpdateWaetherData() {
 
 	country.value = iso2FlagEmoji(weatherData.value.city.country)
 	location.value = {
-		lat: Math.round(weatherData.value.city.coord.lat),
-		lon: Math.round(weatherData.value.city.coord.lon)
+		lat: weatherData.value.city.coord.lat,
+		lon: weatherData.value.city.coord.lon
 	}
 
 	isInFavouriteTowns.value = !isUnicTown(cityNameShow.value)
@@ -139,19 +140,20 @@ watch(storagedTowns.value, () => {
 						Погода {{ predict }}
 						<button class="city-name" ref="cityName"
 						@focus="calcPopupPosition()"
-						@mouseup="calcPopupPosition()"
+						@mouseenter="calcPopupPosition()"
 						>
 							{{ cityIn(cityNameShow) }}
 						</button>
 						<div class="city-description-content" :style="{ top: `${top}px`, left: `${left}px`}" ref="description">
 							<div class="city-description-content__text-item">
-								<div class="city-description-content__icon"></div>
 								<div>{{ country }}</div>
 							</div>
-							<div class="city-description-content__text-item">
-								<div class="city-description-content__icon"></div>
-								<div>{{ `${location.lat} / ${location.lon}` }}</div>
-							</div>
+							<a class="city-description-content__text-item inline no-decoration" :href="`https://www.google.com/maps/search/?api=1&query=${location.lat}%2C${location.lon}`">
+								<div class="city-description-content__icon">
+									<LocationIcon />
+								</div>
+								<div>{{ `${Math.round(location.lat)}° / ${Math.round(location.lon)}°` }}</div>
+							</a>
 						</div>
 					</h2>
 					<div class="weather-main__time">Данные на {{ time }}</div>
@@ -470,16 +472,32 @@ body.night-mode .animation span {
 	pointer-events: none;
 	opacity: 0;
 	transform: translateY(-10px) scale(.7);
+	transition: left 20ms, top 20ms, opacity .2s ease, transform .2s ease;
 }
 .city-name:hover ~ .city-description-content,
-.city-name:focus ~ .city-description-content {
+.city-name:focus ~ .city-description-content,
+.city-description-content:hover {
 	opacity: 1;
 	transform: translateY(0) scale(1);
 	pointer-events: all;
 }
 .city-description-content__text-item {
+	display: flex;
+	gap: 3px;
 	color: var(--text-color-1);
 	font-weight: 600;
 	font-size: 16px;
+}
+.city-description-content__icon {
+	position: relative;
+	top: 2px;
+	width: 16px;
+	height: 16px;
+}
+.city-description-content__icon svg {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	fill: var(--text-color-1);
 }
 </style>
