@@ -144,16 +144,18 @@ watch(storagedTowns.value, () => {
 						>
 							{{ cityIn(cityNameShow) }}
 						</button>
-						<div class="city-description-content" :style="{ top: `${top}px`, left: `${left}px`}" ref="description">
-							<div class="city-description-content__text-item">
-								<div>{{ country }}</div>
-							</div>
-							<a class="city-description-content__text-item inline no-decoration" :href="`https://www.google.com/maps/search/?api=1&query=${location.lat}%2C${location.lon}`">
-								<div class="city-description-content__icon">
-									<LocationIcon />
+						<div class="city-description" :style="{ top: `${top}px`, left: `${left}px`}" ref="description">
+							<div class="city-description-content">
+								<div class="city-description-content__text-item">
+									<div>{{ country }}</div>
 								</div>
-								<div>{{ `${Math.round(location.lat)}° / ${Math.round(location.lon)}°` }}</div>
-							</a>
+								<a class="city-description-content__text-item inline no-decoration" :href="`https://www.google.com/maps/search/?api=1&query=${location.lat}%2C${location.lon}`">
+									<div class="city-description-content__icon">
+										<LocationIcon />
+									</div>
+									<div>{{ `${Math.round(location.lat)}° / ${Math.round(location.lon)}°` }}</div>
+								</a>
+							</div>
 						</div>
 					</h2>
 					<div class="weather-main__time">Данные на {{ time }}</div>
@@ -460,25 +462,29 @@ body.night-mode .animation span {
 .city-name:focus {
 	opacity: .8;
 }
-.city-description-content {
+.city-description {
 	position: absolute;
 	top: 0;
+	padding: 10px 0 0 0;
+	z-index: 2;
+	pointer-events: none;
+	opacity: 0;
+	transform: translateY(-20px) scale(.7);
+	transition: left 20ms, top 20ms, opacity .2s ease, transform .2s ease;
+}
+.city-description-content {
 	display: flex;
 	gap: 10px;
 	background: var(--bg-color-1);
 	padding: 10px 15px;
 	border-radius: 12px;
-	z-index: 2;
-	pointer-events: none;
-	opacity: 0;
-	transform: translateY(-10px) scale(.7);
-	transition: left 20ms, top 20ms, opacity .2s ease, transform .2s ease;
 }
-.city-name:hover ~ .city-description-content,
-.city-name:focus ~ .city-description-content,
-.city-description-content:hover {
+.city-name:hover ~ .city-description,
+.city-name:focus ~ .city-description,
+.city-description:hover,
+.city-description:has(a:focus) {
 	opacity: 1;
-	transform: translateY(0) scale(1);
+	transform: translateY(-10px) scale(1);
 	pointer-events: all;
 }
 .city-description-content__text-item {
