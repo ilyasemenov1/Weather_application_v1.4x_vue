@@ -11,23 +11,15 @@ import LogoIcon from '../../../icons/LogoIcon.vue'
 				<div class="app-logo__icon">
 					<LogoIcon />
 				</div>
-				<div class="app-logo__text">Погода v1.4.4.9</div>
+				<div class="app-logo__text">Погода v1.4.5</div>
 			</div>
 			<h2>Что нового?</h2>
 			<ul>
 				<li>
-					Добавлена поддержка
-					<a
-						class="inline"
-						href="https://doka.guide/tools/web-app-types/#progressive-web-applications-pwa"
-						target="_blank"
-						>PWA</a
-					>.
+					Добавлены настройки отображения информации в почасовом прогнозе.
 				</li>
-				<li>Добавлены настройки отображения данных для почасавого погноза.</li>
 				<li>
-					Исправлены некоторые проблемы с доступностью (такие как контрастность текста и атрибуты
-					интерактивных элементов для скринридеров).
+					Добавлено краткое описание искомого города.
 				</li>
 			</ul>
 			<h2>Другие ветки приложения:</h2>
