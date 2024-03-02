@@ -29,6 +29,9 @@ let isValue = ref(false)
 let searchInput = ref(null)
 
 const isChromium = ref(!!window.chrome)
+const token = 'pk.5458a1a49de64870a499080d6af514dc'
+
+let autocompleteTowns = ref([])
 
 let searchValueInit = ref('')
 let townFocusIndex = ref(0)
@@ -44,7 +47,7 @@ window.addEventListener('keydown', (event) => {
 	}
 })
 
-function searchStoregedTowns(value) {
+async function searchStoregedTowns(value) {
 	let сounter = 0
 	let resultTowns = []
 	if (value) {
@@ -74,6 +77,14 @@ function searchStoregedTowns(value) {
 	}
 }
 
+function inputFormAutocomplete(value) {
+	if (!value) return;
+	searchStoregedTowns(value)
+	.then(() => {
+		autocompleteResponse(value)
+	})
+}
+
 function removeFafouriteTown(name) {
 	for (let i = 0; i < storagedTowns.value.length; i++) {
 		if (storagedTowns.value[i].name.toLowerCase() === name.toLowerCase()) {
@@ -92,6 +103,48 @@ function focusTownByArrow(clallback, event) {
 	if (!(isFocused.value && isFindTowns.value && settings.value.showFavouriteTowns)) return
 	if (clallback) clallback()
 }
+
+
+async function autocompleteResponse(value) {
+	if (towns.value.length > 0) {
+		autocompleteTowns.value = []
+		return
+	} 
+	let xhr = new XMLHttpRequest()
+
+	xhr.open(
+		'GET',
+		`https://api.locationiq.com/v1/autocomplete?key=${token}&q=${value}&limit=5&normalizecity=0`,
+		true
+	)
+	xhr.send()
+	xhr.addEventListener(
+		'readystatechange',
+		() => {
+			if (xhr.readyState == 4 && xhr.status == 200) {
+				const response = JSON.parse(xhr.responseText)
+				autocompleteTowns.value = []
+				let k = 0
+				response.forEach(element => {
+					const type = element.type
+					const displayPlace = element.display_place
+
+					if (type == 'city' || type == 'town' || type == 'village') { 
+						k++
+						autocompleteTowns.value.push({
+							number: k,
+							town: displayPlace
+						}) 
+					}
+				})
+				if (autocompleteTowns.value.length > 0) {
+					isFindTowns.value = true
+				}
+			}
+		},
+		false
+	)
+	}
 
 onMounted(() => {
 	searchInput.value
@@ -113,12 +166,12 @@ onMounted(() => {
 				type="search"
 				autocomplete="off"
 				placeholder="Введите название города"
-				@input="(event) => searchStoregedTowns(event.target.value)"
+				@input="(event) => inputFormAutocomplete(event.target.value)"
 				@keyup.enter="
 					(event) => {
 						cityName = event.target.value
 						event.target.blur()
-						searchStoregedTowns(cityName)
+						inputFormAutocomplete(cityName)
 						searchValueInit = ''
 						focusTownByArrow()
 						townFocusIndex = 0
@@ -129,14 +182,15 @@ onMounted(() => {
 				@keydown.down="
 					(event) =>
 						focusTownByArrow(() => {
-							if (townFocusIndex == towns.length) {
+							if (townFocusIndex == towns.length && towns.length > 0) {
 								let town = $refs[`town-${townFocusIndex}`][0]
 								town.parentElement.classList.add('selected')
 								return
 							}
 							if (townFocusIndex == 0) searchValueInit = searchInput.value
 							townFocusIndex++
-							let town = $refs[`town-${townFocusIndex}`][0]
+							let town={}
+							town = $refs[`town-${townFocusIndex}`][0]
 							town.parentElement.classList.add('selected')
 							searchInput.value = town.value
 						}, event)
@@ -151,14 +205,15 @@ onMounted(() => {
 								return
 							}
 							townFocusIndex--
-							let town = $refs[`town-${townFocusIndex}`][0]
+							let town={}
+							town = $refs[`town-${townFocusIndex}`][0]
 							town.parentElement.classList.add('selected')
 							searchInput.value = town.value
 						}, event)
 				"
 				@focus="
 					(event) => {
-						searchStoregedTowns(event.target.value)
+						inputFormAutocomplete(event.target.value)
 						isFocused = true
 						townFocusIndex = 0
 					}
@@ -199,7 +254,7 @@ onMounted(() => {
 			class="search-towns"
 			:class="{ active: isFocused && isFindTowns && settings.showFavouriteTowns }"
 		>
-			<h3 class="search-towns__label">Избранные города</h3>
+			<h3 class="search-towns__label">{{ towns.length > 0 ? 'Избранные города' : 'Автозаполнение' }} </h3>
 			<div class="search-towns__content">
 				<div class="search-town__town-conteiner" v-for="town in towns">
 					<button
@@ -227,6 +282,25 @@ onMounted(() => {
 					>
 						<CloseIcon />
 					</button>
+				</div>
+				<div class="search-town__town-conteiner" v-for="town in autocompleteTowns">
+					<button
+						class="search-town__town-button"
+						:ref="`town-${town.number}`"
+						@mousedown="
+							() => {
+								cityName = town.town
+								searchInput.value = town.town
+							}
+						"
+						@click="
+							() => {
+								cityName = town.town
+								searchInput.value = town.town
+							}
+						"
+						:value="town.town"
+					><b>{{ town.town }}</b></button>
 				</div>
 			</div>
 		</div>
