@@ -11,12 +11,13 @@ import LogoIcon from '../../../icons/LogoIcon.vue'
 				<div class="app-logo__icon">
 					<LogoIcon />
 				</div>
-				<div class="app-logo__text">Погода v1.4.5</div>
+				<div class="app-logo__text">Погода v1.4.5.1</div>
 			</div>
 			<h2>Что нового?</h2>
 			<ul>
 				<li>Добавлены настройки отображения информации в почасовом прогнозе.</li>
 				<li>Добавлено краткое описание искомого города.</li>
+				<li>Добавлено автозаполнение при поиске.</li>
 			</ul>
 			<h2>Другие ветки приложения:</h2>
 			<ul>
