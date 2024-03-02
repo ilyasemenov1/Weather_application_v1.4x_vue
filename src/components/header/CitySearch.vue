@@ -63,8 +63,7 @@ function townNameHTMLFormatter(value, element) {
 async function searchStoregedTowns(value) {
 	let сounter = 0
 	let resultTowns = []
-	if (value) {
-		isValue.value = true
+	if (settings.value.showFavouriteTowns) {
 		for (let j = 0; j < storagedTowns.value.length; j++) {
 			value = value.toLowerCase()
 			let element = storagedTowns.value[j].name.toLowerCase()
@@ -76,17 +75,19 @@ async function searchStoregedTowns(value) {
 		}
 		towns.value = resultTowns
 		isFindTowns.value = resultTowns.length > 0
-	} else {
-		isValue.value = false
-		isFindTowns.value = false
-		setTimeout(() => {
-			towns.value = []
-		}, 200)
 	}
 }
 
 function inputFormAutocomplete(value) {
-	if (!value) return
+	if (!value) {
+		isFindTowns.value = false
+		isValue.value = false
+		setTimeout(() => {
+			towns.value = []
+		}, 200)
+		return
+	}
+	isValue.value = true
 	searchStoregedTowns(value)
 	.then(() => {
 		autocompleteResponse(value)
@@ -108,7 +109,7 @@ function focusTownByArrow(clallback, event) {
 		element.classList.remove('selected')
 	})
 	if (event) event.preventDefault()
-	if (!(isFocused.value && isFindTowns.value && settings.value.showFavouriteTowns)) return
+	if (!(isFocused.value && isFindTowns.value)) return
 	if (clallback) clallback()
 }
 
@@ -271,7 +272,7 @@ onMounted(() => {
 		</div>
 		<div
 			class="search-towns"
-			:class="{ active: isFocused && isFindTowns && settings.showFavouriteTowns }"
+			:class="{ active: isFocused && isFindTowns }"
 		>
 			<h3 class="search-towns__label">{{ towns.length > 0 ? 'Избранные города' : 'Автозаполнение' }} </h3>
 			<div class="search-towns__content">
