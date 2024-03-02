@@ -25,6 +25,7 @@ let towns = ref([])
 let isFocused = ref(false)
 let isFindTowns = ref(false)
 let isValue = ref(false)
+let isFetching = ref(false)
 
 let searchInput = ref(null)
 
@@ -47,6 +48,18 @@ window.addEventListener('keydown', (event) => {
 	}
 })
 
+function townNameHTMLFormatter(value, element) {
+	value = value.toLowerCase()
+	element = element.toLowerCase()
+	let townTextArr = element.split(value)
+	let town = ''
+	for (let i = 0; i < townTextArr.length; i++) {
+		town += `<b>${townTextArr[i]}</b>`
+		if (i != townTextArr.length - 1) town += value
+	}
+	return town
+} 
+
 async function searchStoregedTowns(value) {
 	let сounter = 0
 	let resultTowns = []
@@ -57,12 +70,7 @@ async function searchStoregedTowns(value) {
 			let element = storagedTowns.value[j].name.toLowerCase()
 			if (element.includes(value)) {
 				сounter++
-				let townTextArr = element.split(value)
-				let town = ''
-				for (let i = 0; i < townTextArr.length; i++) {
-					town += `<b>${townTextArr[i]}</b>`
-					if (i != townTextArr.length - 1) town += value
-				}
+				let town = townNameHTMLFormatter(value, element)
 				resultTowns.push({ townHTML: town, town: element, number: сounter })
 			}
 		}
@@ -78,7 +86,7 @@ async function searchStoregedTowns(value) {
 }
 
 function inputFormAutocomplete(value) {
-	if (!value) return;
+	if (!value) return
 	searchStoregedTowns(value)
 	.then(() => {
 		autocompleteResponse(value)
@@ -111,10 +119,13 @@ async function autocompleteResponse(value) {
 		return
 	} 
 	let xhr = new XMLHttpRequest()
+	let delay = setTimeout(() => {
+		isFetching.value = true
+	}, 200)
 
 	xhr.open(
 		'GET',
-		`https://api.locationiq.com/v1/autocomplete?key=${token}&q=${value}&limit=5&normalizecity=0`,
+		`https://api.locationiq.com/v1/autocomplete?key=${token}&q=${value}&limit=4&normalizecity=0&dedupe=0&accept-language=native`,
 		true
 	)
 	xhr.send()
@@ -129,17 +140,19 @@ async function autocompleteResponse(value) {
 					const type = element.type
 					const displayPlace = element.display_place
 
-					if (type == 'city' || type == 'town' || type == 'village') { 
+					if (type == 'city' || type == 'town') { 
 						k++
+						let townHTML = townNameHTMLFormatter(value, displayPlace)
 						autocompleteTowns.value.push({
 							number: k,
-							town: displayPlace
+							town: displayPlace,
+							townHTML: townHTML
 						}) 
 					}
 				})
-				if (autocompleteTowns.value.length > 0) {
-					isFindTowns.value = true
-				}
+				clearTimeout(delay)
+				isFetching.value = false
+				isFindTowns.value = autocompleteTowns.value.length > 0
 			}
 		},
 		false
@@ -160,7 +173,15 @@ onMounted(() => {
 				@click="cityName = searchInput.value"
 				aria-label="Поиск"
 			>
-				<SearchIcon></SearchIcon>
+				<SearchIcon class="search-icon" :class="{ hide: isFetching }"></SearchIcon>
+				<span class="animation-conteiner" :class="{ active: isFetching }">
+					<span class="animation">
+						<span></span>
+						<span></span>
+						<span></span>
+						<span></span>
+					</span>
+				</span>
 			</button>
 			<input
 				type="search"
@@ -189,8 +210,7 @@ onMounted(() => {
 							}
 							if (townFocusIndex == 0) searchValueInit = searchInput.value
 							townFocusIndex++
-							let town={}
-							town = $refs[`town-${townFocusIndex}`][0]
+							let town = $refs[`town-${townFocusIndex}`][0]
 							town.parentElement.classList.add('selected')
 							searchInput.value = town.value
 						}, event)
@@ -205,8 +225,7 @@ onMounted(() => {
 								return
 							}
 							townFocusIndex--
-							let town={}
-							town = $refs[`town-${townFocusIndex}`][0]
+							let town = $refs[`town-${townFocusIndex}`][0]
 							town.parentElement.classList.add('selected')
 							searchInput.value = town.value
 						}, event)
@@ -300,7 +319,8 @@ onMounted(() => {
 							}
 						"
 						:value="town.town"
-					><b>{{ town.town }}</b></button>
+						v-html="town.townHTML"
+					></button>
 				</div>
 			</div>
 		</div>
@@ -571,5 +591,39 @@ button:focus {
 	opacity: 1;
 	visibility: visible;
 	pointer-events: all;
+}
+.animation-conteiner {
+	position: absolute;
+	left: 3px;
+	top: -2px;
+	width: 26px;
+	height: 26px;
+	border-radius: 50%;
+	transition: .2s ease;
+	opacity: 0;
+	pointer-events: none;
+}
+.animation-conteiner.active {
+	opacity: 1;
+	pointer-events: all;
+}
+.animation {
+	top: 3px;
+	left: -3px;
+	width: 100%;
+	height: 100%;
+}
+.animation span {
+	width: 100%;
+	height: 100%;
+	margin: 3px;
+	border-width: 3px;
+	filter: contrast(2);
+}
+.search-icon {
+	transition: .2s esae;
+}
+.search-icon.hide {
+	opacity: 0;
 }
 </style>
